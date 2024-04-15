@@ -21,7 +21,7 @@ HIPOLIBS    := -L/home/ftouchte/Desktop/hipo/hipo/lib -lhipo4
 LZ4LIBS     := -L/home/ftouchte/Desktop/hipo/hipo/lz4/lib -llz4
 LZ4INCLUDES := -I/home/ftouchte/Desktop/hipo/hipo/lz4/lib
 
-FELIXFLAGS := -I/home/ftouchte/Desktop/hipo/code
+FELIXFLAGS := -I/home/ftouchte/Desktop/hipo/ALERT/code
 
 # ROOT libraries 
 ROOTLIBS = $(shell root-config --libs)
