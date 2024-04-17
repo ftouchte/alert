@@ -33,8 +33,8 @@ int main(int argc, char const *argv[])
         TH1D* hist_phi = new TH1D("hist_phi","MC::Particle #rightarrow #phi",100, 0,2*M_PI);
         TH1D* hist_vz = new TH1D("hist_vz","MC::Particle #rightarrow vz",100, -20,20);
 
-        TH1I* hist_nHits_AHDC = new TH1I("hist_nHits_AHDC","Number of Hits in AHDC",100,0,20);
-        TH1I* hist_nHits_ATOF = new TH1I("hist_nHits_ATOF","Number of Hits in ATOF",100,0,20);
+        TH1I* hist_nHits_AHDC = new TH1I("hist_nHits_AHDC","Number of Hits in AHDC",100,0,35);
+        TH1I* hist_nHits_ATOF = new TH1I("hist_nHits_ATOF","Number of Hits in ATOF",100,0,8);
         TH2D* hist_p_nHits_AHDC = new TH2D("hist_p_nHits_AHDC","Correlation between p and nHits_AHDC",100,0,0.4,100,0,40);
         TH2D* hist_p_nHits_ATOF = new TH2D("hist_p_nHits_ATOF","Correlation between p and nHits_ATOF",100,0,0.4,100,0,10);
 
@@ -139,7 +139,7 @@ int main(int argc, char const *argv[])
         hist_p_nHits_ATOF->Draw("COLZ");
 
         //SAVE
-        canvas2->Print("./output/hists_nHists.pdf");
+        canvas2->Print("./output/hists_nHits.pdf");
         delete hist_nHits_AHDC; delete hist_nHits_ATOF; delete hist_p_nHits_AHDC; delete hist_p_nHits_ATOF;
         delete canvas2;
 
