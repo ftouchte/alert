@@ -77,7 +77,10 @@ int main(int argc, char const *argv[])
 
         std::cout << "nentries : " << nentries << std::endl;
 
-        // Plots MC::Particle
+        // *****************************************
+        //          PlOT MC::Particle
+        // *****************************************
+
         TCanvas* canvas1 = new TCanvas("c1","c1 title",1366,768);
         canvas1->Divide(2,2);
         gStyle->SetOptStat("nemruo"); 
@@ -110,15 +113,13 @@ int main(int argc, char const *argv[])
         hist_vz->GetYaxis()->SetTitleSize(0.05);
         hist_vz->Draw();
         // SAVE
-        TFile outputFile("./output/outputFile.root", "RECREATE");
-        hist_p->Write();
-        outputFile.Close();
-
         canvas1->Print("./output/mc_particle.pdf");
         delete hist_p; delete hist_theta; delete hist_phi; delete hist_vz;
         delete canvas1;
 
-        // PLOT nHits_AHDC,ATOF
+        // *****************************************
+        //          PLOT nHits_AHDC,ATOF
+        // *****************************************
         TCanvas* canvas2 = new TCanvas("c2","c2 title",1366,768);
         canvas2->Divide(2,2);
         gStyle->SetOptStat("nemruo");
@@ -157,7 +158,10 @@ int main(int argc, char const *argv[])
         delete hist_nHits_AHDC; delete hist_nHits_ATOF; delete hist_p_nHits_AHDC; delete hist_p_nHits_ATOF;
         delete canvas2;
 
-        // Plots dummy
+        // *****************************************
+        //          PLOT AHDC::adc -> dummy
+        // *****************************************
+
         TCanvas* canvas3 = new TCanvas("c3","c3 title",1366,768);
         //canvas3->Divide(2,2);
         gStyle->SetOptStat("nemruo"); 
@@ -171,9 +175,12 @@ int main(int argc, char const *argv[])
         delete hist_dummy;
         delete canvas3;
 
-        // Plots ATOF::adc -> sector
+        // *****************************************
+        //          PLOT ATOF::adc -> sector
+        // *****************************************
+
         TCanvas* canvas4 = new TCanvas("c4","c4 title",1366,768);
-        //canvas3->Divide(2,2);
+        //canvas4->Divide(2,2);
         gStyle->SetOptStat("nemruo"); 
         hist_sector->GetXaxis()->SetTitle("sector");
         hist_sector->GetXaxis()->SetTitleSize(0.05);

@@ -1,3 +1,7 @@
-/code/*.exe
-/code/*.o
+*.exe
+*.o
 notes.txt
+code/tmp.cpp
+*.hipo
+
+

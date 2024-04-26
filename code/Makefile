@@ -50,9 +50,6 @@ showFile: showFile.o
 histo: histo.o futils.o
 	$(CXX) -o histo.exe $^ $(HIPOLIBS) $(LZ4LIBS) $(ROOTLIBS)
 
-bmt_histo: bmt_histo.o futils.o
-	$(CXX) -o bmt_histo.exe $^ $(HIPOLIBS) $(LZ4LIBS) $(ROOTLIBS)
-
 prog: prog.o futils.o
 	$(CXX) -o prog.exe $^  $(RAPID_CHECK_LIBS) $(CATCH2_FLLAGS)
 
