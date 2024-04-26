@@ -27,20 +27,25 @@ int main(int argc, char const *argv[])
         double px,py,pz;
         double p, theta, phi;
         double vz;
-
+        // MC::Particle
         TH1D* hist_p = new TH1D("hist_p","MC::Particle #rightarrow p",100, 0,0.3);
         TH1D* hist_theta = new TH1D("hist_theta","MC::Particle #rightarrow #theta",100, 0,M_PI);
         TH1D* hist_phi = new TH1D("hist_phi","MC::Particle #rightarrow #phi",100, 0,2*M_PI);
         TH1D* hist_vz = new TH1D("hist_vz","MC::Particle #rightarrow vz",100, -20,20);
-
+        // nHits
         TH1I* hist_nHits_AHDC = new TH1I("hist_nHits_AHDC","Number of Hits in AHDC",100,0,35);
         TH1I* hist_nHits_ATOF = new TH1I("hist_nHits_ATOF","Number of Hits in ATOF",100,0,8);
         TH2D* hist_p_nHits_AHDC = new TH2D("hist_p_nHits_AHDC","Correlation between p and nHits_AHDC",100,0,0.4,100,0,40);
         TH2D* hist_p_nHits_ATOF = new TH2D("hist_p_nHits_ATOF","Correlation between p and nHits_ATOF",100,0,0.4,100,0,10);
+        // Various
+        TH1I* hist_dummy = new TH1I("hist_dummy","AHDC::adc -> hit_dummy",100,0,2);
+        TH1I* hist_sector = new TH1I("hist_sector","ATOF::adc -> sector",100,0,16);
 
-        while( r.next(list) && nentries < 15'000){
-            // MC::Particle
+        while( r.next(list)){
+
+            // MC::Particle and nHits
             for(int itr = 0; itr < list[0].getRows(); itr++){
+                
                 px = list[0].getFloat("px",itr);
                 py = list[0].getFloat("py",itr);
                 pz = list[0].getFloat("pz",itr);
@@ -52,16 +57,26 @@ int main(int argc, char const *argv[])
                 hist_phi->Fill(phi);
                 hist_vz->Fill(vz);
 
-                // nHits ; remark list[0].getRows() == 1, otherwise this portion of code need to be outside for {...} 
+                // nHits ; in this case remark list[0].getRows() == 1, otherwise this portion of code need to be outside for {...} 
                 hist_nHits_AHDC->Fill(list[1].getRows());
                 hist_nHits_ATOF->Fill(list[2].getRows());
+
                 hist_p_nHits_AHDC->Fill(p,list[1].getRows());
                 hist_p_nHits_ATOF->Fill(p,list[2].getRows());
-                
                 nentries++;
+            }
 
+            // Various
+            for(int itr = 0; itr < list[1].getRows(); itr++){
+                hist_dummy->Fill(list[1].getShort("dummy", itr));
+            }
+            for(int itr = 0; itr < list[2].getRows(); itr++){
+                hist_sector->Fill(list[2].getByte("sector", itr));
             }
         }
+
+        std::cout << "nentries : " << nentries << std::endl;
+
         // Plots MC::Particle
         TCanvas* canvas1 = new TCanvas("c1","c1 title",1366,768);
         canvas1->Divide(2,2);
@@ -99,7 +114,7 @@ int main(int argc, char const *argv[])
         hist_p->Write();
         outputFile.Close();
 
-        canvas1->Print("./output/hists_mc_particle.pdf");
+        canvas1->Print("./output/mc_particle.pdf");
         delete hist_p; delete hist_theta; delete hist_phi; delete hist_vz;
         delete canvas1;
 
@@ -137,11 +152,38 @@ int main(int argc, char const *argv[])
         hist_p_nHits_ATOF->GetYaxis()->SetTitleSize(0.05);
         hist_p_nHits_ATOF->SetStats(kFALSE);
         hist_p_nHits_ATOF->Draw("COLZ");
-
         //SAVE
-        canvas2->Print("./output/hists_nHits.pdf");
+        canvas2->Print("./output/nHits.pdf");
         delete hist_nHits_AHDC; delete hist_nHits_ATOF; delete hist_p_nHits_AHDC; delete hist_p_nHits_ATOF;
         delete canvas2;
+
+        // Plots dummy
+        TCanvas* canvas3 = new TCanvas("c3","c3 title",1366,768);
+        //canvas3->Divide(2,2);
+        gStyle->SetOptStat("nemruo"); 
+        hist_dummy->GetXaxis()->SetTitle("dummy");
+        hist_dummy->GetXaxis()->SetTitleSize(0.05);
+        hist_dummy->GetYaxis()->SetTitle("Number of hits");
+        hist_dummy->GetYaxis()->SetTitleSize(0.05);
+        hist_dummy->Draw();
+        //SAVE
+        canvas3->Print("./output/AHDC_adc_dummy.pdf");
+        delete hist_dummy;
+        delete canvas3;
+
+        // Plots ATOF::adc -> sector
+        TCanvas* canvas4 = new TCanvas("c4","c4 title",1366,768);
+        //canvas3->Divide(2,2);
+        gStyle->SetOptStat("nemruo"); 
+        hist_sector->GetXaxis()->SetTitle("sector");
+        hist_sector->GetXaxis()->SetTitleSize(0.05);
+        hist_sector->GetYaxis()->SetTitle("Number of hits");
+        hist_sector->GetYaxis()->SetTitleSize(0.05);
+        hist_sector->Draw();
+        //SAVE
+        canvas4->Print("./output/ATOF_adc_sector.pdf");
+        delete hist_sector;
+        delete canvas4;
 
     } 
     else {
