@@ -42,13 +42,16 @@ LD        := g++
 LDFLAGS   :=
 
 
-all:  showFile histo prog 
+all:  showFile histo plot prog 
 
 showFile: showFile.o
 	$(CXX) -o showFile.exe $<  $(HIPOLIBS) $(LZ4LIBS)
 
 histo: histo.o futils.o
 	$(CXX) -o histo.exe $^ $(HIPOLIBS) $(LZ4LIBS) $(ROOTLIBS)
+
+plot: plot.o futils.o
+	$(CXX) -o plot.exe $^ $(HIPOLIBS) $(LZ4LIBS) $(ROOTLIBS)
 
 prog: prog.o futils.o
 	$(CXX) -o prog.exe $^  $(RAPID_CHECK_LIBS) $(CATCH2_FLLAGS)

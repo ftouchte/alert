@@ -1,7 +1,7 @@
+*.hipo
 *.exe
 *.o
-notes.txt
-code/tmp.cpp
-*.hipo
-
-
+/code/tmp.*
+/code/random.cpp
+/code/getHipoFile.txt
+/code/?ignal.txt

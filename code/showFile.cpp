@@ -52,7 +52,10 @@ int main(int argc, char** argv) {
 
    //reader.gotoEvent(561);
 
-   while(reader.next()==true && counter <10){
+   while(reader.next()==true){
+      if (counter <991) {
+         counter++;
+         continue;}
       reader.read(event);
       event.getStructure(inBank);
       std::cout << "#EVENT : " << counter +1 << std::endl;
