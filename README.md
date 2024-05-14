@@ -2,4 +2,4 @@
 
 
 
-- [Path to the book](./doc/book/index.html)
+- [Link to the book](./doc/book/index.html)

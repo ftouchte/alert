@@ -38,7 +38,6 @@ int main(int argc, char const *argv[])
         TH2D* hist_p_nHits_AHDC = new TH2D("hist_p_nHits_AHDC","Correlation between p and nHits_AHDC",100,0,0.4,100,0,40);
         TH2D* hist_p_nHits_ATOF = new TH2D("hist_p_nHits_ATOF","Correlation between p and nHits_ATOF",100,0,0.4,100,0,10);
         // Various
-        TH1I* hist_dummy = new TH1I("hist_dummy","AHDC::adc -> hit_dummy",100,0,2);
         TH1I* hist_sector = new TH1I("hist_sector","ATOF::adc -> sector",100,0,16);
 
         while( r.next(list)){
@@ -66,10 +65,6 @@ int main(int argc, char const *argv[])
                 nentries++;
             }
 
-            // Various
-            for(int itr = 0; itr < list[1].getRows(); itr++){
-                hist_dummy->Fill(list[1].getShort("dummy", itr));
-            }
             for(int itr = 0; itr < list[2].getRows(); itr++){
                 hist_sector->Fill(list[2].getByte("sector", itr));
             }
@@ -159,21 +154,10 @@ int main(int argc, char const *argv[])
         delete canvas2;
 
         // *****************************************
-        //          PLOT AHDC::adc -> dummy
+        //          PLOT AHDC::adc -> new entry
         // *****************************************
 
-        TCanvas* canvas3 = new TCanvas("c3","c3 title",1366,768);
-        //canvas3->Divide(2,2);
-        gStyle->SetOptStat("nemruo"); 
-        hist_dummy->GetXaxis()->SetTitle("dummy");
-        hist_dummy->GetXaxis()->SetTitleSize(0.05);
-        hist_dummy->GetYaxis()->SetTitle("Number of hits");
-        hist_dummy->GetYaxis()->SetTitleSize(0.05);
-        hist_dummy->Draw();
-        //SAVE
-        canvas3->Print("./output/AHDC_adc_dummy.pdf");
-        delete hist_dummy;
-        delete canvas3;
+
 
         // *****************************************
         //          PLOT ATOF::adc -> sector

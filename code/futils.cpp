@@ -32,8 +32,9 @@ namespace futils {
         return sqrt(futils::variance(data));
     }
 
-    void cart2polar(double x, double y, double z, double & rho, double & theta, double & phi){
+    bool cart2polar(double x, double y, double z, double & rho, double & theta, double & phi){
         rho = sqrt(x*x+y*y+z*z);
+        if (rho <= __DBL_EPSILON__) {return false;}
         theta = acos(z/rho);
         if (y >= 0){
             phi = acos(x/(rho*sin(theta)));
@@ -41,8 +42,29 @@ namespace futils {
         else {
             phi = 2*M_PI - acos(x/(rho*sin(theta)));
         }
-        
+        return true;
     } 
+
+    bool cart2polar(double x, double y, double & rho, double & theta){
+        rho = sqrt(x*x+y*y);
+        if (rho <= __DBL_EPSILON__) {return false;}
+        if (y >= 0) {
+            theta = acos(x/rho);
+        }
+        else {
+            theta = 2*M_PI - acos(x/rho);
+        }
+        return true;
+    }
+
+    double integrate(Integrable f, double a, double b, int Npts){
+        double S=0;
+        double eps = (b-a)/Npts;
+        for (int i=0;i<Npts;i++){
+            S+= f(a+eps*i)+f(a+eps*(i+1)); // trapèze
+        }
+        return S*eps/2; // trapèze
+    }
     
 
 }

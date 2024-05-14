@@ -3,5 +3,11 @@
 *.o
 /code/tmp.*
 /code/random.cpp
+/code/random.cpp
 /code/getHipoFile.txt
-/code/?ignal.txt
+/code/hipofile/?ignal.txt
+/code/hipofile/hist_nsteps.txt
+/code/getFileFromIJCLab.txt
+
+
+

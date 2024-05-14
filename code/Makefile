@@ -42,7 +42,7 @@ LD        := g++
 LDFLAGS   :=
 
 
-all:  showFile histo plot prog 
+all:  showFile histo plot benchmark simu
 
 showFile: showFile.o
 	$(CXX) -o showFile.exe $<  $(HIPOLIBS) $(LZ4LIBS)
@@ -53,15 +53,20 @@ histo: histo.o futils.o
 plot: plot.o futils.o
 	$(CXX) -o plot.exe $^ $(HIPOLIBS) $(LZ4LIBS) $(ROOTLIBS)
 
-prog: prog.o futils.o
-	$(CXX) -o prog.exe $^  $(RAPID_CHECK_LIBS) $(CATCH2_FLLAGS)
+benchmark: benchmark.o futils.o
+	$(CXX) -o benchmark.exe $^  $(RAPID_CHECK_LIBS) $(CATCH2_FLLAGS)
+
+simu: simu.o futils.o
+	$(CXX) -o simu.exe $^  $(RAPID_CHECK_LIBS) $(CATCH2_FLLAGS) $(ROOTLIBS)
+
 
 # $< représente la première de la cible, i.e histo.o
 # $^ représente la liste complète des dépendances
 
 clean:
 	@echo 'Removing all build files'
-	@rm -rf *.o *~ *.exe example*hipo 
+	@rm -rf *.o *~ *.exe example*hipo ./output/*.pdf
 
 %.o: %.cpp
 	$(CXX) -c $< -O2 $(CXXFLAGS) $(HIPOCFLAGS) $(LZ4INCLUDES) $(ROOTCFLAGS) $(RAPID_CHECK_FLAGS) $(FELIXFLAGS)
+
