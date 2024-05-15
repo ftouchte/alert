@@ -87,27 +87,113 @@ int main(int argc, char const *argv[])
     latex1.DrawLatex(3,5.5,"#bf{Deposited energy in each steps}");
 
     //canvas1->Update();
-    canvas1->Print("./output/signal_simu.pdf");
-    delete gr1; delete ox1; delete oy1; 
+    canvas1->Print("./output/signal_simu1.pdf");
+    //delete gr1; 
+    delete ox1; delete oy1; 
     delete canvas1;
 
     // ****************************************************
     // Change all point by a distributon in the time
     // Change Edep by d/dt• {Edep}
     // ****************************************************
-    double tmin = 0, tmax = 11;
-    int N = 100; // number of points 
-    double dt = (tmax-tmin)/N; // time résolution of the electronic (ALERT : 44 ns)
-    double tRange[N];
-    double eRange[N];
-    for (int i=0;i<N;i++){
-        tRange[i] = tmin + i*dt;
-        eRange[i] = 0;
-        for (int s=0;s<nsteps;s++){
-            futils::Gauss gauss(stepTime.at(s),0.25);
-            eRange[i] += gauss(tRange[i]);
+    double tmin = -1, tmax = 11;
+    int Npts = 1000; // number of points 
+    double dt = (tmax-tmin)/Npts; // time résolution of the electronic (ALERT : 44 ns)
+    double sigma = 0.3;
+    double Kg = 1/sqrt(2*PI*pow(sigma,2)); 
+
+    TCanvas* canvas2 = new TCanvas("c2","c2 title",1366,768);
+    canvas2->Range(-2,-2,12,(int) floor(3*Kg) + 3);
+    std::cout << "========>  Hi Felix ! " << std::endl;
+    // for each step
+    for (int s=0;s<nsteps;s++){ 
+        // Draw graph
+        TGraph* gr2 = new TGraph(Npts);
+        double xRange[Npts], yRange[Npts];
+        futils::Gauss gauss(stepTime.at(s),sigma); // gaussian centered in stepTime.at(s)
+        for (int i=0;i<Npts;i++){
+            xRange[i] = tmin + i*dt;
+            yRange[i] = Edep.at(s)*gauss(xRange[i]);
+            gr2->SetPoint(i,xRange[i],yRange[i]);
         }
+        gr2->SetLineColor(kBlue);
+        gr2->Draw("L"); 
+        // Draw stem
+        gr1->Draw("P");
+        TLine* line = new TLine(stepTime.at(s),0,stepTime.at(s),Edep.at(s));
+        line->SetLineWidth(1);
+        line->SetLineColor(kBlack);
+        line->Draw(); 
     }
+    std::cout << "========>  Hi Nabilath ! " << std::endl;
+    // Draw axis
+    TGaxis* ox2 = new TGaxis(-1,0,11,0,-1,11,510,"+-S>");
+    ox2->SetTickSize(0.009);
+    ox2->SetLabelFont(42);
+    ox2->SetLabelSize(0.025);
+    ox2->SetTitle("time [ns]");
+    ox2->SetTitleSize(0.03);
+    ox2->Draw();
+    TGaxis* oy2 = new TGaxis(0,-1,0,(int) 3*Kg + 1,-1,(int) floor(3*Kg) +1,510,"+-S>");
+    oy2->SetTickSize(0.009);
+    oy2->SetLabelFont(42);
+    oy2->SetLabelSize(0.025);
+    oy2->SetTitle("#frac{d (Edep)}{dt} [keV/ns]");
+    oy2->SetTitleSize(0.03); //oy->SetTitleOffset(0.5);
+    oy2->Draw();
+    canvas2->Print("./output/signal_simu2.pdf");
+    delete ox2; delete oy2; delete gr1;
+    delete canvas2;
+
+    // ****************************************************
+    // Change all point by a distributon in the time
+    // Change Edep by d/dt• {Edep}
+    // ****************************************************
+    TGraph* gr3 = new TGraph(Npts);
+    double xRange[Npts], yRange[Npts];
+    double ymax = 0;
+    for (int i=0;i<Npts;i++){
+        xRange[i] = tmin + i*dt;
+        yRange[i] = 0;
+        for (int s=0;s<nsteps;s++){ // for each step, compute gauss(i-th points)
+            futils::Gauss gauss(stepTime.at(s),sigma); // gaussian centered in stepTime.at(s)
+            yRange[i] += Edep.at(s)*gauss(xRange[i]);
+        }
+        if (ymax < yRange[i]) ymax = yRange[i];
+        gr3->SetPoint(i,xRange[i],yRange[i]);
+    }
+    TCanvas* canvas3 = new TCanvas("c3","c3 title",1366,768);
+    canvas2->Range(-2,-2,12,(int) ymax + 2);
+    // Draw graph
+    gr3->SetLineColor(kBlue);
+    gr3->Draw("L");
+    // Draw axis
+    TGaxis* ox3 = new TGaxis(-1,0,11,0,-1,11,510,"+-S>");
+    ox3->SetTickSize(0.009);
+    ox3->SetLabelFont(42);
+    ox3->SetLabelSize(0.025);
+    ox3->SetTitle("time [ns]");
+    ox3->SetTitleSize(0.03);
+    ox3->Draw();
+    TGaxis* oy3 = new TGaxis(0,-1,0,(int) 3*Kg + 1,-1,(int) floor(3*Kg) +1,510,"+-S>");
+    oy3->SetTickSize(0.009);
+    oy3->SetLabelFont(42);
+    oy3->SetLabelSize(0.025);
+    oy3->SetTitle("#Sigma_{s} #frac{d (Edep)}{dt}|_{s} [keV/ns]");
+    oy3->SetTitleSize(0.03); //oy->SetTitleOffset(0.5);
+    oy3->Draw();
+    // Draw title
+    TLatex latex3;
+    latex3.SetTextSize(0.04);
+    latex3.SetTextAlign(13);
+    latex3.DrawLatex(4,ymax+1.25,"#bf{#Sigma_{s} #frac{d (Edep)}{dt}|_{s} [keV/ns]}");
+
+    canvas3->Print("./output/signal_simu3.pdf");
+    delete ox3; delete oy3; delete gr3;
+    delete canvas3;
+
+
+
     // plot tRange, eRange
 
     
