@@ -131,7 +131,8 @@ int main(int argc, char const *argv[])
     // Draw canvas
     TCanvas* canvas3 = new TCanvas("c3","c3 title",0,0,1500,1500);
     canvas3->Range(-xpad-2,-xpad-2,xpad+2,xpad+2);
-
+    
+    
     // Draw gragh
     graph1->SetTitle("");
     graph1->SetMarkerStyle(21);
@@ -144,13 +145,15 @@ int main(int argc, char const *argv[])
     ox->SetTickSize(0.009);
     ox->SetLabelFont(42);
     ox->SetLabelSize(0.025);
-    //ox->SetTitle("x (cm)");
+    ox->SetTitle("x (mm)");
+    ox->SetTitleSize(0.03);
     ox->Draw();
     TGaxis* oy = new TGaxis(0,-xpad,0,xpad,-xpad,xpad,510,"+-S>");
     oy->SetTickSize(0.009);
     oy->SetLabelFont(42);
     oy->SetLabelSize(0.025);
-    //oy->SetTitle("y (cm)");
+    oy->SetTitle("y (mm)");
+    oy->SetTitleSize(0.03);
     oy->Draw();
 
     // Draw wire

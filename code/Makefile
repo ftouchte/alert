@@ -42,7 +42,8 @@ LD        := g++
 LDFLAGS   :=
 
 
-all:  showFile histo plot benchmark simu
+#all:  showFile histo plot benchmark simu
+all: simu
 
 showFile: showFile.o
 	$(CXX) -o showFile.exe $<  $(HIPOLIBS) $(LZ4LIBS)
