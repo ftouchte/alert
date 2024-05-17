@@ -117,7 +117,9 @@ int main(int argc, char const *argv[])
             gr2->SetPoint(i,xRange[i],yRange[i]);
         }
         gr2->SetLineColor(kBlue);
-        gr2->Draw("L"); 
+        gr2->SetFillColorAlpha(2+s,0.35);
+        gr2->SetFillStyle(3001);
+        gr2->Draw("LF"); 
         // Draw stem
         gr1->Draw("P");
         TLine* line = new TLine(stepTime.at(s),0,stepTime.at(s),Edep.at(s));
@@ -125,7 +127,6 @@ int main(int argc, char const *argv[])
         line->SetLineColor(kBlack);
         line->Draw(); 
     }
-    std::cout << "========>  Hi Nabilath ! " << std::endl;
     // Draw axis
     TGaxis* ox2 = new TGaxis(-1,0,11,0,-1,11,510,"+-S>");
     ox2->SetTickSize(0.009);
@@ -134,7 +135,7 @@ int main(int argc, char const *argv[])
     ox2->SetTitle("time [ns]");
     ox2->SetTitleSize(0.03);
     ox2->Draw();
-    TGaxis* oy2 = new TGaxis(0,-1,0,(int) 3*Kg + 1,-1,(int) floor(3*Kg) +1,510,"+-S>");
+    TGaxis* oy2 = new TGaxis(0,-1,0,(int) 3*Kg + 1,-1,(int) floor(3*Kg) +2,510,"+-S>");
     oy2->SetTickSize(0.009);
     oy2->SetLabelFont(42);
     oy2->SetLabelSize(0.025);
@@ -146,8 +147,7 @@ int main(int argc, char const *argv[])
     delete canvas2;
 
     // ****************************************************
-    // Change all point by a distributon in the time
-    // Change Edep by d/dt• {Edep}
+    // Sum all distributions
     // ****************************************************
     TGraph* gr3 = new TGraph(Npts);
     double xRange[Npts], yRange[Npts];
@@ -163,10 +163,12 @@ int main(int argc, char const *argv[])
         gr3->SetPoint(i,xRange[i],yRange[i]);
     }
     TCanvas* canvas3 = new TCanvas("c3","c3 title",1366,768);
-    canvas2->Range(-2,-2,12,(int) ymax + 2);
+    canvas3->Range(-2,-2,12,(int) ymax + 2);
     // Draw graph
     gr3->SetLineColor(kBlue);
-    gr3->Draw("L");
+    gr3->SetFillColorAlpha(38,0.35);
+    gr3->SetFillStyle(3001);
+    gr3->Draw("LF");
     // Draw axis
     TGaxis* ox3 = new TGaxis(-1,0,11,0,-1,11,510,"+-S>");
     ox3->SetTickSize(0.009);
@@ -186,15 +188,65 @@ int main(int argc, char const *argv[])
     TLatex latex3;
     latex3.SetTextSize(0.04);
     latex3.SetTextAlign(13);
-    latex3.DrawLatex(4,ymax+1.25,"#bf{#Sigma_{s} #frac{d (Edep)}{dt}|_{s} [keV/ns]}");
+    latex3.DrawLatex(4,ymax+1,"#bf{#Sigma_{s} #frac{d (Edep)}{dt}|_{s} [keV/ns]}");
 
     canvas3->Print("./output/signal_simu3.pdf");
     delete ox3; delete oy3; delete gr3;
     delete canvas3;
 
+    // ****************************************************
+    // Sum all distributions 
+    // >>>>>>   test the class GenerateSignal
+    // ****************************************************
+    futils::GenerateSignal Signal;
+    for (int s=0;s<nsteps;s++){
+        //double stdev = 0.1*(1 + rand() % 3);
+        int shape_type = rand () % 2;
+        Signal.Add(stepTime.at(s),Edep.at(s),shape_type);
+    }
+    std::cout << "Signal(tmin) : " << Signal(tmin) << std::endl;
+    std::cout << "Signal(tmax) : " << Signal(tmax) << std::endl;
 
+    TGraph* gr4 = new TGraph(Npts);
+    //double ymax = 0;
+    ymax = 0;
+    for (int i=0;i<Npts;i++){
+        double x_ = tmin + i*dt;
+        double y_ = Signal(x_);
+        if (ymax < y_) ymax = y_;
+        gr4->SetPoint(i,x_,y_);
+    }
+    TCanvas* canvas4 = new TCanvas("c3","c3 title",1366,768);
+    canvas4->Range(-2,-2,12,(int) ymax + 2);
+    // Draw graph
+    gr4->SetLineColor(kBlue);
+    gr4->SetFillColorAlpha(38,0.35);
+    gr4->SetFillStyle(3001);
+    gr4->Draw("LF");
+    // Draw axis
+    TGaxis* ox4 = new TGaxis(-1,0,11,0,-1,11,510,"+-S>");
+    ox4->SetTickSize(0.009);
+    ox4->SetLabelFont(42);
+    ox4->SetLabelSize(0.025);
+    ox4->SetTitle("time [ns]");
+    ox4->SetTitleSize(0.03);
+    ox4->Draw();
+    TGaxis* oy4 = new TGaxis(0,-1,0,(int) 3*Kg + 1,-1,(int) floor(3*Kg) +1,510,"+-S>");
+    oy4->SetTickSize(0.009);
+    oy4->SetLabelFont(42);
+    oy4->SetLabelSize(0.025);
+    oy4->SetTitle("#Sigma_{s} #frac{d (Edep)}{dt}|_{s} [keV/ns]");
+    oy4->SetTitleSize(0.03); //oy->SetTitleOffset(0.5);
+    oy4->Draw();
+    // Draw title
+    TLatex latex4;
+    latex4.SetTextSize(0.04);
+    latex4.SetTextAlign(13);
+    latex4.DrawLatex(4,ymax+1,"#bf{#Sigma_{s} #frac{d (Edep)}{dt}|_{s} [keV/ns]}");
 
-    // plot tRange, eRange
+    canvas4->Print("./output/signal_simu4.pdf");
+    delete ox4; delete oy4; delete gr4;
+    delete canvas4;
 
     
     return 0;

@@ -43,7 +43,7 @@ LDFLAGS   :=
 
 
 #all:  showFile histo plot benchmark simu
-all: simu
+all: simu tmp
 
 showFile: showFile.o
 	$(CXX) -o showFile.exe $<  $(HIPOLIBS) $(LZ4LIBS)
@@ -59,6 +59,9 @@ benchmark: benchmark.o futils.o
 
 simu: simu.o futils.o
 	$(CXX) -o simu.exe $^  $(RAPID_CHECK_LIBS) $(CATCH2_FLLAGS) $(ROOTLIBS)
+
+tmp: tmp.o futils.o
+	$(CXX) -o tmp.exe $^  $(RAPID_CHECK_LIBS) $(CATCH2_FLLAGS) $(ROOTLIBS)
 
 
 # $< représente la première de la cible, i.e histo.o
