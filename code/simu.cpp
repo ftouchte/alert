@@ -202,7 +202,7 @@ int main(int argc, char const *argv[])
     for (int s=0;s<nsteps;s++){
         //double stdev = 0.1*(1 + rand() % 3);
         int shape_type = rand () % 2;
-        Signal.Add(stepTime.at(s),Edep.at(s),shape_type);
+        Signal.Add(stepTime.at(s),Edep.at(s),0.3, shape_type);
     }
     std::cout << "Signal(tmin) : " << Signal(tmin) << std::endl;
     std::cout << "Signal(tmax) : " << Signal(tmax) << std::endl;
@@ -248,8 +248,235 @@ int main(int argc, char const *argv[])
     delete ox4; delete oy4; delete gr4;
     delete canvas4;
 
-    
+    // ***************************************
+    // Test functions Print___()
+    // **************************************
+    Signal.PrintBeforeProcessing();
+    Signal.PrintAllShapes(-2,12,1000);
+    Signal.PrintAfterProcessing(-2,12,1000);
+
     return 0;
 }
 
+
+
+void futils::GenerateSignal::PrintBeforeProcessing(){
+    // Parameters : std::vector<double or int> Location, Amplitude, Width, Shape
+    int nLoc = Location.size();
+    // Determine extrema values
+    double lMax = Location.at(0), aMax = Amplitude.at(0), wMax = Width.at(0);
+    double lMin = lMax, aMin = aMax, wMin = wMax;
+    for (int l=0;l<nLoc;l++){
+        if (lMax < Location.at(l)) lMax = Location.at(l);
+        if (aMax < Amplitude.at(l)) aMax = Amplitude.at(l);
+        if (wMax < Width.at(l)) wMax = Width.at(l);
+        if (lMin > Location.at(l)) lMin = Location.at(l);
+        if (aMin > Amplitude.at(l)) aMin = Amplitude.at(l);
+        if (wMin > Width.at(l)) wMin = Width.at(l);
+    }
+    aMin = 0;
+    // Define canvas
+    double Dl = lMax - lMin;
+    double Da = aMax - aMin;
+    //double Dw = wMax - wMin;
+    double xmargin = 0.1*Dl;
+    double ymargin = 0.2*Da;
+    TCanvas* canvas1 = new TCanvas("c1","c1 title",1366,768);
+    canvas1->Range(lMin-2*xmargin,0-2*ymargin,lMax+2*xmargin,aMax+3*ymargin); //canvas1->Range(-2,-2,12,6);
+    // Define graph 
+    TGraph* gr1 = new TGraph(nLoc);
+    for (int l=0;l<nLoc;l++){
+        gr1->SetPoint(l,Location.at(l),Amplitude.at(l));
+    }
+    // Draw graph
+    gr1->SetMarkerStyle(20);
+    gr1->SetMarkerColor(kRed);
+    gr1->SetMarkerSize(2);
+    gr1->Draw("P");
+    // Draw lines
+    for (int l=0;l<nLoc;l++){
+        TLine* line = new TLine(Location.at(l),0,Location.at(l),Amplitude.at(l));
+        line->SetLineWidth(1);
+        line->SetLineColor(kBlack);
+        line->Draw();
+    }
+    // Draw axis
+    TGaxis* ox1 = new TGaxis(lMin-1*xmargin, 0, lMax+1*xmargin, 0, lMin-1*xmargin, lMax+1*xmargin,510,"+-S>");
+    ox1->SetTickSize(0.009);
+    ox1->SetLabelFont(42);
+    ox1->SetLabelSize(0.025);
+    ox1->SetTitle("time [ns]");
+    ox1->SetTitleSize(0.03);
+    ox1->Draw();
+    TGaxis* oy1 = new TGaxis(lMin-0.5*xmargin, aMin-1*ymargin, lMin-0.5*xmargin, aMax+2*ymargin, aMin-1*ymargin, aMax+2*ymargin,505,"+-S>");
+    oy1->SetTickSize(0.009);
+    oy1->SetLabelFont(42);
+    oy1->SetLabelSize(0.025);
+    oy1->SetTitle("Edep [keV]");
+    oy1->SetTitleSize(0.03); //oy->SetTitleOffset(0.5);
+    oy1->Draw();
+    // Draw title
+    TLatex latex1;
+    latex1.SetTextSize(0.04);
+    latex1.SetTextAlign(13);
+    latex1.DrawLatex(lMin + (lMax-lMin)/3, aMax+2.2*ymargin,"#bf{Deposited energy in each steps}");
+
+    //canvas1->Update();
+    canvas1->Print("./output/TestPrintBeforeProcessing.pdf");
+    delete gr1; 
+    delete ox1; delete oy1; 
+    delete canvas1;
+}
+
+
+void futils::GenerateSignal::PrintAllShapes(double tmin, double tmax, int Npts){
+    int nLoc = Location.size();
+    // Determine extrema values
+    double lMax = Location.at(0), aMax = Amplitude.at(0), wMax = Width.at(0);
+    double lMin = lMax, aMin = aMax, wMin = wMax;
+    for (int l=0;l<nLoc;l++){
+        if (lMax < Location.at(l)) lMax = Location.at(l);
+        if (aMax < Amplitude.at(l)) aMax = Amplitude.at(l);
+        if (wMax < Width.at(l)) wMax = Width.at(l);
+        if (lMin > Location.at(l)) lMin = Location.at(l);
+        if (aMin > Amplitude.at(l)) aMin = Amplitude.at(l);
+        if (wMin > Width.at(l)) wMin = Width.at(l);
+    }
+    aMin = 0;
+    // Define canvas
+    double Dl = lMax - lMin;
+    double Da = aMax - aMin;
+    //double Dw = wMax - wMin;
+    double xmargin = 0.1*Dl;
+    double ymargin = 0.2*Da;
+    // Define canvas
+    TCanvas* canvas1 = new TCanvas("c1","c1 title",1366,768); // canvas1->Range() will set later
+    // Define graph 1
+    TGraph* gr1 = new TGraph(nLoc);
+    for (int l=0;l<nLoc;l++){
+        gr1->SetPoint(l,Location.at(l),Amplitude.at(l));
+    }
+    gr1->SetMarkerStyle(20);
+    gr1->SetMarkerColor(kRed);
+    gr1->SetMarkerSize(2);
+    gr1->Draw("P");
+    // Draw lines
+    for (int l=0;l<nLoc;l++){
+        TLine* line = new TLine(Location.at(l),0,Location.at(l),Amplitude.at(l));
+        line->SetLineWidth(1);
+        line->SetLineColor(kBlack);
+        line->Draw();
+    }
+    // Draw all shape
+    double ymax = aMax;
+    for (int l=0;l<nLoc;l++){ 
+        TGraph* gr2 = new TGraph(Npts);
+        double xRange[Npts], yRange[Npts];
+        for (int i=0;i<Npts;i++){
+            xRange[i] = tmin + i*(tmax-tmin)/Npts;
+            if (Shape.at(l) == 0) {
+                yRange[i] = Amplitude.at(l)*ROOT::Math::gaussian_pdf(xRange[i],Width.at(l),Location.at(l));
+                if (ymax < yRange[i]) ymax = yRange[i];
+            }
+            if (Shape.at(l) == 1){
+                yRange[i] =  Amplitude.at(l)*ROOT::Math::landau_pdf(xRange[i],Width.at(l),Location.at(l));
+                if (ymax < yRange[i]) ymax = yRange[i];
+            }
+            gr2->SetPoint(i,xRange[i],yRange[i]);
+        }
+        gr2->SetLineColor(kBlue);
+        gr2->SetFillColorAlpha(2+l,0.35);
+        gr2->SetFillStyle(3001);
+        gr2->Draw("LF"); 
+    }
+    // Draw axis
+    TGaxis* ox1 = new TGaxis(lMin-1*xmargin, 0, lMax+1*xmargin, 0, lMin-1*xmargin, lMax+1*xmargin,510,"+-S>");
+    ox1->SetTickSize(0.009);
+    ox1->SetLabelFont(42);
+    ox1->SetLabelSize(0.025);
+    ox1->SetTitle("time [ns]");
+    ox1->SetTitleSize(0.03);
+    ox1->Draw();
+    TGaxis* oy1 = new TGaxis(lMin-0.5*xmargin, aMin-1*ymargin, lMin-0.5*xmargin, ymax+2*ymargin, aMin-1*ymargin, ymax+2*ymargin,505,"+-S>");
+    oy1->SetTickSize(0.009);
+    oy1->SetLabelFont(42);
+    oy1->SetLabelSize(0.025);
+    oy1->SetTitle("#frac{d (Edep)}{dt} [keV/ns]");
+    oy1->SetTitleSize(0.03); //oy->SetTitleOffset(0.5);
+    oy1->Draw();
+    // Draw title
+    TLatex latex1;
+    latex1.SetTextSize(0.04);
+    latex1.SetTextAlign(13);
+    latex1.DrawLatex(lMin + (lMax-lMin)/4, ymax+2.2*ymargin,"#bf{Distribution of deposited energy in each steps}");
+    // Print file
+    canvas1->Range(lMin-2*xmargin,0-2*ymargin,lMax+2*xmargin,ymax+3*ymargin);
+    canvas1->Print("./output/TestPrintAllShapes.pdf");
+    delete gr1; 
+    delete ox1; delete oy1; 
+    delete canvas1;
+}
+
+void futils::GenerateSignal::PrintAfterProcessing(double tmin, double tmax, int Npts){
+    int nLoc = Location.size();
+    // Determine extrema values
+    double lMax = Location.at(0), aMax = Amplitude.at(0), wMax = Width.at(0);
+    double lMin = lMax, aMin = aMax, wMin = wMax;
+    for (int l=0;l<nLoc;l++){
+        if (lMax < Location.at(l)) lMax = Location.at(l);
+        if (aMax < Amplitude.at(l)) aMax = Amplitude.at(l);
+        if (wMax < Width.at(l)) wMax = Width.at(l);
+        if (lMin > Location.at(l)) lMin = Location.at(l);
+        if (aMin > Amplitude.at(l)) aMin = Amplitude.at(l);
+        if (wMin > Width.at(l)) wMin = Width.at(l);
+    }
+    aMin = 0;
+    // Define canvas
+    double Dl = lMax - lMin;
+    double Da = aMax - aMin;
+    //double Dw = wMax - wMin;
+    double xmargin = 0.1*Dl;
+    double ymargin = 0.2*Da;
+    // Define canvas
+    TCanvas* canvas1 = new TCanvas("c1","c1 title",1366,768); // canvas1->Range() will set later
+    // Draw graph
+    double ymax = 0;
+    TGraph* gr1 = new TGraph(Npts);
+    for (int i=0;i<Npts;i++){
+        double x_ = tmin + i*(tmax-tmin)/Npts;
+        double y_ = this->operator()(x_);
+        if (ymax < y_) ymax = y_;
+        gr1->SetPoint(i,x_,y_);
+    }
+    gr1->SetLineColor(kBlue);
+    gr1->SetFillColorAlpha(kRed,0.35);
+    gr1->SetFillStyle(3001);
+    gr1->Draw("LF"); 
+    // Draw axis
+    TGaxis* ox1 = new TGaxis(lMin-1*xmargin, 0, lMax+1*xmargin, 0, lMin-1*xmargin, lMax+1*xmargin,510,"+-S>");
+    ox1->SetTickSize(0.009);
+    ox1->SetLabelFont(42);
+    ox1->SetLabelSize(0.025);
+    ox1->SetTitle("time [ns]");
+    ox1->SetTitleSize(0.03);
+    ox1->Draw();
+    TGaxis* oy1 = new TGaxis(lMin-0.5*xmargin, aMin-1*ymargin, lMin-0.5*xmargin, ymax+2*ymargin, aMin-1*ymargin, ymax+2*ymargin,505,"+-S>");
+    oy1->SetTickSize(0.009);
+    oy1->SetLabelFont(42);
+    oy1->SetLabelSize(0.025);
+    oy1->SetTitle("#frac{d (Edep)}{dt} |_{s} [keV/ns]");
+    oy1->SetTitleSize(0.03); //oy->SetTitleOffset(0.5);
+    oy1->Draw();
+    // Draw title
+    TLatex latex1;
+    latex1.SetTextSize(0.04);
+    latex1.SetTextAlign(13);
+    latex1.DrawLatex(lMin + (lMax-lMin)/3, ymax+2.2*ymargin,"#bf{AHDC signal}");
+    // Print file
+    canvas1->Range(lMin-2*xmargin,0-2*ymargin,lMax+2*xmargin,ymax+3*ymargin);
+    canvas1->Print("./output/TestPrintAfterProcessing.pdf");
+    delete gr1; 
+    delete ox1; delete oy1; 
+    delete canvas1;
+}
 

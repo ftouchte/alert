@@ -17,7 +17,7 @@ namespace futils {
 
 class ElectronicShape {
     // class to represent the form of the electronic 
-    // the integral of this signal from -inf to +inf in time is equal to Edep for each steps
+    // the integral of this signal from -inf to +inf in time is equal to Amplitude for each steps
     public:
         virtual double operator()(double x) {return 0;};
         virtual void Print(){
@@ -60,53 +60,66 @@ class Gauss : public futils::ElectronicShape {
 
 class GenerateSignal {
     private:
-        std::vector<double> stepTime;
-        std::vector<double> Edep;
-        std::vector<int> thisShape; // allow to have a specific shape associated to each step (ex: gaussians with different std_dev )
+        std::vector<double> Location;
+        std::vector<double> Amplitude;
+        std::vector<double> Width;
+        std::vector<int> Shape; // allow to have a specific shape associated to each step (ex: gaussians with different std_dev )
+        
     public:
-        GenerateSignal(std::vector<double> stepTime_, std::vector<double> Edep_, std::vector<int> thisShape_){
-            stepTime = stepTime_;
-            Edep = Edep_;
-            thisShape = thisShape_;
+        GenerateSignal(std::vector<double> Location_, std::vector<double> Amplitude_, std::vector<double> Width_, std::vector<int> Shape_){
+            Location = Location_;
+            Amplitude = Amplitude_;
+            Width = Width_;
+            Shape = Shape_;
         }
+        //GenerateSignal(MHit* aHit);
         GenerateSignal() = default;
         GenerateSignal(const GenerateSignal & obj){
-            stepTime = obj.stepTime;
-            Edep = obj.Edep;
-            thisShape = obj.thisShape;
+            Location = obj.Location;
+            Amplitude = obj.Amplitude;
+            Width = obj.Width;
+            Shape = obj.Shape;
         }
         ~GenerateSignal(){;}
-        void Add(double time, double edep, int shape){
-            stepTime.push_back(time);
-            Edep.push_back(edep);
-            thisShape.push_back(shape);
+        void Add(double time, double amplitude, double width, int shape){
+            Location.push_back(time);
+            Amplitude.push_back(amplitude);
+            Width.push_back(width);
+            Shape.push_back(shape);
         }
-        std::vector<double>                     GetEdep(){return Edep;}
-        std::vector<double>                     GetStepTime(){return stepTime;}
-        std::vector<int>    GetShape(){return thisShape;}
-        void SetEdep(std::vector<double> Edep_) {Edep = Edep_;}
-        void SetStepTime(std::vector<double> stepTime_){stepTime = stepTime_;}
-        void SetShape(std::vector<int> thisShape_){thisShape = thisShape_;}
+        std::vector<double>                     GetAmplitude(){return Amplitude;}
+        std::vector<double>                     GetLocation() {return Location;}
+        std::vector<double>                     GetWidth(){return Width;}
+        std::vector<int>                        GetShape(){return Shape;}
+        void SetAmplitude(std::vector<double> Amplitude_) {Amplitude = Amplitude_;}
+        void SetLocation(std::vector<double> Location_){Location = Location_;}
+        void SetWidth(std::vector<double> Width_){Width = Width_;}
+        void SetShape(std::vector<int> Shape_){Shape = Shape_;}
         bool is_safe(){
-            int n1 = stepTime.size();
-            int n2 = Edep.size();
-            int n3 = thisShape.size();
-            return (n1 == n2) && (n2 == n3);
+            int n1 = Location.size();
+            int n2 = Amplitude.size();
+            int n3 = Width.size();
+            int n4 = Shape.size();
+            return (n1 == n2) && (n2 == n3) && (n3 == n4);
         }
         // The reason why this class has been created
         double operator()(double x){
             double res = 0;
-            int nsteps = stepTime.size();
-            for (int s=0;s<nsteps;s++){
-                if (thisShape.at(s) == 0) {
-                    res += Edep.at(s)*ROOT::Math::gaussian_pdf(x,0.3,stepTime.at(s));
+            int nLoc = Location.size();
+            for (int l=0;l<nLoc;l++){
+                if (Shape.at(l) == 0) {
+                    res += Amplitude.at(l)*ROOT::Math::gaussian_pdf(x,Width.at(l),Location.at(l));
                 }
-                else if (thisShape.at(s) == 1){
-                    res += Edep.at(s)*ROOT::Math::landau_pdf(x,0.3,stepTime.at(s));
+                else if (Shape.at(l) == 1){
+                    res += Amplitude.at(l)*ROOT::Math::landau_pdf(x,Width.at(l),Location.at(l));
                 }
             }
             return res;
         }
+
+        void PrintBeforeProcessing();
+        void PrintAllShapes(double tmin, double tmax, int Npts);
+        void PrintAfterProcessing(double tmin, double tmax, int Npts);
         
 };
 
