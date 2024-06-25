@@ -43,7 +43,7 @@ LDFLAGS   :=
 
 
 #all:  showFile histo plot benchmark simu
-all: simu tmp
+all: simu tmp decoder showFile histo
 
 showFile: showFile.o
 	$(CXX) -o showFile.exe $<  $(HIPOLIBS) $(LZ4LIBS)
@@ -63,6 +63,8 @@ simu: simu.o futils.o
 tmp: tmp.o futils.o
 	$(CXX) -o tmp.exe $^  $(RAPID_CHECK_LIBS) $(CATCH2_FLLAGS) $(ROOTLIBS)
 
+decoder: decoder.o futils.o
+	$(CXX) -o decoder.exe $^  $(RAPID_CHECK_LIBS) $(CATCH2_FLLAGS) $(ROOTLIBS)
 
 # $< représente la première de la cible, i.e histo.o
 # $^ représente la liste complète des dépendances

@@ -28,9 +28,9 @@ int main(int argc, char const *argv[])
         double p, theta, phi;
         double vz;
         // MC::Particle
-        TH1D* hist_p = new TH1D("hist_p","MC::Particle #rightarrow p",100, 0,0.3);
-        TH1D* hist_theta = new TH1D("hist_theta","MC::Particle #rightarrow #theta",100, 0,M_PI);
-        TH1D* hist_phi = new TH1D("hist_phi","MC::Particle #rightarrow #phi",100, 0,2*M_PI);
+        TH1D* hist_p = new TH1D("hist_p","MC::Particle #rightarrow p",100, 0,300); // Mev
+        TH1D* hist_theta = new TH1D("hist_theta","MC::Particle #rightarrow #theta",100, 0,180); // deg
+        TH1D* hist_phi = new TH1D("hist_phi","MC::Particle #rightarrow #phi",100, 0,360); // phi
         TH1D* hist_vz = new TH1D("hist_vz","MC::Particle #rightarrow vz",100, -20,20);
         // nHits
         TH1I* hist_nHits_AHDC = new TH1I("hist_nHits_AHDC","Number of Hits in AHDC",100,0,35);
@@ -51,9 +51,9 @@ int main(int argc, char const *argv[])
                 vz = list[0].getFloat("vz",itr);
                 /*p*/
                 futils::cart2polar(px,py,pz,p,theta,phi);
-                hist_p->Fill(p);
-                hist_theta->Fill(theta);
-                hist_phi->Fill(phi);
+                hist_p->Fill(p*1000); // MeV
+                hist_theta->Fill(theta*180/M_PI); // deg
+                hist_phi->Fill(phi*180/M_PI); // deg
                 hist_vz->Fill(vz);
 
                 // nHits ; in this case remark list[0].getRows() == 1, otherwise this portion of code need to be outside for {...} 
@@ -81,21 +81,21 @@ int main(int argc, char const *argv[])
         gStyle->SetOptStat("nemruo"); 
         // hist_p
         canvas1->cd(1);
-        hist_p->GetXaxis()->SetTitle("p (GeV)");
+        hist_p->GetXaxis()->SetTitle("p (MeV)");
         hist_p->GetXaxis()->SetTitleSize(0.05);
         hist_p->GetYaxis()->SetTitle("#events");
         hist_p->GetYaxis()->SetTitleSize(0.05);
         hist_p->Draw();
         //hist_theta
         canvas1->cd(2);
-        hist_theta->GetXaxis()->SetTitle("#theta");
+        hist_theta->GetXaxis()->SetTitle("#theta (deg)");
         hist_theta->GetXaxis()->SetTitleSize(0.05);
         hist_theta->GetYaxis()->SetTitle("#events");
         hist_theta->GetYaxis()->SetTitleSize(0.05);
         hist_theta->Draw();
         //hist_phi
         canvas1->cd(3);
-        hist_phi->GetXaxis()->SetTitle("#phi");
+        hist_phi->GetXaxis()->SetTitle("#phi (deg)");
         hist_phi->GetXaxis()->SetTitleSize(0.05);
         hist_phi->GetYaxis()->SetTitle("#events");
         hist_phi->GetYaxis()->SetTitleSize(0.05);

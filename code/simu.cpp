@@ -417,6 +417,7 @@ void futils::GenerateSignal::PrintAllShapes(double tmin, double tmax, int Npts){
     delete canvas1;
 }
 
+
 void futils::GenerateSignal::PrintAfterProcessing(double tmin, double tmax, int Npts){
     int nLoc = Location.size();
     // Determine extrema values
