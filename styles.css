@@ -117,4 +117,12 @@ img.author_pp {
     .maincol {
         margin: 0;
     }
+    /* .sidebar {
+        display: none;
+    } */
+    .sidebar ul {
+        position: relative;
+        height: auto;
+        border: solid 1px black;
+    }
 }
