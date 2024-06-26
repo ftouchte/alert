@@ -4,10 +4,14 @@
 
 ---
 
-- [gemc source](./gemc_source.md)
-    - [ahdc](./gemc_ahdc.md)
-    - [atof](./gemc_atof.md)
-- [coatjava](./coatjava.md)
+- [Configuration](./configuration/intro.md)
+    - [First use](./configuration/first_use.md)
+    - [Setup GEMC](./configuration/setup_gemc.md)
+    - [Run my code](./configuration/run.md)
+
+
+
+
 
 ---
 

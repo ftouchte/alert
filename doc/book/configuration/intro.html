@@ -3,7 +3,7 @@
     <head>
         <!-- Book generated using mdBook -->
         <meta charset="UTF-8">
-        <title>ahdc - ALERT Software documentation</title>
+        <title>Configuration - ALERT Software documentation</title>
 
 
         <!-- Custom HTML head -->
@@ -12,20 +12,20 @@
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <meta name="theme-color" content="#ffffff">
 
-        <link rel="icon" href="favicon.svg">
-        <link rel="stylesheet" href="css/variables.css">
-        <link rel="stylesheet" href="css/general.css">
-        <link rel="stylesheet" href="css/chrome.css">
-        <link rel="stylesheet" href="css/print.css" media="print">
+        <link rel="icon" href="../favicon.svg">
+        <link rel="stylesheet" href="../css/variables.css">
+        <link rel="stylesheet" href="../css/general.css">
+        <link rel="stylesheet" href="../css/chrome.css">
+        <link rel="stylesheet" href="../css/print.css" media="print">
 
         <!-- Fonts -->
-        <link rel="stylesheet" href="FontAwesome/css/font-awesome.css">
-        <link rel="stylesheet" href="fonts/fonts.css">
+        <link rel="stylesheet" href="../FontAwesome/css/font-awesome.css">
+        <link rel="stylesheet" href="../fonts/fonts.css">
 
         <!-- Highlight.js Stylesheets -->
-        <link rel="stylesheet" href="highlight.css">
-        <link rel="stylesheet" href="tomorrow-night.css">
-        <link rel="stylesheet" href="ayu-highlight.css">
+        <link rel="stylesheet" href="../highlight.css">
+        <link rel="stylesheet" href="../tomorrow-night.css">
+        <link rel="stylesheet" href="../ayu-highlight.css">
 
         <!-- Custom theme stylesheets -->
 
@@ -36,7 +36,7 @@
     <div id="body-container">
         <!-- Provide site root to javascript -->
         <script>
-            var path_to_root = "";
+            var path_to_root = "../";
             var default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? "navy" : "light";
         </script>
 
@@ -89,7 +89,7 @@
 
         <nav id="sidebar" class="sidebar" aria-label="Table of contents">
             <div class="sidebar-scrollbox">
-                <ol class="chapter"><li class="chapter-item expanded affix "><a href="introduction.html">Introduction</a></li><li class="spacer"></li><li class="chapter-item expanded "><a href="gemc_source.html"><strong aria-hidden="true">1.</strong> gemc source</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="gemc_ahdc.html" class="active"><strong aria-hidden="true">1.1.</strong> ahdc</a></li><li class="chapter-item expanded "><a href="gemc_atof.html"><strong aria-hidden="true">1.2.</strong> atof</a></li></ol></li><li class="chapter-item expanded "><a href="coatjava.html"><strong aria-hidden="true">2.</strong> coatjava</a></li><li class="spacer"></li><li class="chapter-item expanded affix "><a href="references.html">Références</a></li></ol>
+                <ol class="chapter"><li class="chapter-item expanded affix "><a href="../introduction.html">Introduction</a></li><li class="spacer"></li><li class="chapter-item expanded "><a href="../configuration/intro.html" class="active"><strong aria-hidden="true">1.</strong> Configuration</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="../configuration/first_use.html"><strong aria-hidden="true">1.1.</strong> First use</a></li><li class="chapter-item expanded "><a href="../configuration/setup_gemc.html"><strong aria-hidden="true">1.2.</strong> Setup GEMC</a></li><li class="chapter-item expanded "><a href="../configuration/run.html"><strong aria-hidden="true">1.3.</strong> Run my code</a></li><li class="spacer"></li></ol></li><li class="chapter-item expanded "><a href="../references.html">Références</a></li></ol>
             </div>
             <div id="sidebar-resize-handle" class="sidebar-resize-handle">
                 <div class="sidebar-resize-indicator"></div>
@@ -145,7 +145,7 @@
                     <h1 class="menu-title">ALERT Software documentation</h1>
 
                     <div class="right-buttons">
-                        <a href="print.html" title="Print this book" aria-label="Print this book">
+                        <a href="../print.html" title="Print this book" aria-label="Print this book">
                             <i id="print-button" class="fa fa-print"></i>
                         </a>
 
@@ -174,46 +174,23 @@
 
                 <div id="content" class="content">
                     <main>
-                        <h1 id="ahdc"><a class="header" href="#ahdc">AHDC</a></h1>
-<h2 id="ahdc_hitprocesscc"><a class="header" href="#ahdc_hitprocesscc">ahdc_HitProcess.cc</a></h2>
-<pre><code class="language-cpp">map&lt;string, double&gt; ahdc_HitProcess::integrateDgt(MHit* aHit, int hitn);
+                        <h1 id="configuration"><a class="header" href="#configuration">Configuration</a></h1>
+<p>The must simple way to run my code is to have access to the <strong>ifarm</strong>. Here are some useful command lines :</p>
+<pre><code class="language-shell">ssh -XY username@scilogin.jlab.org
 </code></pre>
-<p>Un hit est caractérisé par un signal d'énergie déposée sur une certaine plage horaire. La version discrétisée de ce signal est contenue dans les attributs de tout objet de type <code>MHit</code> (ou <code>Hit</code> ou <code>GAVHit</code>). Voici quelques attributs :</p>
-<pre><code class="language-cpp">private:
-	// all these infos are recorded
-	// in each step of the hit
-	vector&lt;G4ThreeVector&gt;   pos;    ///&lt; Hit Position (Global)
-	vector&lt;G4ThreeVector&gt;  Lpos;    ///&lt; Hit Positions (Local to the Volume)
-	vector&lt;G4ThreeVector&gt;  vert;    ///&lt; Primary Vertex of track in each step
-	vector&lt;double&gt;         edep;    ///&lt; Energy Deposited
-	vector&lt;double&gt;           dx;    ///&lt; Length of the step
-	vector&lt;double&gt;         time;    ///&lt; Time from the start of event
-	vector&lt;G4ThreeVector&gt;   mom;    ///&lt; Momentum of the Track
-	vector&lt;double&gt;            E;    ///&lt; Energy of the track
+<pre><code class="language-shell">ssh -XY ifarm
 </code></pre>
-<p>L'argument <code>hitn</code> contient le numéro n du n-ième hit associé à un évènement donné. Pour l'observer, on peut intelligemment ajouter le code ci-dessous dans la définition de la méthode :</p>
-<pre><code class="language-cpp">std::ofstream output("output.txt",std::ofstream::app);
-// ...
-if (!output.fail()){
-        if (hitn == 1) {
-            output &lt;&lt; "# NEW EVENT" &lt;&lt; std::endl; 
-        }
-        output &lt;&lt; "hitn : " &lt;&lt; hitn &lt;&lt; std::endl;
-        output &lt;&lt; "time : " &lt;&lt; stepTime &lt;&lt; std::endl;
-}
-</code></pre>
-<p>Il suffit alors d'utiliser la fonction <code>./showFile.cpp</code> pour voir les correspondanes.</p>
-<p><strong>Important :</strong> La numérotation de <code>hitn</code> commence à 1. Le <code>time</code> ainsi défini croit avec <code>hitn</code> sauf pour le dernier dont la valeur semble aléatoire.</p>
+<p>To run the full simulation chain, we need to load the CLAS12 modules, ...</p>
 
                     </main>
 
                     <nav class="nav-wrapper" aria-label="Page navigation">
                         <!-- Mobile navigation buttons -->
-                            <a rel="prev" href="gemc_source.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                            <a rel="prev" href="../introduction.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
                                 <i class="fa fa-angle-left"></i>
                             </a>
 
-                            <a rel="next prefetch" href="gemc_atof.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                            <a rel="next prefetch" href="../configuration/first_use.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
                                 <i class="fa fa-angle-right"></i>
                             </a>
 
@@ -223,33 +200,17 @@ if (!output.fail()){
             </div>
 
             <nav class="nav-wide-wrapper" aria-label="Page navigation">
-                    <a rel="prev" href="gemc_source.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                    <a rel="prev" href="../introduction.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
                         <i class="fa fa-angle-left"></i>
                     </a>
 
-                    <a rel="next prefetch" href="gemc_atof.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                    <a rel="next prefetch" href="../configuration/first_use.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
                         <i class="fa fa-angle-right"></i>
                     </a>
             </nav>
 
         </div>
 
-        <!-- Livereload script (if served using the cli tool) -->
-        <script>
-            const wsProtocol = location.protocol === 'https:' ? 'wss:' : 'ws:';
-            const wsAddress = wsProtocol + "//" + location.host + "/" + "__livereload";
-            const socket = new WebSocket(wsAddress);
-            socket.onmessage = function (event) {
-                if (event.data === "reload") {
-                    socket.close();
-                    location.reload();
-                }
-            };
-
-            window.onbeforeunload = function() {
-                socket.close();
-            }
-        </script>
 
 
 
@@ -258,13 +219,13 @@ if (!output.fail()){
         </script>
 
 
-        <script src="elasticlunr.min.js"></script>
-        <script src="mark.min.js"></script>
-        <script src="searcher.js"></script>
+        <script src="../elasticlunr.min.js"></script>
+        <script src="../mark.min.js"></script>
+        <script src="../searcher.js"></script>
 
-        <script src="clipboard.min.js"></script>
-        <script src="highlight.js"></script>
-        <script src="book.js"></script>
+        <script src="../clipboard.min.js"></script>
+        <script src="../highlight.js"></script>
+        <script src="../book.js"></script>
 
         <!-- Custom JS scripts -->
 
