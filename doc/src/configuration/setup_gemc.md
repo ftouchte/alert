@@ -47,7 +47,7 @@ git clone https://github.com/gemc/detectors.git
 Now go inside the directory 
 
 ``` shell
-    cd detectors/clas12/alert
+cd detectors/clas12/alert
 ```
 
 and copy and paste the following lines in the terminal (line by line)

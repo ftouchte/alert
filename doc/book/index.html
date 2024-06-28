@@ -177,6 +177,7 @@
                         <h1 id="introduction"><a class="header" href="#introduction">Introduction</a></h1>
 <p>This page is a documentation of my work related to the ALERT software. I work on the simulation of the AHDC signal. A description of the project and the results are accessible in <a href="https://ftouchte.github.io/projects/index.html">Preparation of the ALERT experiment at JLab</a> (see the project of June 2024).</p>
 <p>The simulation is based on GEMC. The following lines describe the steps to run my code.</p>
+<p><img src="./ahdc_signal_simu.png" alt="Framework" /></p>
 
                     </main>
 
@@ -201,6 +202,22 @@
 
         </div>
 
+        <!-- Livereload script (if served using the cli tool) -->
+        <script>
+            const wsProtocol = location.protocol === 'https:' ? 'wss:' : 'ws:';
+            const wsAddress = wsProtocol + "//" + location.host + "/" + "__livereload";
+            const socket = new WebSocket(wsAddress);
+            socket.onmessage = function (event) {
+                if (event.data === "reload") {
+                    socket.close();
+                    location.reload();
+                }
+            };
+
+            window.onbeforeunload = function() {
+                socket.close();
+            }
+        </script>
 
 
 

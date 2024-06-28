@@ -178,6 +178,7 @@
                         <h1 id="introduction"><a class="header" href="#introduction">Introduction</a></h1>
 <p>This page is a documentation of my work related to the ALERT software. I work on the simulation of the AHDC signal. A description of the project and the results are accessible in <a href="https://ftouchte.github.io/projects/index.html">Preparation of the ALERT experiment at JLab</a> (see the project of June 2024).</p>
 <p>The simulation is based on GEMC. The following lines describe the steps to run my code.</p>
+<p><img src="./ahdc_signal_simu.png" alt="Framework" /></p>
 <div style="break-before: page; page-break-before: always;"></div><h1 id="configuration"><a class="header" href="#configuration">Configuration</a></h1>
 <p>The must simple way to run my code is to have access to the <strong>ifarm</strong>. Here are some useful command lines :</p>
 <pre><code class="language-shell">ssh -XY username@scilogin.jlab.org
@@ -231,7 +232,7 @@ source /w/hallb-scshelf2102/clas12/users/touchte/root/bin/thisroot.csh
 <pre><code class="language-shell">git clone https://github.com/gemc/detectors.git
 </code></pre>
 <p>Now go inside the directory</p>
-<pre><code class="language-shell">    cd detectors/clas12/alert
+<pre><code class="language-shell">cd detectors/clas12/alert
 </code></pre>
 <p>and copy and paste the following lines in the terminal (line by line)</p>
 <pre><code class="language-shell">cd ../targets
@@ -312,6 +313,22 @@ cd ../
 
         </div>
 
+        <!-- Livereload script (if served using the cli tool) -->
+        <script>
+            const wsProtocol = location.protocol === 'https:' ? 'wss:' : 'ws:';
+            const wsAddress = wsProtocol + "//" + location.host + "/" + "__livereload";
+            const socket = new WebSocket(wsAddress);
+            socket.onmessage = function (event) {
+                if (event.data === "reload") {
+                    socket.close();
+                    location.reload();
+                }
+            };
+
+            window.onbeforeunload = function() {
+                socket.close();
+            }
+        </script>
 
 
 
