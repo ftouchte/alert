@@ -4,4 +4,6 @@ This page is a documentation of my work related to the ALERT software. I work on
 
 The simulation is based on GEMC. The following lines describe the steps to run my code. 
 
-![Framework](./ahdc_signal_simu.png)
+![Mechanism](./ahdh_signal_mechanism.png)
+
+<!-- ![Framework](./ahdc_signal_simu.png) -->
