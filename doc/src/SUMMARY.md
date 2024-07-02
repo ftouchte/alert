@@ -9,7 +9,9 @@
     - [Setup GEMC](./configuration/setup_gemc.md)
     - [Run my code](./configuration/run.md)
 
-
+- [Tutorials](./tutorials/intro.md)
+    - [Generate a particle](./tutorials/alert_gcard.md)
+    - [Add new entries in a bank](./tutorials/new_entry_bank.md)
 
 
 

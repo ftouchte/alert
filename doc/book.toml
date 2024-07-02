@@ -8,3 +8,6 @@ title = "ALERT Software documentation"
 
 [output.html]
 mathjax-support = true
+
+[output.html.code.hidelines]
+json = "~"
