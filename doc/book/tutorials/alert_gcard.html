@@ -3,7 +3,7 @@
     <head>
         <!-- Book generated using mdBook -->
         <meta charset="UTF-8">
-        <title>Generate a particle - ALERT Software documentation</title>
+        <title>Generate a particle (alert.gcard) - ALERT Software documentation</title>
 
 
         <!-- Custom HTML head -->
@@ -89,7 +89,7 @@
 
         <nav id="sidebar" class="sidebar" aria-label="Table of contents">
             <div class="sidebar-scrollbox">
-                <ol class="chapter"><li class="chapter-item expanded affix "><a href="../introduction.html">Introduction</a></li><li class="spacer"></li><li class="chapter-item expanded "><a href="../configuration/intro.html"><strong aria-hidden="true">1.</strong> Configuration</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="../configuration/first_use.html"><strong aria-hidden="true">1.1.</strong> First use</a></li><li class="chapter-item expanded "><a href="../configuration/setup_gemc.html"><strong aria-hidden="true">1.2.</strong> Setup GEMC</a></li><li class="chapter-item expanded "><a href="../configuration/run.html"><strong aria-hidden="true">1.3.</strong> Run my code</a></li></ol></li><li class="chapter-item expanded "><a href="../tutorials/intro.html"><strong aria-hidden="true">2.</strong> Tutorials</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="../tutorials/alert_gcard.html" class="active"><strong aria-hidden="true">2.1.</strong> Generate a particle</a></li><li class="chapter-item expanded "><a href="../tutorials/new_entry_bank.html"><strong aria-hidden="true">2.2.</strong> Add new entries in a bank</a></li><li class="spacer"></li></ol></li><li class="chapter-item expanded "><a href="../references.html">Références</a></li></ol>
+                <ol class="chapter"><li class="chapter-item expanded affix "><a href="../introduction.html">Introduction</a></li><li class="spacer"></li><li class="chapter-item expanded "><a href="../configuration/intro.html"><strong aria-hidden="true">1.</strong> Configuration</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="../configuration/first_use.html"><strong aria-hidden="true">1.1.</strong> First use</a></li><li class="chapter-item expanded "><a href="../configuration/setup_gemc.html"><strong aria-hidden="true">1.2.</strong> Setup GEMC</a></li><li class="chapter-item expanded "><a href="../configuration/run.html"><strong aria-hidden="true">1.3.</strong> Run my code</a></li></ol></li><li class="chapter-item expanded "><a href="../tutorials/intro.html"><strong aria-hidden="true">2.</strong> Tutorials</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="../tutorials/alert_gcard.html" class="active"><strong aria-hidden="true">2.1.</strong> Generate a particle (alert.gcard)</a></li><li class="chapter-item expanded "><a href="../tutorials/new_entry_bank.html"><strong aria-hidden="true">2.2.</strong> Add new entries in a bank</a></li><li class="spacer"></li></ol></li><li class="chapter-item expanded "><a href="../references.html">Références</a></li></ol>
             </div>
             <div id="sidebar-resize-handle" class="sidebar-resize-handle">
                 <div class="sidebar-resize-indicator"></div>
@@ -216,14 +216,14 @@
 </span><span class="boring">
 </span>&lt;/gcard&gt;
 </code></pre>
-<p>The part of interest is called <strong>beam conditions</strong>. With this configuration file, the software will generate <strong>proton</strong> with momentum <strong>\(p\) = 160 MeV</strong> oriented along <strong>\(\theta\) = 90°</strong> and <strong>\(\phi\) = 0°</strong>. In fact, no ! Indeed, due to the option <strong>SPREAD_P</strong>, the real values are uniform draws :</p>
+<p>The part of interest is called <strong>beam conditions</strong>. With this configuration file, the software will generate <strong>proton</strong> with momentum <strong>\(p\) = 160 MeV</strong> oriented along <strong>\(\theta\) = 90°</strong> and <strong>\(\phi\) = 0°</strong>. In fact, no ! Indeed, due to the option <em>SPREAD_P</em>, the real values are uniform draws :</p>
 <div class="table-wrapper"><table><thead><tr><th style="text-align: center">parameters</th><th style="text-align: center">values</th></tr></thead><tbody>
 <tr><td style="text-align: center">\(p\)</td><td style="text-align: center"><strong>160 MeV ± 90 MeV</strong></td></tr>
 <tr><td style="text-align: center">\(\theta\)</td><td style="text-align: center"><strong>90° ± 30°</strong></td></tr>
 <tr><td style="text-align: center">\(\phi\)</td><td style="text-align: center"><strong>0° ± 180°</strong></td></tr>
 </tbody></table>
 </div>
-<p>This is the same logic for the position (BEAM_V and SPREAD_V). In other words :</p>
+<p>This is the same logic for the position (<em>BEAM_V</em> and <em>SPREAD_V</em>). In other words :</p>
 <pre><code class="language-json">&lt;option name="BEAM_P"   value="type_of_particle, p*MeV, theta*deg, phi*deg"/&gt;
 &lt;option name="SPREAD_P"  value="p*MeV, theta*deg, phi*deg"/&gt;
 &lt;option name="BEAM_V"    value="(x,y,z)cm"/&gt;
@@ -231,7 +231,18 @@
 </code></pre>
 <p>Reference <a href="https://gemc.jlab.org/gemc/html/documentation/options.html#gcard">GEMC options</a>. The following plot shows the momentum distribution of ten thousands particle generated in GEMC with the above <strong>alert.gcard</strong>. We can see that all the parameters are centered in the values defined in <em>BEAM_P</em>. The widths of the distributions correspond to the value defined in <em>SPREAD_P</em>.</p>
 <p><img src="./mc_particle.png" alt="mc_particle.png" /></p>
-
+<p><strong>N.B</strong></p>
+<ul>
+<li>Use <code>./gemc -BEAM_P="show_all"</code> to print the list of G4 supported particles.</li>
+</ul>
+<div class="table-wrapper"><table><thead><tr><th style="text-align: center">particle</th><th style="text-align: center">pid</th></tr></thead><tbody>
+<tr><td style="text-align: center">proton</td><td style="text-align: center">2212</td></tr>
+<tr><td style="text-align: center">neutron</td><td style="text-align: center">2112</td></tr>
+<tr><td style="text-align: center">alpha</td><td style="text-align: center">1000020040</td></tr>
+<tr><td style="text-align: center">He3</td><td style="text-align: center">1000020030</td></tr>
+<tr><td style="text-align: center">triton</td><td style="text-align: center">1000010030</td></tr>
+</tbody></table>
+</div>
                     </main>
 
                     <nav class="nav-wrapper" aria-label="Page navigation">

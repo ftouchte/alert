@@ -44,7 +44,7 @@ The type of particle, the iniatial coordinates, momentum, ... are defined in a f
 </gcard>
 ```
 
-The part of interest is called **beam conditions**. With this configuration file, the software will generate **proton** with momentum **\\(p\\) = 160 MeV** oriented along **\\(\theta\\) = 90°** and **\\(\phi\\) = 0°**. In fact, no ! Indeed, due to the option **SPREAD_P**, the real values are uniform draws : 
+The part of interest is called **beam conditions**. With this configuration file, the software will generate **proton** with momentum **\\(p\\) = 160 MeV** oriented along **\\(\theta\\) = 90°** and **\\(\phi\\) = 0°**. In fact, no ! Indeed, due to the option *SPREAD_P*, the real values are uniform draws : 
 
 parameters | values
 :---: | :---:
@@ -52,8 +52,7 @@ parameters | values
 \\(\theta\\) |**90° ± 30°**  
 \\(\phi\\)  | **0° ± 180°**
 
-
-This is the same logic for the position (BEAM_V and SPREAD_V). In other words :
+This is the same logic for the position (*BEAM_V* and *SPREAD_V*). In other words :
 
 ``` json
 <option name="BEAM_P"   value="type_of_particle, p*MeV, theta*deg, phi*deg"/>
@@ -62,6 +61,18 @@ This is the same logic for the position (BEAM_V and SPREAD_V). In other words :
 <option name="SPREAD_V"  value="(r=sqrt(x²+y²),z)cm"/>
 ```
 
-Reference [GEMC options](https://gemc.jlab.org/gemc/html/documentation/options.html#gcard). The following plot shows the momentum distribution of ten thousands particle generated in GEMC with the above **alert.gcard**. We can see that all the parameters are centered in the values defined in *BEAM_P*. The widths of the distributions correspond to the value defined in *SPREAD_P*.
+Reference [GEMC options](https://gemc.jlab.org/gemc/html/documentation/options.html#gcard). The following plot shows the momentum distribution of ten thousands particle generated in GEMC with the above **alert.gcard**. We can see that all the parameters are centered in the values defined in *BEAM_P*. The widths of the distributions correspond to the value defined in *SPREAD_P*. 
 
 ![mc_particle.png](./mc_particle.png)
+
+**N.B**
+
+- Use `./gemc -BEAM_P="show_all"` to print the list of G4 supported particles.
+
+particle | pid
+:---: | :---:
+proton | 2212
+neutron | 2112
+alpha  | 1000020040
+He3    | 1000020030
+triton | 1000010030
