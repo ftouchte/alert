@@ -53,6 +53,7 @@
         "ratio": "cpp",
         "sstream": "cpp",
         "variant": "cpp",
-        "iomanip": "cpp"
+        "iomanip": "cpp",
+        "CFD_cpt.C": "cpp"
     }
 }

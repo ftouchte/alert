@@ -57,14 +57,6 @@ plot: plot.o futils.o
 benchmark: benchmark.o futils.o
 	$(CXX) -o benchmark.exe $^  $(RAPID_CHECK_LIBS) $(CATCH2_FLLAGS)
 
-simu: simu.o futils.o
-	$(CXX) -o simu.exe $^  $(RAPID_CHECK_LIBS) $(CATCH2_FLLAGS) $(ROOTLIBS)
-
-tmp: tmp.o futils.o
-	$(CXX) -o tmp.exe $^  $(RAPID_CHECK_LIBS) $(CATCH2_FLLAGS) $(ROOTLIBS)
-
-decoder: decoder.o futils.o
-	$(CXX) -o decoder.exe $^  $(RAPID_CHECK_LIBS) $(CATCH2_FLLAGS) $(ROOTLIBS)
 
 # $< représente la première de la cible, i.e histo.o
 # $^ représente la liste complète des dépendances

@@ -1,3 +1,8 @@
+// ********************************
+// Example of code to histogram
+// hipo banks
+//*********************************
+
 #define _USE_MATH_DEFINES
 
 #include <iostream>

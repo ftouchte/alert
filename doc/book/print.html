@@ -345,6 +345,11 @@ cd ../
 <tr><td style="text-align: center">triton</td><td style="text-align: center">1000010030</td></tr>
 </tbody></table>
 </div><div style="break-before: page; page-break-before: always;"></div><h1 id="add-new-entries-in-a-bank"><a class="header" href="#add-new-entries-in-a-bank">Add new entries in a bank</a></h1>
+<blockquote>
+<p>[!NOTE]
+Holla
+Soy Felix Touchte Codjo</p>
+</blockquote>
 <div style="break-before: page; page-break-before: always;"></div><h1 id="références"><a class="header" href="#références">Références</a></h1>
 <ul>
 <li>
@@ -384,6 +389,22 @@ cd ../
 
         </div>
 
+        <!-- Livereload script (if served using the cli tool) -->
+        <script>
+            const wsProtocol = location.protocol === 'https:' ? 'wss:' : 'ws:';
+            const wsAddress = wsProtocol + "//" + location.host + "/" + "__livereload";
+            const socket = new WebSocket(wsAddress);
+            socket.onmessage = function (event) {
+                if (event.data === "reload") {
+                    socket.close();
+                    location.reload();
+                }
+            };
+
+            window.onbeforeunload = function() {
+                socket.close();
+            }
+        </script>
 
 
 

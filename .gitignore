@@ -1,13 +1,10 @@
 *.hipo
 *.exe
 *.o
-/code/tmp.*
-/code/random.cpp
-/code/random.cpp
-/code/getHipoFile.txt
-/code/hipofile/?ignal.txt
-/code/hipofile/hist_nsteps.txt
-/code/getFileFromIJCLab.txt
-/code/output
+/code/ssh.txt
+/code/hipofile/*
+/code/output/*
+Am_1700_CMN.root
+
 
 
