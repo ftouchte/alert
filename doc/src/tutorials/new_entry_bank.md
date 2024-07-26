@@ -60,7 +60,7 @@ HipoSchema :: HipoSchema()
 }
 ```
 
-## Step 4 (can be skipped)
+## Step 3 (can be skipped)
 
 Nothing to do, just understanding what going on. During the simulation, there is a part dedicated to the recording of data in hipo files. 
 
@@ -76,7 +76,7 @@ and [gemc/source/output/gbank.cc](https://github.com/ftouchte/gemc_source/blob/a
 map <string, gBank> read_banks(goptions gemcOpt, map <string, string> allSystems) { ... }
 ```
 
-## Step 5
+## Step 4
 
 Update the database containing the bank definition. Go in [gemc/detectors/clas12/alert/ahdc/bank.pl](https://github.com/gemc/detectors/blob/main/clas12/alert/ahdc/bank.pl)
 
@@ -104,6 +104,7 @@ cd ../alert/ahdc
 run-groovy factory.groovy --variation default --runnumber 11
 run-groovy factory.groovy --variation rga_fall2018 --runnumber 11
 ./ahdc.pl config.dat
+cd ..
 ```
 
 and run :
@@ -111,3 +112,5 @@ and run :
 ```
 /yourpathto/gemc/source/gemc alert.gcard -OUTPUT='hipo, ten_events.hipo' -N=10 -USE_GUI=0
 ```
+
+

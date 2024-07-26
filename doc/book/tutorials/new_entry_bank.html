@@ -223,7 +223,7 @@
     // remaining part of the code
 }
 </code></pre>
-<h2 id="step-4-can-be-skipped"><a class="header" href="#step-4-can-be-skipped">Step 4 (can be skipped)</a></h2>
+<h2 id="step-3-can-be-skipped"><a class="header" href="#step-3-can-be-skipped">Step 3 (can be skipped)</a></h2>
 <p>Nothing to do, just understanding what going on. During the simulation, there is a part dedicated to the recording of data in hipo files.</p>
 <p>Look at <a href="https://github.com/ftouchte/gemc_source/blob/main/output/hipo_output.cc">gemc/source/output/hipo_output.cc</a></p>
 <pre><code class="language-cpp">void hipo_output :: writeG4DgtIntegrated(outputContainer* output, vector&lt;hitOutput&gt; HO, string hitType, map&lt;string, gBank&gt; *banksMap) {...}
@@ -231,7 +231,7 @@
 <p>and <a href="https://github.com/ftouchte/gemc_source/blob/a38234b335fcc8a924a5e5716087d3fb66dedab6/output/gbank.cc#L345-L729">gemc/source/output/gbank.cc</a></p>
 <pre><code class="language-cpp">map &lt;string, gBank&gt; read_banks(goptions gemcOpt, map &lt;string, string&gt; allSystems) { ... }
 </code></pre>
-<h2 id="step-5"><a class="header" href="#step-5">Step 5</a></h2>
+<h2 id="step-4"><a class="header" href="#step-4">Step 4</a></h2>
 <p>Update the database containing the bank definition. Go in <a href="https://github.com/gemc/detectors/blob/main/clas12/alert/ahdc/bank.pl">gemc/detectors/clas12/alert/ahdc/bank.pl</a></p>
 <pre><code class="language-pl">insert_bank_variable(\%configuration, $bankname, "bankid",   $bankId, "Di", "$bankname bank ID");
 	insert_bank_variable(\%configuration, $bankname, "sector",       1, "Di", "set to 0");
@@ -253,6 +253,7 @@
 run-groovy factory.groovy --variation default --runnumber 11
 run-groovy factory.groovy --variation rga_fall2018 --runnumber 11
 ./ahdc.pl config.dat
+cd ..
 </code></pre>
 <p>and run :</p>
 <pre><code>/yourpathto/gemc/source/gemc alert.gcard -OUTPUT='hipo, ten_events.hipo' -N=10 -USE_GUI=0
