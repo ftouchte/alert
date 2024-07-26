@@ -29,6 +29,7 @@
         <link rel="stylesheet" href="ayu-highlight.css">
 
         <!-- Custom theme stylesheets -->
+        <link rel="stylesheet" href="./css/custom.css">
 
         <!-- MathJax -->
         <script async src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
@@ -201,9 +202,7 @@
 <p>Run these command lines :</p>
 <pre><code class="language-shell">source /group/clas12/packages/setup.csh
 module load clas12
-module switch ccdb/1.99.2
-module load gemc
-module switch ccdb/1.99.1
+module switch gemc/dev
 </code></pre>
 <p>This set of commands can be added into your .login file in your home directory.</p>
 <div style="break-before: page; page-break-before: always;"></div><h1 id="setup-gemc"><a class="header" href="#setup-gemc">Setup GEMC</a></h1>
@@ -277,6 +276,7 @@ cd ../
 </ul>
 <div style="break-before: page; page-break-before: always;"></div><h1 id="tutorials"><a class="header" href="#tutorials">Tutorials</a></h1>
 <div style="break-before: page; page-break-before: always;"></div><h1 id="generate-a-particle"><a class="header" href="#generate-a-particle">Generate a particle</a></h1>
+<h2 id="particle"><a class="header" href="#particle">Particle</a></h2>
 <p>The type of particle, the iniatial coordinates, momentum, ... are defined in a file called <strong>alert.gcard</strong> accessible in <code>gemc/detectors/clas12/alert</code>. Here is an example  of such a file.</p>
 <pre><code class="language-json">&lt;gcard&gt;
 	
@@ -344,7 +344,109 @@ cd ../
 <tr><td style="text-align: center">He3</td><td style="text-align: center">1000020030</td></tr>
 <tr><td style="text-align: center">triton</td><td style="text-align: center">1000010030</td></tr>
 </tbody></table>
-</div><div style="break-before: page; page-break-before: always;"></div><h1 id="add-new-entries-in-a-bank"><a class="header" href="#add-new-entries-in-a-bank">Add new entries in a bank</a></h1>
+</div>
+<h2 id="more"><a class="header" href="#more">More</a></h2>
+<ol>
+<li>What does the “variation” attribute in <code>&lt;detector ...&gt;</code> represent?</li>
+</ol>
+<pre><code class="language-json">&lt;!-- target. ALERT target --&gt;
+&lt;detector name="../targets/target" factory="TEXT" variation="alertHe"/&gt;
+
+&lt;!-- Implementation ATOF, ahdc --&gt;
+	&lt;detector name="atof/atof" factory="TEXT" variation="default"/&gt;
+	&lt;detector name="ahdc/ahdc" factory="TEXT" variation="default"/&gt;
+	&lt;detector name="./external_shell_nonActif/alertshell" factory="TEXT" variation="original"/&gt;
+
+	&lt;!-- He bag --&gt;
+	&lt;detector name="./He_bag/hebag" factory="TEXT" variation="original"/&gt;
+</code></pre>
+<p>It represents a specific configuration. These configurations are defined in <code>@allconfs</code>:</p>
+<ul>
+<li><a href="https://github.com/gemc/detectors/blob/main/clas12/targets/targets.pl"><code>gemc/detectors/clas12/targets/targets.pl</code></a></li>
+<li><code>gemc/detectors/clas12/alert/thisDet/thisDet.pl</code> where thisDet == {He_bag, ahdc or atof}</li>
+</ul>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="add-new-entries-in-a-bank"><a class="header" href="#add-new-entries-in-a-bank">Add new entries in a bank</a></h1>
+<p>On the <strong>ifarm</strong>, when can see the content of an hipo file using :</p>
+<pre><code>hipo-utils -dump myfile.hipo
+</code></pre>
+<p>This figure shows a typical output. It displays the content of the AHDC::adc bank. In the following, we will see how to add a new entry.</p>
+<p><img src="tutorials/./file.hipo.png" alt="An example of hipo file" /></p>
+<h2 id="step-1"><a class="header" href="#step-1">Step 1</a></h2>
+<p>Go in <a href="https://github.com/ftouchte/gemc_source/blob/main/hitprocess/clas12/alert/ahdc_hitprocess.cc">/gemc/source/hitprocess/clas12/alert/ahdc_hitprcess.cc</a> and modify the function <code>ahdchitprocess::integrateDgtz()</code>.</p>
+<pre><code class="language-cpp">map&lt;string, double&gt; ahdc_HitProcess::integrateDgt(MHit* aHit, int hitn) {
+    // starting part of the code
+
+    dgtz["hitn"]      = hitn;
+	dgtz["sector"]    = sector;
+	dgtz["layer"]     = layer;
+	dgtz["component"] = component;
+	dgtz["ADC_order"] = 0;
+<span class="boring">	dgtz["ADC_ADC"]   = (int) output["max_value"]; // adc 
+</span><span class="boring">	dgtz["ADC_time"]  = (float) output["t_ovr"]; // ns
+</span><span class="boring">	dgtz["ADC_ped"]   = (int) output["noise_level"]; // adc
+</span><span class="boring">	dgtz["ADC_integral"] = (int) output["integral"]; // adc per 44 ns
+</span><span class="boring">	dgtz["ADC_timestamp"] = (long) output["t_start"]; // ns
+</span>
+    // MY NEW ENTRY
+    dgtz["ADC_newEntry"] = value_of_my_newEntry; 
+
+<span class="boring">	dgtz["TDC_order"] = 0;
+</span>	dgtz["TDC_TDC"]   = output["t_start"];
+		
+	// remaining part of the code
+	
+	return dgtz;
+} // end of the funtion
+</code></pre>
+<h2 id="step-2"><a class="header" href="#step-2">Step 2</a></h2>
+<p>Go in <a href="https://github.com/ftouchte/gemc_source/blob/main/output/hipoSchemas.cc">gemc/source/output/hipoSchemas.cc</a> and modify the function <code>HipoSchema :: HipoSchema()</code>. I add <code>"newEntry/F"</code> in <code>alertAhdcchema.parse("...")</code>. The letter "F" is the type of my new entry, it can be I, S, B, F, D, or L (there is a comment about them in the code, you can check check).</p>
+<pre><code class="language-cpp">HipoSchema :: HipoSchema()
+{
+	// starting part of the code
+
+    // detectors
+
+    alertAhdcADCchema.parse("sector/B, layer/B, component/S, order/B, ADC/I, time/F, ped/S, integral/I, timestamp/L, newEntry/F");
+	alertAhdcTDCchema.parse("sector/B, layer/B, component/S, order/B, TDC/I, ped/S");
+	alertAtofADCchema.parse("sector/B, layer/B, component/S, order/B, ADC/I, time/F, ped/S");
+
+    // remaining part of the code
+}
+</code></pre>
+<h2 id="step-4-can-be-skipped"><a class="header" href="#step-4-can-be-skipped">Step 4 (can be skipped)</a></h2>
+<p>Nothing to do, just understanding what going on. During the simulation, there is a part dedicated to the recording of data in hipo files.</p>
+<p>Look at <a href="https://github.com/ftouchte/gemc_source/blob/main/output/hipo_output.cc">gemc/source/output/hipo_output.cc</a></p>
+<pre><code class="language-cpp">void hipo_output :: writeG4DgtIntegrated(outputContainer* output, vector&lt;hitOutput&gt; HO, string hitType, map&lt;string, gBank&gt; *banksMap) {...}
+</code></pre>
+<p>and <a href="https://github.com/ftouchte/gemc_source/blob/a38234b335fcc8a924a5e5716087d3fb66dedab6/output/gbank.cc#L345-L729">gemc/source/output/gbank.cc</a></p>
+<pre><code class="language-cpp">map &lt;string, gBank&gt; read_banks(goptions gemcOpt, map &lt;string, string&gt; allSystems) { ... }
+</code></pre>
+<h2 id="step-5"><a class="header" href="#step-5">Step 5</a></h2>
+<p>Update the database containing the bank definition. Go in <a href="https://github.com/gemc/detectors/blob/main/clas12/alert/ahdc/bank.pl">gemc/detectors/clas12/alert/ahdc/bank.pl</a></p>
+<pre><code class="language-pl">insert_bank_variable(\%configuration, $bankname, "bankid",   $bankId, "Di", "$bankname bank ID");
+	insert_bank_variable(\%configuration, $bankname, "sector",       1, "Di", "set to 0");
+	insert_bank_variable(\%configuration, $bankname, "layer",        2, "Di", "hipo layer is superlayer*10 + layer");
+	insert_bank_variable(\%configuration, $bankname, "component",    3, "Di", "wire number");
+	insert_bank_variable(\%configuration, $bankname, "ADC_order",    4, "Di", "set to 0");
+	insert_bank_variable(\%configuration, $bankname, "ADC_ADC",      5, "Di", "ADC integral from pulse fit");
+	insert_bank_variable(\%configuration, $bankname, "ADC_time" ,    6, "Di", "adc time from pulse fit");
+	insert_bank_variable(\%configuration, $bankname, "ADC_ped" ,     7, "Di", "pedestal from pulse analysis - currently set to doca");
+    insert_bank_variable(\%configuration, $bankname, "ADC_newEntry" ,     8, "Dd", "this my new entry");
+#	insert_bank_variable(\%configuration, $bankname, "TDC_order",    4, "Di", "set to 0");
+#	insert_bank_variable(\%configuration, $bankname, "TDC_TDC",      5, "Di", "TDC integral from pulse fit");
+#	insert_bank_variable(\%configuration, $bankname, "TDC_ped" ,     6, "Di", "pedestal from pulse analysis - currently set to doca");
+	insert_bank_variable(\%configuration, $bankname, "hitn",        99, "Di", "hit number");
+
+</code></pre>
+<p>This is the end. Now you have to go in your <code>gemc/detectors/clas12/alert</code> (the place where you run <strong>gemc</strong>).</p>
+<pre><code class="language-shell">cd ../alert/ahdc
+run-groovy factory.groovy --variation default --runnumber 11
+run-groovy factory.groovy --variation rga_fall2018 --runnumber 11
+./ahdc.pl config.dat
+</code></pre>
+<p>and run :</p>
+<pre><code>/yourpathto/gemc/source/gemc alert.gcard -OUTPUT='hipo, ten_events.hipo' -N=10 -USE_GUI=0
+</code></pre>
 <div style="break-before: page; page-break-before: always;"></div><h1 id="références"><a class="header" href="#références">Références</a></h1>
 <ul>
 <li>

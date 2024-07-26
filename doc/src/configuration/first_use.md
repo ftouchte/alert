@@ -25,9 +25,7 @@ Run these command lines :
 ``` shell
 source /group/clas12/packages/setup.csh
 module load clas12
-module switch ccdb/1.99.2
-module load gemc
-module switch ccdb/1.99.1
+module switch gemc/dev
 ```
 
 This set of commands can be added into your .login file in your home directory.

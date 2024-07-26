@@ -43,7 +43,7 @@ LDFLAGS   :=
 
 
 #all:  showFile histo plot benchmark simu
-all: simu tmp decoder showFile histo
+all: showFile histo
 
 showFile: showFile.o
 	$(CXX) -o showFile.exe $<  $(HIPOLIBS) $(LZ4LIBS)

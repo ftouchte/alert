@@ -62,13 +62,15 @@ int main(int argc, char const *argv[])
                 hist_vz->Fill(vz);
 
                 // nHits ; in this case remark list[0].getRows() == 1, otherwise this portion of code need to be outside for {...} 
-                hist_nHits_AHDC->Fill(list[1].getRows());
-                hist_nHits_ATOF->Fill(list[2].getRows());
+                //hist_nHits_AHDC->Fill(list[1].getRows());
+                //hist_nHits_ATOF->Fill(list[2].getRows());
 
-                hist_p_nHits_AHDC->Fill(p,list[1].getRows());
-                hist_p_nHits_ATOF->Fill(p,list[2].getRows());
-                nentries++;
+                //hist_p_nHits_AHDC->Fill(p,list[1].getRows());
+                //hist_p_nHits_ATOF->Fill(p,list[2].getRows());
+                //nentries++;
             }
+            nentries++;
+            std::cout << "nentries : " << nentries << std::endl;
 
             for(int itr = 0; itr < list[2].getRows(); itr++){
                 hist_sector->Fill(list[2].getByte("sector", itr));

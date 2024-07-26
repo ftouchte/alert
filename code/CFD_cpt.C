@@ -26,6 +26,7 @@
 #include <TF1.h>
 #include <TMath.h>
 #include <TProfile.h>
+#include <algorithm>
 
 
 
@@ -96,7 +97,7 @@ void CFD_cpt() {
 
     Long64_t nEntries = tree->GetEntries();
 
-
+   bool gr1_IsUsed = false;
     // Boucler sur les combinaisons de délai et d'atténuation
     for (int delay : delays) {
         for (double fraction : fractions) {
@@ -127,13 +128,22 @@ cout << delay << "  " << fraction << endl;
                   // Trouver l'amplitude maximale et son temps
                   double max_amp = -1;
                   int max_time = -1;
+                  TGraph *gr1 = new TGraph(signal.size()); 
                   for(int k = 0; k < signal.size(); ++k){
                      if(signal[k] > max_amp) {
                         max_amp = signal[k];
                         max_time = k;
                      }
+                     gr1->SetPoint(k,k,signal.at(k));
                   }
-
+                  if (eve == 1) {
+                     if (!gr1_IsUsed){
+                        TCanvas* canvas1 = new TCanvas("c1","c1 title",1366,768);
+                        gr1->Draw("APL");
+                        canvas1->Print("./output/test_CFD.pdf");
+                        gr1_IsUsed = true;
+                     }
+                  }
                   // Ajuste une gaussienne autour du maximum
                   int start = std::max(0, max_time - 3);
                   int end = std::min((int)signal.size(), max_time + 4);

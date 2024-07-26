@@ -1,5 +1,6 @@
 # Generate a particle
 
+## Particle
 The type of particle, the iniatial coordinates, momentum, ... are defined in a file called **alert.gcard** accessible in `gemc/detectors/clas12/alert`. Here is an example  of such a file.
 
 ``` json
@@ -76,3 +77,26 @@ neutron | 2112
 alpha  | 1000020040
 He3    | 1000020030
 triton | 1000010030
+
+
+## More
+
+1. What does the “variation” attribute in `<detector ...>` represent?
+
+```json
+<!-- target. ALERT target -->
+<detector name="../targets/target" factory="TEXT" variation="alertHe"/>
+
+<!-- Implementation ATOF, ahdc -->
+	<detector name="atof/atof" factory="TEXT" variation="default"/>
+	<detector name="ahdc/ahdc" factory="TEXT" variation="default"/>
+	<detector name="./external_shell_nonActif/alertshell" factory="TEXT" variation="original"/>
+
+	<!-- He bag -->
+	<detector name="./He_bag/hebag" factory="TEXT" variation="original"/>
+```
+
+It represents a specific configuration. These configurations are defined in `@allconfs`:
+
+- [`gemc/detectors/clas12/targets/targets.pl`](https://github.com/gemc/detectors/blob/main/clas12/targets/targets.pl) 
+- `gemc/detectors/clas12/alert/thisDet/thisDet.pl` where thisDet == {He_bag, ahdc or atof}
