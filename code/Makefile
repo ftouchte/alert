@@ -43,7 +43,10 @@ LDFLAGS   :=
 
 
 #all:  showFile histo plot benchmark simu
-all: showFile histo
+all: simu_CFD
+
+simu_CFD: simu_CFD.o 
+	$(CXX) -o simu_CFD.exe $^ $(HIPOLIBS) $(LZ4LIBS) $(ROOTLIBS)
 
 showFile: showFile.o
 	$(CXX) -o showFile.exe $<  $(HIPOLIBS) $(LZ4LIBS)
