@@ -6,6 +6,7 @@
 #include "TGraph.h"
 #include "TAxis.h"
 #include "TGaxis.h"
+#include "TLatex.h"
 //#include "TString.h"
 
 int main(int argc, char const *argv[])
@@ -31,84 +32,124 @@ int main(int argc, char const *argv[])
             // --------------------------------
             // Constant Fraction Discriminator
             // --------------------------------
-            double fraction = 0.3;
-            int delay = 60;
-            std::vector<double> signal(Npts,0.0);
-            std::cout << "signal : " << std::endl;
+            std::vector<double> Fraction = {0.1,0.3,0.5,0.7,0.9};
+            std::vector<double> Delay = {5,10,15,20,25,30,35,40,45,50,55,60};
+            std::vector<double> time; // vector for saving t_cfd
+            for (double fraction : Fraction) {
+                for (int delay : Delay){
+                    std::vector<double> signal(Npts,0.0);
+                    std::cout << "signal : " << std::endl;
 
-            // Remove noise
-            double noise=0;
-            for (int i=0;i<5;i++){
-                noise += Dgtz.at(i);
-            }
-            noise = noise/5;
-            for (int i=0;i<Npts;i++){
-                Dgtz[i] = Dgtz.at(i) - noise;
-            }
-            // End remove noise
-            for (int i=0;i<Npts;i++){
-                signal[i] += -1*fraction*Dgtz.at(i);
-                if (i >= delay) {
-                    signal[i] += Dgtz.at(i-delay);
-                }
-                std::cout << signal.at(i) << " "; 
-            }
-            std::cout << std::endl;
-            // Determine t_cfd
-            // Convention : dernier passage en bas de zéro
-            int i_ref = 0;
-            for (int i=0;i<Npts;i++){
-                if (signal.at(i) < 0){
-                    i_ref = i;
-                }
-            } // dernier passage en bas de zéro
-            int i1 = i_ref; // 1 index below 
-            int i2 = i_ref+1; // 1 index above
-            if (i1 < 0) {i1 = 0; } 
-            if (i2 >= Npts) {i2 = Npts-1;}
-            double slope = (signal.at(i1) - signal.at(i2))/(i1-i2); 
-            double t_cfd;
-            t_cfd = i1 + (0-signal.at(i1))/slope; // DONE
-            std::cout << "--------------------------------------" << std::endl;
-            std::cout << "|       t_CFD  :  "  << t_cfd << std::endl;
-            std::cout << "--------------------------------------" << std::endl;
+                    // Remove noise
+                    double noise=0;
+                    for (int i=0;i<5;i++){
+                        noise += Dgtz.at(i);
+                    }
+                    noise = noise/5;
+                    for (int i=0;i<Npts;i++){
+                        Dgtz[i] = Dgtz.at(i) - noise;
+                    }
+                    // End remove noise
+                    for (int i=0;i<Npts;i++){
+                        signal[i] += -1*fraction*Dgtz.at(i);
+                        if (i >= delay) {
+                            signal[i] += Dgtz.at(i-delay);
+                        }
+                        std::cout << signal.at(i) << " "; 
+                    }
+                    std::cout << std::endl;
+                    // Determine t_cfd
+                    // Convention : dernier passage en bas de zéro
+                    int i_ref = 0;
+                    for (int i=0;i<Npts-1;i++){
+                        if (signal.at(i) < 0){
+                            i_ref = i;
+                        }
+                    } // dernier passage en bas de zéro
+                    int i1 = i_ref; // 1 index below 
+                    int i2 = i_ref+1; // 1 index above
+                    if (i1 < 0) {i1 = 0; } 
+                    if (i2 >= Npts) {i2 = Npts-1;}
+                    double slope = (signal.at(i1) - signal.at(i2))/(i1-i2); 
+                    double t_cfd;
+                    t_cfd = i1 + (0-signal.at(i1))/slope; // DONE
+                    time.push_back(t_cfd);
+                    std::cout << "--------------------------------------" << std::endl;
+                    std::cout << "|       i_ref  :  "  << i_ref << std::endl;
+                    std::cout << "|       t_CFD  :  "  << t_cfd << std::endl;
+                    std::cout << "--------------------------------------" << std::endl;
 
-            TCanvas* canvas1 = new TCanvas("c1","c1 title",1366,768);
-            TGraph* gr1 = new TGraph(Npts);
-            TGraph* gr2 = new TGraph(Npts);
-            for (int i=0;i<Npts;i++){
-                gr1->SetPoint(i,i,Dgtz.at(i));
-                gr2->SetPoint(i,i,signal.at(i));
+                    TCanvas* canvas1 = new TCanvas("c1","c1 title",1366,768);
+                    TGraph* gr1 = new TGraph(Npts);
+                    TGraph* gr2 = new TGraph(Npts);
+                    for (int i=0;i<Npts;i++){
+                        gr1->SetPoint(i,i,Dgtz.at(i));
+                        gr2->SetPoint(i,i,signal.at(i));
+                    }
+                    gr2->SetTitle(TString::Format("CFD,  fraction = %.1lf, delay = %d index units",fraction,delay));
+                    gr2->GetXaxis()->SetTitle("Time (ns)");
+                    gr2->GetXaxis()->SetTitleSize(0.05);
+                    gr2->GetYaxis()->SetTitle("Charge (adc)");
+                    gr2->GetYaxis()->SetTitleSize(0.05);
+                    //gr2->SetLineStyle(1);
+                    gr2->SetLineColor(kRed);
+                    gr2->SetMarkerColor(kRed);
+                    gr2->SetMarkerSize(5);
+                    gr2->Draw("APL");
+
+                    gr1->SetMarkerColor(kBlue);
+                    gr1->SetMarkerSize(5);
+                    gr1->SetLineColor(kBlue);
+                    //gr1->SetLineStyle(2);
+                    gr1->Draw("PL");
+
+                    TGaxis* axis1 = new TGaxis(0,0,136,0,0,136,510,"");
+                    axis1->SetLineColor(kGreen);
+                    axis1->SetLabelColor(kGreen);
+                    axis1->Draw();
+
+
+                    canvas1->Print(TString::Format("./output/CFD_%.1lf_%d.pdf",fraction,delay));
+                    //canvas1->Print("./output/CFD.pdf");
+                    delete gr1; delete gr2; delete canvas1;
+                    delete axis1;
+                }
             }
-            gr1->SetTitle(TString::Format("CFD,  fraction = %lf, delay = %d unité d'indice",fraction,delay));
-            gr1->GetXaxis()->SetTitle("Time (ns)");
-            gr1->GetXaxis()->SetTitleSize(0.05);
-            gr1->GetYaxis()->SetTitle("Charge (adc)");
-            gr1->GetYaxis()->SetTitleSize(0.05);
-            gr1->SetMarkerColor(kBlue);
-            gr1->SetMarkerSize(5);
-            gr1->SetLineColor(kBlue);
-            //gr1->SetLineStyle(2);
-            
-            
+            TCanvas* canvas2 = new TCanvas("c1","c1 title",1366,768);
+            TGraph* gr_cfd = new TGraph(time.size());
+            int k=0;
+            for (double fraction : Fraction){
+                for (int delay : Delay){
+                    gr_cfd->SetPoint(k,delay,fraction); 
+                    //data.DrawLatex(delay,fraction,TString::Format("#bf{%.2lf}",time.at(k)));
+                    k++;
+                }
+            }
+            gr_cfd->SetTitle("Time from CFD");
+            gr_cfd->GetXaxis()->SetTitle("delay (index units)");
+            gr_cfd->GetXaxis()->SetTitleSize(0.05);
+            gr_cfd->GetYaxis()->SetTitle("fraction");
+            gr_cfd->GetYaxis()->SetTitleSize(0.05);
             //gr2->SetLineStyle(1);
-            gr2->SetLineColor(kRed);
-            gr2->SetMarkerColor(kRed);
-            gr2->SetMarkerSize(5);
-            gr2->Draw("APL");
-            gr1->Draw("PL");
+            //gr_cfd->SetLineColor(kRed);
+            gr_cfd->SetMarkerColor(kRed);
+            gr_cfd->SetMarkerStyle(47);
+            //gr_cfd->SetMarkerSize(5);
+            gr_cfd->Draw("AP");
 
-            TGaxis* axis1 = new TGaxis(0,0,136,0,0,136,510,"");
-            axis1->SetLineColor(kGreen);
-            axis1->SetLabelColor(kGreen);
-            axis1->Draw();
-
-
-            //canvas1->Print(TString::Format("./output/CFD_%s.pdf",argv[1]));
-            canvas1->Print("./output/CFD.pdf");
-            delete gr1; delete gr2; delete canvas1;
-            delete axis1;
-
+            TLatex data;
+            data.SetTextSize(0.02);
+            data.SetTextAlign(13);
+            k = 0;
+            for (double fraction : Fraction){
+                for (int delay : Delay){
+                    data.DrawLatex(delay,fraction,TString::Format("#bf{%.2lf}",44*time.at(k)));
+                    k++;
+                }
+            }
+            canvas2->Print("./output/Bilan_CFD.pdf");
+            delete gr_cfd;
+            delete canvas2;
         }
         else {
             std::cout << "this file cannot be opened" << std::endl;
