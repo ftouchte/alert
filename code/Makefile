@@ -14,14 +14,15 @@
 # 	-I<path> : Ajoute le répertoire <path> au chemin de recherche des fichiers d'en-tête.
 # 	-L<path> : Ajoute le répertoire <path> au chemin de recherche des bibliothèques.
 
+PATH2HIPO := /homeijclab/touchte-codjo/hipo
 
-HIPOCFLAGS  := -I/home/ftouchte/Desktop/hipo/hipo/hipo4 -I/home/ftouchte/Desktop/hipo/hipo/hipo4/chart   
-HIPOLIBS    := -L/home/ftouchte/Desktop/hipo/hipo/lib -lhipo4 
+HIPOCFLAGS  := -I$(PATH2HIPO)/hipo4 -I$(PATH2HIPO)/hipo4/chart   
+HIPOLIBS    := -L$(PATH2HIPO)/lib -lhipo4 
 									
-LZ4LIBS     := -L/home/ftouchte/Desktop/hipo/hipo/lz4/lib -llz4
-LZ4INCLUDES := -I/home/ftouchte/Desktop/hipo/hipo/lz4/lib
+LZ4LIBS     := -L$(PATH2HIPO)/lz4/lib -llz4
+LZ4INCLUDES := -I$(PATH2HIPO)/lz4/lib
 
-FELIXFLAGS := -I/home/ftouchte/Desktop/hipo/ALERT/code
+FELIXFLAGS := -I/homeijclab/touchte-codjo/Bureau/alert/code
 
 # ROOT libraries 
 ROOTLIBS = $(shell root-config --libs)
@@ -29,12 +30,12 @@ ROOTLIBS = $(shell root-config --libs)
 ROOTCFLAGS = $(shell root-config --cflags)
 
 #rapidCheck include directories
-RAPID_CHECK_FLAGS := -I/home/ftouchte/rapidcheck/include #-I/home/ftouchte/rapidcheck/include/rapidcheck
+#RAPID_CHECK_FLAGS := -I/home/ftouchte/rapidcheck/include #-I/home/ftouchte/rapidcheck/include/rapidcheck
 #rapidCheck linking directories
-RAPID_CHECK_LIBS := -L/home/ftouchte/rapidcheck -lrapidcheck
+#RAPID_CHECK_LIBS := -L/home/ftouchte/rapidcheck -lrapidcheck
 
 # Catch2
-CATCH2_FLLAGS := -L/home/ftouchte/Catch2/build/src -lCatch2 -lCatch2Main
+#CATCH2_FLLAGS := -L/home/ftouchte/Catch2/build/src -lCatch2 -lCatch2Main
 
 CXX       := g++
 CXXFLAGS  += -Wall -fPIC -std=c++17
@@ -43,7 +44,10 @@ LDFLAGS   :=
 
 
 #all:  showFile histo plot benchmark simu
-all: simu_CFD
+all: simu_CFD showFile histo analyse
+
+analyse: analyse.o futils.o
+	$(CXX) -o analyse.exe $^ $(HIPOLIBS) $(LZ4LIBS) $(ROOTLIBS)
 
 simu_CFD: simu_CFD.o 
 	$(CXX) -o simu_CFD.exe $^ $(HIPOLIBS) $(LZ4LIBS) $(ROOTLIBS)
@@ -57,8 +61,8 @@ histo: histo.o futils.o
 plot: plot.o futils.o
 	$(CXX) -o plot.exe $^ $(HIPOLIBS) $(LZ4LIBS) $(ROOTLIBS)
 
-benchmark: benchmark.o futils.o
-	$(CXX) -o benchmark.exe $^  $(RAPID_CHECK_LIBS) $(CATCH2_FLLAGS)
+#benchmark: benchmark.o futils.o
+#	$(CXX) -o benchmark.exe $^  $(RAPID_CHECK_LIBS) $(CATCH2_FLLAGS)
 
 
 # $< représente la première de la cible, i.e histo.o

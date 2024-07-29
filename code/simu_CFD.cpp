@@ -51,10 +51,14 @@ int main(int argc, char const *argv[])
                     }
                     // End remove noise
                     for (int i=0;i<Npts;i++){
-                        signal[i] += -1*fraction*Dgtz.at(i);
-                        if (i >= delay) {
-                            signal[i] += Dgtz.at(i-delay);
-                        }
+                        //signal[i] += -1*fraction*Dgtz.at(i);
+                        //if (i >= delay) {
+                        //    signal[i] += Dgtz.at(i-delay);
+                        //}
+			signal[i] += Dgtz.at(i);
+			if (i < Npts-delay){
+				signal[i] += -1*fraction*Dgtz.at(i+delay);
+			}
                         std::cout << signal.at(i) << " "; 
                     }
                     std::cout << std::endl;

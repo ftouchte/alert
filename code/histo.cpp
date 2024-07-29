@@ -48,7 +48,7 @@ int main(int argc, char const *argv[])
         while( r.next(list)){
 
             // MC::Particle and nHits
-            for(int itr = 0; itr < list[0].getRows(); itr++){
+            for(int itr = 0; itr < list[0].getRows(); itr++){ // Here list[0].getRows() == 1
                 
                 px = list[0].getFloat("px",itr);
                 py = list[0].getFloat("py",itr);
@@ -60,21 +60,19 @@ int main(int argc, char const *argv[])
                 hist_theta->Fill(theta*180/M_PI); // deg
                 hist_phi->Fill(phi*180/M_PI); // deg
                 hist_vz->Fill(vz);
+		
+		// Here .getRows() give the number of (collection of) hits
+                hist_nHits_AHDC->Fill(list[1].getRows());
+                hist_nHits_ATOF->Fill(list[2].getRows());
 
-                // nHits ; in this case remark list[0].getRows() == 1, otherwise this portion of code need to be outside for {...} 
-                //hist_nHits_AHDC->Fill(list[1].getRows());
-                //hist_nHits_ATOF->Fill(list[2].getRows());
-
-                //hist_p_nHits_AHDC->Fill(p,list[1].getRows());
-                //hist_p_nHits_ATOF->Fill(p,list[2].getRows());
-                //nentries++;
+                hist_p_nHits_AHDC->Fill(p,list[1].getRows());
+                hist_p_nHits_ATOF->Fill(p,list[2].getRows());
             }
             nentries++;
-            std::cout << "nentries : " << nentries << std::endl;
 
-            for(int itr = 0; itr < list[2].getRows(); itr++){
-                hist_sector->Fill(list[2].getByte("sector", itr));
-            }
+            //for(int itr = 0; itr < list[2].getRows(); itr++){
+            //    hist_sector->Fill(list[2].getByte("sector", itr));
+            //}
         }
 
         std::cout << "nentries : " << nentries << std::endl;
@@ -179,7 +177,7 @@ int main(int argc, char const *argv[])
         hist_sector->GetYaxis()->SetTitleSize(0.05);
         hist_sector->Draw();
         //SAVE
-        canvas4->Print("./output/ATOF_adc_sector.pdf");
+        //canvas4->Print("./output/ATOF_adc_sector.pdf");
         delete hist_sector;
         delete canvas4;
 
