@@ -7,6 +7,8 @@
 #include "TAxis.h"
 #include "TGaxis.h"
 #include "TLatex.h"
+#include "TLegend.h"
+#include "TLatex.h"
 //#include "TString.h"
 
 int main(int argc, char const *argv[])
@@ -46,26 +48,34 @@ int main(int argc, char const *argv[])
                         noise += Dgtz.at(i);
                     }
                     noise = noise/5;
+                    double ymax = 0; // for plotting
                     for (int i=0;i<Npts;i++){
+                        if (ymax < Dgtz.at(i)) ymax = Dgtz.at(i);
                         Dgtz[i] = Dgtz.at(i) - noise;
                     }
+                    double delta_y = ymax*(1+fraction); // for plotting
                     // End remove noise
                     for (int i=0;i<Npts;i++){
                         //signal[i] += -1*fraction*Dgtz.at(i);
                         //if (i >= delay) {
                         //    signal[i] += Dgtz.at(i-delay);
                         //}
-			signal[i] += Dgtz.at(i);
-			if (i < Npts-delay){
-				signal[i] += -1*fraction*Dgtz.at(i+delay);
-			}
+                        signal[i] += Dgtz.at(i);
+                        if (i < Npts-delay){
+                            signal[i] += -1*fraction*Dgtz.at(i+delay);
+                        }
                         std::cout << signal.at(i) << " "; 
                     }
                     std::cout << std::endl;
                     // Determine t_cfd
-                    // Convention : dernier passage en bas de zéro
+                    // Convention : dernier passage en bas de zéro et compris entre les min et max absolues
+                    int i_min=0, i_max=0;
+                    for (int i=0;i<Npts;i++){
+                        if (signal.at(i_max) < signal.at(i)) i_max = i;
+                        if (signal.at(i_min) > signal.at(i)) i_min = i;
+                    }
                     int i_ref = 0;
-                    for (int i=0;i<Npts-1;i++){
+                    for (int i=i_min;i<=i_max;i++){
                         if (signal.at(i) < 0){
                             i_ref = i;
                         }
@@ -79,6 +89,8 @@ int main(int argc, char const *argv[])
                     t_cfd = i1 + (0-signal.at(i1))/slope; // DONE
                     time.push_back(t_cfd);
                     std::cout << "--------------------------------------" << std::endl;
+                    std::cout << "|       i_min  :  "  << i_min << std::endl;
+                    std::cout << "|       i_max  :  "  << i_max << std::endl;
                     std::cout << "|       i_ref  :  "  << i_ref << std::endl;
                     std::cout << "|       t_CFD  :  "  << t_cfd << std::endl;
                     std::cout << "--------------------------------------" << std::endl;
@@ -91,7 +103,7 @@ int main(int argc, char const *argv[])
                         gr2->SetPoint(i,i,signal.at(i));
                     }
                     gr2->SetTitle(TString::Format("CFD,  fraction = %.1lf, delay = %d index units",fraction,delay));
-                    gr2->GetXaxis()->SetTitle("Time (ns)");
+                    gr2->GetXaxis()->SetTitle("Time (index unit)");
                     gr2->GetXaxis()->SetTitleSize(0.05);
                     gr2->GetYaxis()->SetTitle("Charge (adc)");
                     gr2->GetYaxis()->SetTitleSize(0.05);
@@ -99,6 +111,7 @@ int main(int argc, char const *argv[])
                     gr2->SetLineColor(kRed);
                     gr2->SetMarkerColor(kRed);
                     gr2->SetMarkerSize(5);
+                    gr2->GetYaxis()->SetRangeUser(-ymax*fraction-delta_y*0.1,ymax+delta_y*0.1);
                     gr2->Draw("APL");
 
                     gr1->SetMarkerColor(kBlue);
@@ -112,6 +125,16 @@ int main(int argc, char const *argv[])
                     axis1->SetLabelColor(kGreen);
                     axis1->Draw();
 
+                    TLegend* legend = new TLegend(0.7,0.8,0.9,0.9);
+                    legend->AddEntry(gr1,"Digitized signal","l");
+                    legend->AddEntry(gr2,"CFD signal","l");
+                    legend->Draw();
+
+                    TLatex data;
+                    data.SetTextSize(0.03);
+                    data.SetTextAlign(13);
+                    data.DrawLatexNDC(0.7,0.6,TString::Format("#bf{#bf{i_cfd} =  %.2lf}",t_cfd).Data());
+                    data.DrawLatexNDC(0.7,0.6-1*0.05,TString::Format("#bf{#bf{t_cfd} =  %.2lf ns}",t_cfd*44).Data());
 
                     canvas1->Print(TString::Format("./output/CFD_%.1lf_%d.pdf",fraction,delay));
                     //canvas1->Print("./output/CFD.pdf");
@@ -119,6 +142,9 @@ int main(int argc, char const *argv[])
                     delete axis1;
                 }
             }
+            // -----------------------
+            // Bilan
+            // -----------------------
             TCanvas* canvas2 = new TCanvas("c1","c1 title",1366,768);
             TGraph* gr_cfd = new TGraph(time.size());
             int k=0;

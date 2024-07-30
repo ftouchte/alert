@@ -44,7 +44,7 @@ LDFLAGS   :=
 
 
 #all:  showFile histo plot benchmark simu
-all: simu_CFD showFile histo analyse
+all: simu_CFD histo analyse
 
 analyse: analyse.o futils.o
 	$(CXX) -o analyse.exe $^ $(HIPOLIBS) $(LZ4LIBS) $(ROOTLIBS)
