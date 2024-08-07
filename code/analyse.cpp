@@ -37,26 +37,26 @@ int main(int argc, char const *argv[]){
 	int max_value, integral, noise, nsteps;
 	double delta_start, delta_cfd;
 
-	TH1D* hist_t_start = new TH1D("hist_t_start","t_start",100, 400,1000);
-	TH1D* hist_t_cfd = new TH1D("hist_t_cfd","t_cfd",100, 400,1000);
-	TH1D* hist_mctime = new TH1D("hist_mctime","mctime",100, 0,400);
-	TH1D* hist_t_ovr = new TH1D("hist_t_ovr","t_ovr",100, 0,2000);
+	TH1D* hist_t_start = new TH1D("hist_t_start","t_start",600, 400,1000);
+	TH1D* hist_t_cfd = new TH1D("hist_t_cfd","t_cfd",600, 400,1000);
+	TH1D* hist_mctime = new TH1D("hist_mctime","mctime",400, 0,400);
+	TH1D* hist_t_ovr = new TH1D("hist_t_ovr","t_ovr",2000, 0,2000);
 
-	TH1D* hist_delta_start = new TH1D("hist_delta_start","delta_start",100, -300,300);
-	TH1D* hist_delta_cfd = new TH1D("hist_delta_cfd","delta_cfd",100, -300,300);
+	TH1D* hist_delta_start = new TH1D("hist_delta_start","#Delta t_{start}",600, 400,1000);
+	TH1D* hist_delta_cfd = new TH1D("hist_delta_cfd","#Delta t_{cfd}",600, 400,1000);
 
 
 	TH1I* hist_nsteps = new TH1I("hist_nsteps","nsteps",100, 0,50);
-	TH1I* hist_max_value = new TH1I("hist_max_value","max_value",100, 0,4095);
-	TH1I* hist_integral = new TH1I("hist_integral","integral",100, 0,60000);
-	TH1I* hist_noise = new TH1I("hist_noise","noise",100, 0,600);
+	TH1I* hist_max_value = new TH1I("hist_max_value","max_value",4095, 0,4095);
+	TH1I* hist_integral = new TH1I("hist_integral","integral",1000, 0,60000);
+	TH1I* hist_noise = new TH1I("hist_noise","noise",600, 0,600);
 
 	TH2D* hist2d_start_cfd = new TH2D("hist2d_start_cfd","Correlation between #bf{t_start} and #bf{t_cfd}",100,500,1000,100,500,1000);
 	TH2D* hist2d_start_mctime = new TH2D("hist2d_start_mctime","Correlation between #bf{t_start} and #bf{mctime}",100,500,1000,100,0,400);
 	TH2D* hist2d_cfd_mctime = new TH2D("hist2d_cfd_mctime","Correlation between #bf{t_cfd} and #bf{mctime}",100,500,1000,100,0,400);
 
-	TH2D* hist2d_start_magnitude = new TH2D("hist2d_start_magnitude","Correlation between #bf{t_start - mctime} and #bf{magnitude}",100,-300,300,100,0,4095);
-	TH2D* hist2d_cfd_magnitude = new TH2D("hist2d_cfd_magnitude","Correlation between #bf{t_cfd - mctime} and #bf{magnitude}",100,-300,300,100,0,4095);
+	TH2D* hist2d_start_magnitude = new TH2D("hist2d_start_magnitude","Correlation between #bf{t_start - mctime} and #bf{magnitude}",600,400,1000,1000,0,4095);
+	TH2D* hist2d_cfd_magnitude = new TH2D("hist2d_cfd_magnitude","Correlation between #bf{t_cfd - mctime} and #bf{magnitude}",600,400,1000,1000,0,4095);
 
 	// MC::Particle
 	double px, py, pz;
@@ -102,8 +102,8 @@ int main(int argc, char const *argv[]){
 			noise = list[1].getInt("ped",itr);
 			delta_start = t_start-mctime;
 			delta_cfd = t_cfd-mctime;
-			delta_start = delta_start - 625.6; // centered at 0
-			delta_cfd = delta_cfd - 589.1; // centerd at 0 
+			//delta_start = delta_start - 625.6; // centered at 0
+			//delta_cfd = delta_cfd - 589.1; // centerd at 0 
 
 			//if (true){
 			//if ((mctime > 10) and (mctime < 400)){ // Define your cut
@@ -129,6 +129,7 @@ int main(int argc, char const *argv[]){
 				hist2d_start_magnitude->Fill(delta_start,max_value);
 				hist2d_cfd_magnitude->Fill(delta_cfd,max_value);
 			}
+
 		}
 
 		nEvents++;
@@ -206,6 +207,9 @@ int main(int argc, char const *argv[]){
 	hist_delta_start->GetXaxis()->SetTitleSize(0.05);
 	hist_delta_start->GetYaxis()->SetTitle("#events");
 	hist_delta_start->GetYaxis()->SetTitleSize(0.05);
+		// analysis
+		//std::cout << "maximum     : " << hist_delta_start->GetMaximum() << std::endl;
+		//std::cout << "maximum bin : " << hist_delta_start->GetMaximumBin() << std::endl;
 	hist_delta_start->Draw();
 	// hist_delta_cfd
 	canvas1->cd(5);
@@ -233,8 +237,8 @@ int main(int argc, char const *argv[]){
 	//     Study of correlation in AHDC::adc
 	// **************************************
 
-	TCanvas* canvas2 = new TCanvas("c2","c2 title",2000,2000);
-	canvas2->Divide(2,3);
+	TCanvas* canvas2 = new TCanvas("c2","c2 title",2000,3000);
+	canvas2->Divide(2,4);
 	gStyle->SetOptStat("nemruo");
 	
 	// hist2d_start_cfd
@@ -277,6 +281,30 @@ int main(int argc, char const *argv[]){
 	hist2d_cfd_magnitude->GetYaxis()->SetTitleSize(0.05);
 		//hist2d_cfd_magnitude->SetStats(kFALSE);
 	hist2d_cfd_magnitude->Draw("COLZ");
+	// time error as a function of magnitude
+	std::cout << "nbins : " << hist2d_start_magnitude->GetYaxis()->GetNbins() << std::endl;
+	int Nbins = hist2d_start_magnitude->GetYaxis()->GetNbins();
+	double wbins = hist2d_start_magnitude->GetYaxis()->GetBinWidth(0);
+	TGraph* gr_start = new TGraph(Nbins);
+	TH1D* hist_tmp = hist2d_start_magnitude->ProjectionX("_px20",Nbins/5,Nbins/5,"[20,21]"); canvas2->cd(2); hist_tmp->SetTitle("projection X for Y == Nbins/5"); hist_tmp->Draw();
+	double stdev;
+	for (int k=0;k<Nbins;k++){
+		stdev = hist2d_start_magnitude->ProjectionX("_px",k,k,"")->GetStdDev();
+		gr_start->SetPoint(k,k*wbins,stdev);
+	}
+	canvas2->cd(7); 
+	gr_start->SetTitle("Error #Delta t_{start} vs magnitude");
+	gr_start->GetXaxis()->SetTitle("Magnitude (adc)");
+	gr_start->GetXaxis()->SetTitleSize(0.05);
+	gr_start->GetYaxis()->SetTitle("Error (ns)");
+	gr_start->GetYaxis()->SetTitleSize(0.05);
+	//gr2->SetLineStyle(1);
+	gr_start->SetLineColor(kBlue);
+	gr_start->SetMarkerColor(kBlue);
+	gr_start->SetMarkerSize(5);
+	gr_start->Draw("ALP");
+	
+
 	// SAVE
 	canvas2->Print("./output/Decoding2d_analysis.pdf");
 	delete hist2d_start_cfd;
