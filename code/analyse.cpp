@@ -105,9 +105,9 @@ int main(int argc, char const *argv[]){
 			//delta_start = delta_start - 625.6; // centered at 0
 			//delta_cfd = delta_cfd - 589.1; // centerd at 0 
 
-			//if (true){
+			if (true){
 			//if ((mctime > 10) and (mctime < 400)){ // Define your cut
-			if (nsteps > 0){
+			//if (nsteps > 0){
 			//if ((nsteps > 0) and (1000*p > 70) and (1000*p < 80)){
 				// Fill histograms
 				hist_t_start->Fill(t_start);
@@ -141,8 +141,8 @@ int main(int argc, char const *argv[]){
 	// *******************************
 	//          AHDC::adc
 	// *******************************
-	TCanvas* canvas1 = new TCanvas("c1","c1 title",2000,2000);
-	canvas1->Divide(3,4);
+	TCanvas* canvas1 = new TCanvas("c1","c1 title",2000,3000);
+	canvas1->Divide(2,5);
 	gStyle->SetOptStat("nemruo"); 
 
 	// hist_t_start
@@ -160,7 +160,7 @@ int main(int argc, char const *argv[]){
 	hist_t_cfd->GetYaxis()->SetTitleSize(0.05);
 	hist_t_cfd->Draw();
 	// hist_mctime
-	canvas1->cd(3);
+	canvas1->cd(5);
 	hist_mctime->GetXaxis()->SetTitle("mctime (ns)");
 	hist_mctime->GetXaxis()->SetTitleSize(0.05);
 	hist_mctime->GetYaxis()->SetTitle("#events");
@@ -212,7 +212,7 @@ int main(int argc, char const *argv[]){
 		//std::cout << "maximum bin : " << hist_delta_start->GetMaximumBin() << std::endl;
 	hist_delta_start->Draw();
 	// hist_delta_cfd
-	canvas1->cd(5);
+	canvas1->cd(3);
 	hist_delta_cfd->GetXaxis()->SetTitle("t_cfd - mctime (ns)");
 	hist_delta_cfd->GetXaxis()->SetTitleSize(0.05);
 	hist_delta_cfd->GetYaxis()->SetTitle("#events");
