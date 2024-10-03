@@ -23,7 +23,7 @@ cd yourjlabusername
 Run these command lines :
 
 ``` shell
-source /group/clas12/packages/setup.csh
+module use /scigroup/cvmfs/hallb/clas12/sw/modulefiles
 module load clas12
 module switch gemc/dev
 ```

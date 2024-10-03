@@ -176,30 +176,35 @@
                 <div id="content" class="content">
                     <main>
                         <h1 id="setup-gemc"><a class="header" href="#setup-gemc">Setup GEMC</a></h1>
-<h2 id="gemc-source"><a class="header" href="#gemc-source">GEMC source</a></h2>
-<p>In your work space (<code>/work/clas12/users/yourjlabusername</code>), you have to clone my version of GEMC using :</p>
-<pre><code class="language-shell">git clone git@github.com:ftouchte/gemc_source.git
+<p>In your work space (<code>/work/clas12/users/yourjlabusername</code>), create a new repository named <code>gemc</code></p>
+<pre><code class="language-shell">mkdir gemc
+cd gemc
 </code></pre>
+<h2 id="gemc-source"><a class="header" href="#gemc-source">GEMC source</a></h2>
+<p>Now, clone my version of GEMC :</p>
+<pre><code class="language-shell">git clone git@github.com:ftouchte/gemc_source.git source
+</code></pre>
+<p>N.B: The repository has been renamed <code>source</code>.</p>
 <p>If you don't have a ssh key, you will get an error. You can learn how to create one and add this in your GitHub account. Then you can re-use the same command. If you don't want to create a ssh key, you can use :</p>
-<pre><code class="language-shell">git clone https://github.com/ftouchte/gemc_source.git
+<pre><code class="language-shell">git clone https://github.com/ftouchte/gemc_source.git source
 </code></pre>
 <p>Now go inside the directory and compile gemc.</p>
-<pre><code class="language-shell">cd gemc_source
+<pre><code class="language-shell">cd source
 scons -j4
 </code></pre>
 <p>An executabe called <strong>gemc</strong> has been created.</p>
-<p><strong>N.B:</strong> At the date of June 26 2024, this repository contains ROOT codes. To avoid error, you to use a version of ROOT based on C++14. To do so, you can download a pre-compile version of ROOT followinf these <a href="https://root.cern/install/#download-a-pre-compiled-binary-distribution">instructions</a>.</p>
+<!-- **N.B:** At the date of June 26 2024, this repository contains ROOT codes. To avoid error, you have to use a version of ROOT based on C++14. To do so, you can download a pre-compile version of ROOT followinf these [instructions](https://root.cern/install/#download-a-pre-compiled-binary-distribution). -->
 <!-- You have to correct right access, you just source this version :
 
 ``` shell
 source /w/hallb-scshelf2102/clas12/users/touchte/root/bin/thisroot.csh
 ``` -->
 <h2 id="gemc-detector"><a class="header" href="#gemc-detector">GEMC detector</a></h2>
-<p>Go back to your work space (<code>/work/clas12/users/yourjlabusername</code>) and clone this repository:</p>
-<pre><code class="language-shell">git clone git@github.com:gemc/detectors.git
+<p>Go back in your working space (<code>/work/clas12/users/yourjlabusername/gemc</code>) and clone this repository:</p>
+<pre><code class="language-shell">git clone git@github.com:gemc/detectors.git detectors
 </code></pre>
 <p>or</p>
-<pre><code class="language-shell">git clone https://github.com/gemc/detectors.git
+<pre><code class="language-shell">git clone https://github.com/gemc/detectors.git detectors
 </code></pre>
 <p>Now go inside the directory</p>
 <pre><code class="language-shell">cd detectors/clas12/alert

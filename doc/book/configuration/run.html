@@ -192,12 +192,23 @@
 <p><strong>-OUTPUT='hipo, ten_events.hipo'</strong> sets the name of the output file. In this case, <em>ten_events.hipo</em> can be replace by <em>myfilename.hipo</em>.</p>
 </li>
 <li>
-<p><strong>-N=10</strong> sets the number of events to generate.</p>
+<p><strong>-N=10</strong> sets the number of events to be generated.</p>
 </li>
 <li>
 <p><strong>-USE_GUI=0</strong> when this option is set to 1, a user interface appears.</p>
 </li>
 </ul>
+<h2 id="analysis"><a class="header" href="#analysis">Analysis</a></h2>
+<p>To view the content of the file on the ifarm, use <strong>hipo-utils</strong></p>
+<pre><code>hipo-utils -dump ten-events.hipo
+</code></pre>
+<p>N.B : This command line is already available on the ifarm. To use it on a local computer, follow the instructions of <a href="https://userweb.jlab.org/~gavalian/docs/sphinx/hipo/html/chapters/hipo_java.html">HIPO Utilities JAVA</a>.</p>
+<p>Tips : In your equivalent <code>.bashrc</code> file, define this alias</p>
+<pre><code class="language-bash">alias hipo-utils="/yourpathto/bin/hipoutils.sh"
+</code></pre>
+<p><img src="./images/hipo-utils2.png" alt="hipo-utils2" />
+<img src="./images/hipo-utils3.png" alt="hipo-utils3" /></p>
+<p>To go further, visit <a href="https://clasweb.jlab.org/wiki/index.php/CLAS12_Software_Center#tab=Analysis">CLAS12 Software Center / Analysis</a></p>
 
                     </main>
 

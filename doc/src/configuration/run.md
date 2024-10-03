@@ -16,6 +16,28 @@ Explanation :
 
 - **-OUTPUT='hipo, ten_events.hipo'** sets the name of the output file. In this case, *ten_events.hipo* can be replace by *myfilename.hipo*. 
 
-- **-N=10** sets the number of events to generate. 
+- **-N=10** sets the number of events to be generated. 
 
 - **-USE_GUI=0** when this option is set to 1, a user interface appears.
+
+## Analysis
+
+To view the content of the file on the ifarm, use **hipo-utils** 
+
+```
+hipo-utils -dump ten-events.hipo
+```
+
+N.B : This command line is already available on the ifarm. To use it on a local computer, follow the instructions of [HIPO Utilities JAVA](https://userweb.jlab.org/~gavalian/docs/sphinx/hipo/html/chapters/hipo_java.html).
+
+Tips : In your equivalent `.bashrc` file, define this alias
+
+``` bash
+alias hipo-utils="/yourpathto/bin/hipoutils.sh"
+```
+
+![hipo-utils2](./images/hipo-utils2.png)
+![hipo-utils3](./images/hipo-utils3.png)
+
+
+To go further, visit [CLAS12 Software Center / Analysis](https://clasweb.jlab.org/wiki/index.php/CLAS12_Software_Center#tab=Analysis)

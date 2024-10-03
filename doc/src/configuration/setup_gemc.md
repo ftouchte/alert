@@ -1,29 +1,37 @@
 # Setup GEMC
 
+In your work space (`/work/clas12/users/yourjlabusername`), create a new repository named `gemc`
+
+``` shell
+mkdir gemc
+cd gemc
+```
 ## GEMC source
 
-In your work space (`/work/clas12/users/yourjlabusername`), you have to clone my version of GEMC using :
+Now, clone my version of GEMC :
 
 ``` shell 
-git clone git@github.com:ftouchte/gemc_source.git
+git clone git@github.com:ftouchte/gemc_source.git source
 ```
+
+N.B: The repository has been renamed `source`. 
 
 If you don't have a ssh key, you will get an error. You can learn how to create one and add this in your GitHub account. Then you can re-use the same command. If you don't want to create a ssh key, you can use :
 
 ``` shell
-git clone https://github.com/ftouchte/gemc_source.git
+git clone https://github.com/ftouchte/gemc_source.git source
 ```
 
 Now go inside the directory and compile gemc.
 
 ``` shell
-cd gemc_source
+cd source
 scons -j4
 ```
 
 An executabe called **gemc** has been created. 
 
-**N.B:** At the date of June 26 2024, this repository contains ROOT codes. To avoid error, you to use a version of ROOT based on C++14. To do so, you can download a pre-compile version of ROOT followinf these [instructions](https://root.cern/install/#download-a-pre-compiled-binary-distribution).
+<!-- **N.B:** At the date of June 26 2024, this repository contains ROOT codes. To avoid error, you have to use a version of ROOT based on C++14. To do so, you can download a pre-compile version of ROOT followinf these [instructions](https://root.cern/install/#download-a-pre-compiled-binary-distribution). -->
 
 <!-- You have to correct right access, you just source this version :
 
@@ -33,15 +41,15 @@ source /w/hallb-scshelf2102/clas12/users/touchte/root/bin/thisroot.csh
 
 ## GEMC detector
 
-Go back to your work space (`/work/clas12/users/yourjlabusername`) and clone this repository:
+Go back in your working space (`/work/clas12/users/yourjlabusername/gemc`) and clone this repository:
 
 ``` shell
-git clone git@github.com:gemc/detectors.git
+git clone git@github.com:gemc/detectors.git detectors
 ```
 or 
 
 ``` shell
-git clone https://github.com/gemc/detectors.git
+git clone https://github.com/gemc/detectors.git detectors
 ```
 
 Now go inside the directory 
