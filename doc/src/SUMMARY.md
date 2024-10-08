@@ -13,7 +13,7 @@
     - [Generate a particle (alert.gcard)](./tutorials/alert_gcard.md)
     - [Add new entries in a bank](./tutorials/new_entry_bank.md)
 
-
+- [AHDC signal](./ahdc/simu_signal.md)
 
 ---
 
