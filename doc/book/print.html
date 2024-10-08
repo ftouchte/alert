@@ -456,7 +456,7 @@ cd ../
 
 </code></pre>
 <p>This is the end. Now you have to go in your <code>gemc/detectors/clas12/alert</code> (the place where you run <strong>gemc</strong>).</p>
-<pre><code class="language-shell">cd ../alert/ahdc
+<pre><code class="language-shell">cd ahdc
 run-groovy factory.groovy --variation default --runnumber 11
 run-groovy factory.groovy --variation rga_fall2018 --runnumber 11
 ./ahdc.pl config.dat
@@ -504,6 +504,22 @@ cd ..
 
         </div>
 
+        <!-- Livereload script (if served using the cli tool) -->
+        <script>
+            const wsProtocol = location.protocol === 'https:' ? 'wss:' : 'ws:';
+            const wsAddress = wsProtocol + "//" + location.host + "/" + "__livereload";
+            const socket = new WebSocket(wsAddress);
+            socket.onmessage = function (event) {
+                if (event.data === "reload") {
+                    socket.close();
+                    location.reload();
+                }
+            };
+
+            window.onbeforeunload = function() {
+                socket.close();
+            }
+        </script>
 
 
 

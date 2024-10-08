@@ -100,7 +100,7 @@ insert_bank_variable(\%configuration, $bankname, "bankid",   $bankId, "Di", "$ba
 This is the end. Now you have to go in your `gemc/detectors/clas12/alert` (the place where you run **gemc**). 
 
 ```shell
-cd ../alert/ahdc
+cd ahdc
 run-groovy factory.groovy --variation default --runnumber 11
 run-groovy factory.groovy --variation rga_fall2018 --runnumber 11
 ./ahdc.pl config.dat
