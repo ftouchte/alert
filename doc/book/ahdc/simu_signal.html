@@ -203,7 +203,16 @@ t_{start} = t_i + \frac{\mbox{threshold} - S_i}{\mbox{slope}}
 <p><img src="../images/cfd-algorithm.png" alt="AlgoCFD.png" />
 <img src="../images/SignalCFDApplied.png" alt="SignalCFDApplied.png" /></p>
 <p>N.B : This image has been taken from <a href="https://www.edinst.com/blog/constant-fraction-discrimination/">EDINBURGH INSTRUMENTS</a>.</p>
-
+<h2 id="decoding-output-vs-ahdcadc-entries"><a class="header" href="#decoding-output-vs-ahdcadc-entries">Decoding output vs AHDC::adc entries</a></h2>
+<div class="table-wrapper"><table><thead><tr><th>AHDC::adc entries</th><th>Decoding output</th></tr></thead><tbody>
+<tr><td>ADC</td><td>max_value</td></tr>
+<tr><td>time</td><td>t_ovr</td></tr>
+<tr><td>ped</td><td>noise_level</td></tr>
+<tr><td>integral</td><td>integral</td></tr>
+<tr><td>timestamp</td><td>t_start</td></tr>
+<tr><td>t_cfd</td><td>t_cfd</td></tr>
+</tbody></table>
+</div>
                     </main>
 
                     <nav class="nav-wrapper" aria-label="Page navigation">

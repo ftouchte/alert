@@ -491,7 +491,16 @@ t_{start} = t_i + \frac{\mbox{threshold} - S_i}{\mbox{slope}}
 <p><img src="ahdc/../images/cfd-algorithm.png" alt="AlgoCFD.png" />
 <img src="ahdc/../images/SignalCFDApplied.png" alt="SignalCFDApplied.png" /></p>
 <p>N.B : This image has been taken from <a href="https://www.edinst.com/blog/constant-fraction-discrimination/">EDINBURGH INSTRUMENTS</a>.</p>
-<div style="break-before: page; page-break-before: always;"></div><h1 id="références"><a class="header" href="#références">Références</a></h1>
+<h2 id="decoding-output-vs-ahdcadc-entries"><a class="header" href="#decoding-output-vs-ahdcadc-entries">Decoding output vs AHDC::adc entries</a></h2>
+<div class="table-wrapper"><table><thead><tr><th>AHDC::adc entries</th><th>Decoding output</th></tr></thead><tbody>
+<tr><td>ADC</td><td>max_value</td></tr>
+<tr><td>time</td><td>t_ovr</td></tr>
+<tr><td>ped</td><td>noise_level</td></tr>
+<tr><td>integral</td><td>integral</td></tr>
+<tr><td>timestamp</td><td>t_start</td></tr>
+<tr><td>t_cfd</td><td>t_cfd</td></tr>
+</tbody></table>
+</div><div style="break-before: page; page-break-before: always;"></div><h1 id="références"><a class="header" href="#références">Références</a></h1>
 <ul>
 <li>
 <p><a href="https://clasweb.jlab.org/wiki/index.php/ALERT_Software_and_Simulations/GEMC_coatjava_setup_on_farm">ALERT Software Wiki</a></p>

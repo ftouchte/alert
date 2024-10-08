@@ -51,3 +51,14 @@ This is the time obtained using the Constant Fraction Discriminator (CFD) algori
 ![SignalCFDApplied.png](../images/SignalCFDApplied.png)
 
 N.B : This image has been taken from [EDINBURGH INSTRUMENTS](https://www.edinst.com/blog/constant-fraction-discrimination/).
+
+## Decoding output vs AHDC::adc entries
+
+| AHDC::adc entries | Decoding output |
+|-|-|
+|ADC|max_value|
+|time|t_ovr|
+|ped|noise_level|
+|integral|integral|
+timestamp|t_start|
+|t_cfd|t_cfd|
