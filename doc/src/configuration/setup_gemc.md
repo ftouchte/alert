@@ -44,12 +44,12 @@ source /w/hallb-scshelf2102/clas12/users/touchte/root/bin/thisroot.csh
 Go back in your working space (`/work/clas12/users/yourjlabusername/gemc`) and clone this repository:
 
 ``` shell
-git clone git@github.com:gemc/detectors.git detectors
+git clone git@github.com:mpaolone/detectors.git detectors
 ```
 or 
 
 ``` shell
-git clone https://github.com/gemc/detectors.git detectors
+git clone https://github.com/mpaolone/detectors.git detectors
 ```
 
 Now go inside the directory 
