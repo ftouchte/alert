@@ -10,8 +10,9 @@
     - [Run my code](./configuration/run.md)
 
 - [Tutorials](./tutorials/intro.md)
-    - [Generate a particle (alert.gcard)](./tutorials/alert_gcard.md)
-    - [Add new entries in a bank](./tutorials/new_entry_bank.md)
+    - [Simulation parameters](./tutorials/alert_gcard.md)
+    - [New entry, AHDC::adc](./tutorials/new_entry_bank.md)
+    - [New bank, AHDC::wf136](./tutorials/new_ahdc_bank.md)
 
 - [AHDC signal](./ahdc/simu_signal.md)
 

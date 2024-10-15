@@ -91,7 +91,7 @@
 
         <nav id="sidebar" class="sidebar" aria-label="Table of contents">
             <div class="sidebar-scrollbox">
-                <ol class="chapter"><li class="chapter-item expanded affix "><a href="introduction.html">Introduction</a></li><li class="spacer"></li><li class="chapter-item expanded "><a href="configuration/intro.html"><strong aria-hidden="true">1.</strong> Configuration</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="configuration/first_use.html"><strong aria-hidden="true">1.1.</strong> First use</a></li><li class="chapter-item expanded "><a href="configuration/setup_gemc.html"><strong aria-hidden="true">1.2.</strong> Setup GEMC</a></li><li class="chapter-item expanded "><a href="configuration/run.html"><strong aria-hidden="true">1.3.</strong> Run my code</a></li></ol></li><li class="chapter-item expanded "><a href="tutorials/intro.html"><strong aria-hidden="true">2.</strong> Tutorials</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="tutorials/alert_gcard.html"><strong aria-hidden="true">2.1.</strong> Generate a particle (alert.gcard)</a></li><li class="chapter-item expanded "><a href="tutorials/new_entry_bank.html"><strong aria-hidden="true">2.2.</strong> Add new entries in a bank</a></li></ol></li><li class="chapter-item expanded "><a href="ahdc/simu_signal.html"><strong aria-hidden="true">3.</strong> AHDC signal</a></li><li class="spacer"></li><li class="chapter-item expanded affix "><a href="references.html">Références</a></li></ol>
+                <ol class="chapter"><li class="chapter-item expanded affix "><a href="introduction.html">Introduction</a></li><li class="spacer"></li><li class="chapter-item expanded "><a href="configuration/intro.html"><strong aria-hidden="true">1.</strong> Configuration</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="configuration/first_use.html"><strong aria-hidden="true">1.1.</strong> First use</a></li><li class="chapter-item expanded "><a href="configuration/setup_gemc.html"><strong aria-hidden="true">1.2.</strong> Setup GEMC</a></li><li class="chapter-item expanded "><a href="configuration/run.html"><strong aria-hidden="true">1.3.</strong> Run my code</a></li></ol></li><li class="chapter-item expanded "><a href="tutorials/intro.html"><strong aria-hidden="true">2.</strong> Tutorials</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="tutorials/alert_gcard.html"><strong aria-hidden="true">2.1.</strong> Simulation parameters</a></li><li class="chapter-item expanded "><a href="tutorials/new_entry_bank.html"><strong aria-hidden="true">2.2.</strong> New entry, AHDC::adc</a></li><li class="chapter-item expanded "><a href="tutorials/new_ahdc_bank.html"><strong aria-hidden="true">2.3.</strong> New bank, AHDC::wf136</a></li></ol></li><li class="chapter-item expanded "><a href="ahdc/simu_signal.html"><strong aria-hidden="true">3.</strong> AHDC signal</a></li><li class="spacer"></li><li class="chapter-item expanded affix "><a href="references.html">Références</a></li></ol>
             </div>
             <div id="sidebar-resize-handle" class="sidebar-resize-handle">
                 <div class="sidebar-resize-indicator"></div>
@@ -290,6 +290,7 @@ cd ../
 <img src="configuration/./images/hipo-utils3.png" alt="hipo-utils3" /></p>
 <p>To go further, visit <a href="https://clasweb.jlab.org/wiki/index.php/CLAS12_Software_Center#tab=Analysis">CLAS12 Software Center / Analysis</a></p>
 <div style="break-before: page; page-break-before: always;"></div><h1 id="tutorials"><a class="header" href="#tutorials">Tutorials</a></h1>
+<p>As it's much simple to learn from examples...</p>
 <div style="break-before: page; page-break-before: always;"></div><h1 id="generate-a-particle"><a class="header" href="#generate-a-particle">Generate a particle</a></h1>
 <h2 id="particle"><a class="header" href="#particle">Particle</a></h2>
 <p>The type of particle, the iniatial coordinates, momentum, ... are defined in a file called <strong>alert.gcard</strong> accessible in <code>gemc/detectors/clas12/alert</code>. Here is an example  of such a file.</p>
@@ -380,7 +381,7 @@ cd ../
 <li><a href="https://github.com/gemc/detectors/blob/main/clas12/targets/targets.pl"><code>gemc/detectors/clas12/targets/targets.pl</code></a></li>
 <li><code>gemc/detectors/clas12/alert/thisDet/thisDet.pl</code> where thisDet == {He_bag, ahdc or atof}</li>
 </ul>
-<div style="break-before: page; page-break-before: always;"></div><h1 id="add-new-entries-in-a-bank"><a class="header" href="#add-new-entries-in-a-bank">Add new entries in a bank</a></h1>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="add-new-entries-in-ahdcadc"><a class="header" href="#add-new-entries-in-ahdcadc">Add new entries in AHDC::adc</a></h1>
 <p>On the <strong>ifarm</strong>, we can see the content of an hipo file using :</p>
 <pre><code>hipo-utils -dump myfile.hipo
 </code></pre>
@@ -455,14 +456,155 @@ cd ../
 </code></pre>
 <p>This is the end. Now you have to go in your <code>gemc/detectors/clas12/alert</code> (the place where you run <strong>gemc</strong>).</p>
 <pre><code class="language-shell">cd ahdc
-run-groovy factory.groovy --variation default --runnumber 11
-run-groovy factory.groovy --variation rga_fall2018 --runnumber 11
 ./ahdc.pl config.dat
 cd ..
 </code></pre>
 <p>and run :</p>
 <pre><code>/yourpathto/gemc/source/gemc alert.gcard -OUTPUT='hipo, ten_events.hipo' -N=10 -USE_GUI=0
 </code></pre>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="creation-of-the-ahdcwf136-bank"><a class="header" href="#creation-of-the-ahdcwf136-bank">Creation of the AHDC::wf136 bank?</a></h1>
+<p>I wanted to create a new bank to save the digitized AHDC signal. I called it <code>AHDC::wf136</code>. wf refers "waveform" and 136 is the sampling number. (It is important to note that 136 is an abitrary number that should normally depends on <code>(int) (tmax-tmin)/44ns</code>. Here, the time windows is 6000 ns.)</p>
+<p>The goal is to provide this digitized signal to the decoder in the reconstruction algorithm.</p>
+<h2 id="step-1-classic"><a class="header" href="#step-1-classic">Step 1 (classic)</a></h2>
+<p>In <code>gemc/source/hitprocess/clas12/alert/ahdc_hitprocess.cc</code>, I added :</p>
+<pre><code class="language-cpp">for (int itr=1;itr&lt;=136;itr++){
+                std::ostringstream sEntry;
+                sEntry &lt;&lt; "wf136_s" &lt;&lt; itr;
+                dgtz[sEntry.str()] = (int) SDgtz.at(itr-1);
+}
+
+</code></pre>
+<h2 id="step-2-classic"><a class="header" href="#step-2-classic">Step 2 (classic)</a></h2>
+<p>In <code>gemc/detectors/clas12/alert/ahdc/bank.pl</code>, I added these lines :</p>
+<pre><code class="language-pl">for my $itr (1..136) {
+                my $entry = "wf136_s$itr";
+                insert_bank_variable(\%configuration, $bankname, $entry,$itr+3, "Di", "Digitized AHDC siganl : sample n° $itr");
+}
+</code></pre>
+<p>To update the database, in <code>gemc/detectors/clas12/alert/ahdc</code>, I run  :</p>
+<pre><code class="language-bash">./ahdc.pl config.dat
+</code></pre>
+<h2 id="step-3-less-classic"><a class="header" href="#step-3-less-classic">Step 3 (less classic)</a></h2>
+<p>In <code>gemc/source/output/hipoSchema.h</code>, I declared :</p>
+<pre><code class="language-cpp">class HipoSchema {
+    // ...
+    // detectors
+    hipo::schema alertAhdcWF136chema;
+    // ..
+};
+</code></pre>
+<p>In <code>gemc/source/output/hipoSchema.cc</code>, I added :</p>
+<pre><code class="language-cpp">// detectors
+alertAhdcWF136chema = hipo::schema("AHDC::wf136",22400, 13); // &lt;== this line !
+// ...
+// detectors
+std::ostringstream ListOfAhdcWF136;
+ListOfAhdcWF136 &lt;&lt; "sector/B, layer/B, component/S";
+for (int itr=1;itr&lt;=136;itr++){
+        ListOfAhdcWF136 &lt;&lt; ", s" &lt;&lt; itr &lt;&lt; "/I";
+}
+alertAhdcWF136chema.parse(ListOfAhdcWF136.str());  // &lt;== this line !
+// ...
+schemasToLoad["AHDC::wf136"] = alertAhdcWF136chema; // &lt;== this line !
+// ...
+</code></pre>
+<h2 id="step-4-very-subtle"><a class="header" href="#step-4-very-subtle">Step 4 (very subtle)</a></h2>
+<p>The writting of the digitized bank is done in <code>hipo_output::writeDgtIntegrated(...)</code>.</p>
+<p><code>hitType</code> is the name of the detector. For ALERT, <code>hitType == "ahdc"</code>.</p>
+<p>The line bellow extract the structure of the AHDC bank.</p>
+<pre><code class="language-cpp">gBank dgtBank     = getDgtBankFromMap(hitType, banksMap);
+</code></pre>
+<p>If you do a <code>cout &lt;&lt; dgtBank</code>, you will got something like that :</p>
+<pre><code>======&gt; Show dgtBank
+ &gt;&gt; Bank ahdc loaded with id 2 : ahdc bank ID
+  &gt; Variable : sector	 id: 1	 type: Di	 Description: set to 1
+  &gt; Variable : layer	 id: 2	 type: Di	 Description: hipo layer is superlayer*10 + layer
+  &gt; Variable : component	 id: 3	 type: Di	 Description: wire number
+  &gt; Variable : ADC_order	 id: 4	 type: Di	 Description: set to 1
+  &gt; Variable : ADC_ADC	 id: 5	 type: Di	 Description: ADC integral from pulse fit
+  &gt; Variable : ADC_time	 id: 6	 type: Dd	 Description: adc time from pulse fit
+  &gt; Variable : ADC_ped	 id: 7	 type: Di	 Description: pedestal from pulse analysis - currently set to noise level
+  &gt; Variable : ADC_integral	 id: 8	 type: Di	 Description: integral
+  &gt; Variable : ADC_timestamp	 id: 9	 type: Dd	 Description: currently set to t_start
+  &gt; Variable : ADC_t_cfd	 id: 10	 type: Dd	 Description: time from constant fraction discriminator
+  &gt; Variable : ADC_mctime	 id: 11	 type: Dd	 Description: mc time - weighted average with Edep
+  &gt; Variable : ADC_nsteps	 id: 12	 type: Di	 Description: nsteps
+  &gt; Variable : ADC_mcEtot	 id: 13	 type: Dd	 Description: mcEtot
+  &gt; Variable : hitn	 id: 99	 type: Di	 Description: hit number
+  &gt; Variable : wf136_s1	 id: 4	 type: Di	 Description: Digitized AHDC siganl : sample n° 1
+  &gt; Variable : wf136_s2	 id: 5	 type: Di	 Description: Digitized AHDC siganl : sample n° 2
+  &gt; Variable : wf136_s3	 id: 6	 type: Di	 Description: Digitized AHDC siganl : sample n° 3
+  &gt; Variable : wf136_s4	 id: 7	 type: Di	 Description: Digitized AHDC siganl : sample n° 4
+  &gt; Variable : wf136_s5	 id: 8	 type: Di	 Description: Digitized AHDC siganl : sample n° 5
+  &gt; Variable : wf136_s6	 id: 9	 type: Di	 Description: Digitized AHDC siganl : sample n° 6
+  &gt; Variable : wf136_s7	 id: 10	 type: Di	 Description: Digitized AHDC siganl : sample n° 7
+  &gt; Variable : wf136_s8	 id: 11	 type: Di	 Description: Digitized AHDC siganl : sample n° 8
+  &gt; Variable : wf136_s9	 id: 12	 type: Di	 Description: Digitized AHDC siganl : sample n° 9
+  &gt; Variable : wf136_s10	 id: 13	 type: Di	 Description: Digitized AHDC siganl : sample n° 10
+  &gt; Variable : wf136_s11	 id: 14	 type: Di	 Description: Digitized AHDC siganl : sample n° 11
+  &gt; Variable : wf136_s12	 id: 15	 type: Di	 Description: Digitized AHDC siganl : sample n° 12
+  &gt; Variable : wf136_s13	 id: 16	 type: Di	 Description: Digitized AHDC siganl : sample n° 13
+  &gt; Variable : wf136_s14	 id: 17	 type: Di	 Description: Digitized AHDC siganl : sample n° 14
+  &gt; Variable : wf136_s15	 id: 18	 type: Di	 Description: Digitized AHDC siganl : sample n° 15
+  &gt; Variable : wf136_s16	 id: 19	 type: Di	 Description: Digitized AHDC siganl : sample n° 16
+  &gt; Variable : wf136_s17	 id: 20	 type: Di	 Description: Digitized AHDC siganl : sample n° 17
+  // etc...
+</code></pre>
+<p>At this step, I was confident with the fact that I could access my new bank. To continue, I just got inspire by the code already written. As AHDC::wf136 is neither of type <code>adc</code> nor <code>tdc</code>, I had to do some stuffs manually. So I extracted the schema and the bank like that :</p>
+<pre><code class="language-cpp">// Specific to AHDC and AHDC::wf136
+hipo::schema ahdcWF136Schema = (output-&gt;hipoSchema)-&gt;schemasToLoad["AHDC::wf136"];
+hipo::bank ahdcWF136Bank(ahdcWF136Schema, HO.size());
+//std::cout &lt;&lt; "======&gt; Show ahdcWF136Bank" &lt;&lt; std::endl;
+//ahdcWF136Bank.show(); // to have a preview the AHDC::wf136 // of course, at this step, all entries are set to 0
+</code></pre>
+<p>It remained to fill the bank when hitType == "ahdc" :</p>
+<pre><code class="language-cpp">for(auto &amp;bankName : dgtBank.orderedNames ) {
+// ...
+    if(hasADCBank) {
+				
+<span class="boring">        // looping over the hits
+</span><span class="boring">        for(unsigned int nh=0; nh&lt;HO.size(); nh++) {
+</span><span class="boring">            
+</span><span class="boring">            map&lt;string, double&gt; theseDgts = HO[nh].getDgtz();
+</span><span class="boring">            for(auto &amp;thisVar: theseDgts) {
+</span><span class="boring">               
+</span><span class="boring">                // found data match to bank definition
+</span><span class="boring">                if(thisVar.first == bname) {
+</span><span class="boring">                    
+</span><span class="boring">                    string varType = dgtBank.getVarType(thisVar.first);
+</span><span class="boring">                    
+</span><span class="boring">                    // sector, layer, component are common in adc/tdc so their names are w/o prefix
+</span><span class="boring">                    // sector, layers are "Bytes"
+</span>                    if(bname == "sector" || bname == "layer") {
+                        detectorADCBank.putByte(bname.c_str(), nh, thisVar.second);
+                        if (hitType == "ahdc") {ahdcWF136Bank.putByte(bname.c_str(), nh, thisVar.second);} // &lt;== This line !
+                    } else if(bname == "component") {
+                        detectorADCBank.putShort(bname.c_str(), nh, thisVar.second);
+                        if (hitType == "ahdc") {ahdcWF136Bank.putShort(bname.c_str(), nh, thisVar.second);} // &lt;== This line !
+                    } else {
+<span class="boring">                        // all other ADC vars must begin with "ADC_"
+</span><span class="boring">                        if(bname.find("ADC_") == 0) {
+</span><span class="boring">                            string adcName = bname.substr(4);
+</span><span class="boring">                            if(varType == "i") {
+</span><span class="boring">                                detectorADCBank.putInt(adcName.c_str(), nh, thisVar.second);
+</span><span class="boring">                            } else if(varType == "d") {
+</span><span class="boring">                                detectorADCBank.putFloat(adcName.c_str(), nh, thisVar.second);
+</span><span class="boring">                            }
+</span>                        } else if(bname.find("wf136_") == 0) { // actually this prefix only appears in AHDC
+                            if (hitType == "ahdc") {
+                                string wf136Name = bname.substr(6);
+                                if (varType == "i"){
+                                    ahdcWF136Bank.putInt(wf136Name.c_str(), nh, thisVar.second); // &lt;== This line !
+                                }
+                            }
+                        }
+                    }
+// ...
+}
+</code></pre>
+<h2 id="result"><a class="header" href="#result">Result</a></h2>
+<p><img src="tutorials/./images/ahdc_wf136_bank0.png" alt="AHDC::wf136_isthere" />
+<img src="tutorials/./images/ahdc_wf136_bank.png" alt="AHDC::wf136" /></p>
 <div style="break-before: page; page-break-before: always;"></div><h1 id="ahdc-signal"><a class="header" href="#ahdc-signal">AHDC signal</a></h1>
 <p>The process to obtain this signal is well explained in <a href="https://ftouchte.github.io/projects/">Preparation of the ALERT experiment at Jefferson Lab (chapter 4)</a>. Here is a simulation of the AHDC signal.  This section presents the definition of each decoding output.</p>
 <p><img src="ahdc/../images/SignalDecoded.png" alt="AHDC signal + decoding" /></p>
