@@ -48,9 +48,10 @@ This is the green area shown in the figure [SignalDecoded](#ahdc-signal). It is 
 This is the time obtained using the Constant Fraction Discriminator (CFD) algorithm. The CFD has the particularity of giving the time when the signal reaches a constant fraction of its amplitude. The process to determine this time is illustrated by the figure bellow. The CFD depends on two parameters : a fraction factor and a delay. Currently, the fraction factor is set to $0.3$ and the delay to 5 (in index units) but they have to be optimized ! 
 
 ![AlgoCFD.png](../images/cfd-algorithm.png)
+N.B : This image has been taken from [EDINBURGH INSTRUMENTS](https://www.edinst.com/blog/constant-fraction-discrimination/).
+
 ![SignalCFDApplied.png](../images/SignalCFDApplied.png)
 
-N.B : This image has been taken from [EDINBURGH INSTRUMENTS](https://www.edinst.com/blog/constant-fraction-discrimination/).
 
 ## Decoding output vs AHDC::adc entries
 

@@ -201,8 +201,8 @@ t_{start} = t_i + \frac{\mbox{threshold} - S_i}{\mbox{slope}}
 <h2 id="t_cfd"><a class="header" href="#t_cfd">t_cfd</a></h2>
 <p>This is the time obtained using the Constant Fraction Discriminator (CFD) algorithm. The CFD has the particularity of giving the time when the signal reaches a constant fraction of its amplitude. The process to determine this time is illustrated by the figure bellow. The CFD depends on two parameters : a fraction factor and a delay. Currently, the fraction factor is set to $0.3$ and the delay to 5 (in index units) but they have to be optimized !</p>
 <p><img src="../images/cfd-algorithm.png" alt="AlgoCFD.png" />
-<img src="../images/SignalCFDApplied.png" alt="SignalCFDApplied.png" /></p>
-<p>N.B : This image has been taken from <a href="https://www.edinst.com/blog/constant-fraction-discrimination/">EDINBURGH INSTRUMENTS</a>.</p>
+N.B : This image has been taken from <a href="https://www.edinst.com/blog/constant-fraction-discrimination/">EDINBURGH INSTRUMENTS</a>.</p>
+<p><img src="../images/SignalCFDApplied.png" alt="SignalCFDApplied.png" /></p>
 <h2 id="decoding-output-vs-ahdcadc-entries"><a class="header" href="#decoding-output-vs-ahdcadc-entries">Decoding output vs AHDC::adc entries</a></h2>
 <div class="table-wrapper"><table><thead><tr><th>AHDC::adc entries</th><th>Decoding output</th></tr></thead><tbody>
 <tr><td>ADC</td><td>max_value</td></tr>

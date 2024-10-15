@@ -1,6 +1,6 @@
 # Add new entries in a bank
 
-On the **ifarm**, when can see the content of an hipo file using :
+On the **ifarm**, we can see the content of an hipo file using :
 
 ```
 hipo-utils -dump myfile.hipo
