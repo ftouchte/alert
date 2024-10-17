@@ -242,6 +242,19 @@ source /w/hallb-scshelf2102/clas12/users/touchte/root/bin/thisroot.csh
 <pre><code class="language-shell">cd ../targets
 ./targets.pl config.dat
 cd ../alert/ahdc
+./ahdc.pl config.dat
+cd ../atof
+./atof.pl config.dat
+cd ../external_shell_nonActif
+./alertshell.pl config.dat
+cd ../He_bag
+./hebag.pl config.dat
+cd ../ 
+</code></pre>
+<!-- ``` shell
+cd ../targets
+./targets.pl config.dat
+cd ../alert/ahdc
 run-groovy factory.groovy --variation default --runnumber 11
 run-groovy factory.groovy --variation rga_fall2018 --runnumber 11
 ./ahdc.pl config.dat
@@ -254,8 +267,7 @@ cd ../external_shell_nonActif
 cd ../He_bag
 ./hebag.pl config.dat
 cd ../ 
-</code></pre>
-<div style="break-before: page; page-break-before: always;"></div><h1 id="run-my-code"><a class="header" href="#run-my-code">Run my code</a></h1>
+``` --><div style="break-before: page; page-break-before: always;"></div><h1 id="run-my-code"><a class="header" href="#run-my-code">Run my code</a></h1>
 <p>At this step, everything is setup. Go in the directory where the geometry of the ALERT detector has been defined (<code>yourpathto/gemc/detectors/clas12/alert</code>)</p>
 <p>Example of run :</p>
 <pre><code class="language-shell">/yourpathto/gemc/source/gemc alert.gcard -OUTPUT='hipo, ten_events.hipo' -N=10 -USE_GUI=0
@@ -291,7 +303,7 @@ cd ../
 <p>To go further, visit <a href="https://clasweb.jlab.org/wiki/index.php/CLAS12_Software_Center#tab=Analysis">CLAS12 Software Center / Analysis</a></p>
 <div style="break-before: page; page-break-before: always;"></div><h1 id="tutorials"><a class="header" href="#tutorials">Tutorials</a></h1>
 <p>As it's much simple to learn from examples...</p>
-<div style="break-before: page; page-break-before: always;"></div><h1 id="generate-a-particle"><a class="header" href="#generate-a-particle">Generate a particle</a></h1>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="simulation-parameters"><a class="header" href="#simulation-parameters">Simulation parameters</a></h1>
 <h2 id="particle"><a class="header" href="#particle">Particle</a></h2>
 <p>The type of particle, the iniatial coordinates, momentum, ... are defined in a file called <strong>alert.gcard</strong> accessible in <code>gemc/detectors/clas12/alert</code>. Here is an example  of such a file.</p>
 <pre><code class="language-json">&lt;gcard&gt;
