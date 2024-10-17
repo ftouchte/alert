@@ -26,37 +26,43 @@
 
 int main(int argc, char const *argv[]){
 	//const char* filename = "./data/simu.hipo";
-	const char* filename = "./data/simu_100k.hipo";
-	//const char* filename = "./data/simu_mctime_max.hipo";
+	//const char* filename = "./data/simu_100k.hipo";
+	const char* filename = "./data/new_simu_100k.hipo";
 	hipo::reader  r(filename);
 	hipo::banklist list = r.getBanks({"MC::Particle","AHDC::adc","ATOF::adc"});
 	long unsigned int nEvents =0;
 
 	// AHDC::adc
-	double t_start, t_cfd, mctime, t_ovr;
+	double t_start, t_cfd, mctime, t_ovr, mcEtot;
 	int max_value, integral, noise, nsteps;
 	double delta_start, delta_cfd;
 
-	TH1D* hist_t_start = new TH1D("hist_t_start","t_start",600, 400,1000);
-	TH1D* hist_t_cfd = new TH1D("hist_t_cfd","t_cfd",600, 400,1000);
-	TH1D* hist_mctime = new TH1D("hist_mctime","mctime",400, 0,400);
-	TH1D* hist_t_ovr = new TH1D("hist_t_ovr","t_ovr",2000, 0,2000);
+	TH1D* hist_t_start = new TH1D("hist_t_start","#bf{a)} t_start",600, 400,1000);
+	TH1D* hist_t_cfd = new TH1D("hist_t_cfd","#bf{b)} t_cfd",600, 400,1000);
+	TH1D* hist_mctime = new TH1D("hist_mctime","#bf{e)} mctime",400, 0,400);
+	TH1D* hist_t_ovr = new TH1D("hist_t_ovr","#bf{f)} t_ovr",2000, 0,2000);
 
-	TH1D* hist_delta_start = new TH1D("hist_delta_start","#Delta t_{start}",600, 400,1000);
-	TH1D* hist_delta_cfd = new TH1D("hist_delta_cfd","#Delta t_{cfd}",600, 400,1000);
+	TH1D* hist_delta_start = new TH1D("hist_delta_start","#bf{c)} #Delta t_{start}",600, 400,1000);
+	TH1D* hist_delta_cfd = new TH1D("hist_delta_cfd","#bf{d)} #Delta t_{cfd}",600, 400,1000);
+
+	TH1D* hist_mcEtot = new TH1D("hist_mcEtot","#bf{c)} hist_mcEtot",1000, 0,30);
 
 
-	TH1I* hist_nsteps = new TH1I("hist_nsteps","nsteps",100, 0,50);
-	TH1I* hist_max_value = new TH1I("hist_max_value","max_value",4095, 0,4095);
-	TH1I* hist_integral = new TH1I("hist_integral","integral",1000, 0,60000);
-	TH1I* hist_noise = new TH1I("hist_noise","noise",600, 0,600);
 
-	TH2D* hist2d_start_cfd = new TH2D("hist2d_start_cfd","Correlation between #bf{t_start} and #bf{t_cfd}",100,500,1000,100,500,1000);
-	TH2D* hist2d_start_mctime = new TH2D("hist2d_start_mctime","Correlation between #bf{t_start} and #bf{mctime}",100,500,1000,100,0,400);
-	TH2D* hist2d_cfd_mctime = new TH2D("hist2d_cfd_mctime","Correlation between #bf{t_cfd} and #bf{mctime}",100,500,1000,100,0,400);
+	TH1I* hist_nsteps = new TH1I("hist_nsteps","#bf{j)} nsteps",100, 0,50);
+	TH1I* hist_max_value = new TH1I("hist_max_value","#bf{g)} max_value",4095, 0,4095);
+	TH1I* hist_integral = new TH1I("hist_integral","#bf{h)} integral",1000, 0,60000);
+	TH1I* hist_noise = new TH1I("hist_noise","#bf{i)} noise",600, 0,600);
 
-	TH2D* hist2d_start_magnitude = new TH2D("hist2d_start_magnitude","Correlation between #bf{t_start - mctime} and #bf{magnitude}",600,400,1000,1000,0,4095);
-	TH2D* hist2d_cfd_magnitude = new TH2D("hist2d_cfd_magnitude","Correlation between #bf{t_cfd - mctime} and #bf{magnitude}",600,400,1000,1000,0,4095);
+	TH2D* hist2d_start_cfd = new TH2D("hist2d_start_cfd","#bf{a)} Correlation between #bf{t_start} and #bf{t_cfd}",100,500,1000,100,500,1000);
+	TH2D* hist2d_start_mctime = new TH2D("hist2d_start_mctime","#bf{b)} Correlation between #bf{t_start} and #bf{mctime}",100,500,1000,100,0,400);
+	TH2D* hist2d_cfd_mctime = new TH2D("hist2d_cfd_mctime","#bf{c)} Correlation between #bf{t_cfd} and #bf{mctime}",100,500,1000,100,0,400);
+
+	TH2D* hist2d_start_magnitude = new TH2D("hist2d_start_magnitude","#bf{a)} Correlation between #Delta t_{start} and amplitude",600,400,1000,1000,0,4095);
+	TH2D* hist2d_cfd_magnitude = new TH2D("hist2d_cfd_magnitude","#bf{b)} Correlation between #Delta t_{cfd} and amplitude",600,400,1000,1000,0,4095);
+
+	TH2D* hist2d_adc_mcEtot = new TH2D("hist2d_adc_mcEtot","#bf{a)} Correlation between max_value and mcEtot",4095,0,4095,30,0,30);
+	TH2D* hist2d_integral_mcEtot = new TH2D("hist2d_integral_mcEtot","#bf{b)} Correlation between integral and mcEtot",1000,0,8000,30,0,30);
 
 	// MC::Particle
 	double px, py, pz;
@@ -100,6 +106,7 @@ int main(int argc, char const *argv[]){
 			max_value = list[1].getInt("ADC",itr);
 			integral = list[1].getInt("integral",itr);
 			noise = list[1].getInt("ped",itr);
+			mcEtot = list[1].getFloat("mcEtot",itr);
 			delta_start = t_start-mctime;
 			delta_cfd = t_cfd-mctime;
 			//delta_start = delta_start - 625.6; // centered at 0
@@ -118,6 +125,7 @@ int main(int argc, char const *argv[]){
 				hist_max_value->Fill(max_value);
 				hist_integral->Fill(integral);
 				hist_noise->Fill(noise);
+				hist_mcEtot->Fill(mcEtot);
 
 				hist_delta_start->Fill(delta_start);
 				hist_delta_cfd->Fill(delta_cfd);
@@ -128,6 +136,8 @@ int main(int argc, char const *argv[]){
 
 				hist2d_start_magnitude->Fill(delta_start,max_value);
 				hist2d_cfd_magnitude->Fill(delta_cfd,max_value);
+				hist2d_adc_mcEtot->Fill(max_value,mcEtot);
+				hist2d_integral_mcEtot->Fill(integral,mcEtot);
 			}
 
 		}
@@ -202,7 +212,7 @@ int main(int argc, char const *argv[]){
 	hist_noise->GetYaxis()->SetTitleSize(0.05);
 	hist_noise->Draw();
 	// hist_delta_start
-	canvas1->cd(4);
+	canvas1->cd(3);
 	hist_delta_start->GetXaxis()->SetTitle("t_start - mctime (ns)");
 	hist_delta_start->GetXaxis()->SetTitleSize(0.05);
 	hist_delta_start->GetYaxis()->SetTitle("#events");
@@ -212,7 +222,7 @@ int main(int argc, char const *argv[]){
 		//std::cout << "maximum bin : " << hist_delta_start->GetMaximumBin() << std::endl;
 	hist_delta_start->Draw();
 	// hist_delta_cfd
-	canvas1->cd(3);
+	canvas1->cd(4);
 	hist_delta_cfd->GetXaxis()->SetTitle("t_cfd - mctime (ns)");
 	hist_delta_cfd->GetXaxis()->SetTitleSize(0.05);
 	hist_delta_cfd->GetYaxis()->SetTitle("#events");
@@ -237,8 +247,8 @@ int main(int argc, char const *argv[]){
 	//     Study of correlation in AHDC::adc
 	// **************************************
 
-	TCanvas* canvas2 = new TCanvas("c2","c2 title",2000,3000);
-	canvas2->Divide(2,4);
+	TCanvas* canvas2 = new TCanvas("c2","c2 title",2400,1400);
+	canvas2->Divide(2,2);
 	gStyle->SetOptStat("nemruo");
 	
 	// hist2d_start_cfd
@@ -265,54 +275,113 @@ int main(int argc, char const *argv[]){
 	hist2d_cfd_mctime->GetYaxis()->SetTitleSize(0.05);
 		//hist2d_cfd_mctime->SetStats(kFALSE);
 	hist2d_cfd_mctime->Draw("COLZ");
+	// SAVE
+	canvas2->Print("./output/Decoding2d1_analysis.pdf");
+
+	TCanvas* canvas22 = new TCanvas("c22","c22 title",2200,2000);
+	canvas22->Divide(2,3);
 	// hist2d_start_magnitude
-	canvas2->cd(5);
-	hist2d_start_magnitude->GetXaxis()->SetTitle("t_start - mctime");
+	canvas22->cd(1);
+	hist2d_start_magnitude->GetXaxis()->SetTitle("#Delta t_{start}");
 	hist2d_start_magnitude->GetXaxis()->SetTitleSize(0.05);
-	hist2d_start_magnitude->GetYaxis()->SetTitle("magnitude");
+	hist2d_start_magnitude->GetYaxis()->SetTitle("amplitude");
 	hist2d_start_magnitude->GetYaxis()->SetTitleSize(0.05);
 		//hist2d_start_magnitude->SetStats(kFALSE);
 	hist2d_start_magnitude->Draw("COLZ");
 	// hist2d_cfd_magnitude
-	canvas2->cd(6);
-	hist2d_cfd_magnitude->GetXaxis()->SetTitle("t_cfd - mctime");
+	canvas22->cd(2);
+	hist2d_cfd_magnitude->GetXaxis()->SetTitle("#Delta t_{cfd}");
 	hist2d_cfd_magnitude->GetXaxis()->SetTitleSize(0.05);
-	hist2d_cfd_magnitude->GetYaxis()->SetTitle("magnitude");
+	hist2d_cfd_magnitude->GetYaxis()->SetTitle("amplitude");
 	hist2d_cfd_magnitude->GetYaxis()->SetTitleSize(0.05);
 		//hist2d_cfd_magnitude->SetStats(kFALSE);
 	hist2d_cfd_magnitude->Draw("COLZ");
-	// time error as a function of magnitude
+	// time error as a function of magnitude 
+	// error t_start
 	std::cout << "nbins : " << hist2d_start_magnitude->GetYaxis()->GetNbins() << std::endl;
 	int Nbins = hist2d_start_magnitude->GetYaxis()->GetNbins();
 	double wbins = hist2d_start_magnitude->GetYaxis()->GetBinWidth(0);
 	TGraph* gr_start = new TGraph(Nbins);
-	TH1D* hist_tmp = hist2d_start_magnitude->ProjectionX("_px20",Nbins/5,Nbins/5,"[20,21]"); canvas2->cd(2); hist_tmp->SetTitle("projection X for Y == Nbins/5"); hist_tmp->Draw();
+	TH1D* hist_tmp = hist2d_start_magnitude->ProjectionX("_px20",Nbins/5,Nbins/5,"[20,21]"); canvas22->cd(3); hist_tmp->SetTitle(TString::Format("#bf{c)} projection of #Delta t_{start} for amp = %.0lf", 400 + wbins*Nbins/5)); hist_tmp->Draw();
 	double stdev;
 	for (int k=0;k<Nbins;k++){
 		stdev = hist2d_start_magnitude->ProjectionX("_px",k,k,"")->GetStdDev();
 		gr_start->SetPoint(k,k*wbins,stdev);
 	}
-	canvas2->cd(7); 
-	gr_start->SetTitle("Error #Delta t_{start} vs magnitude");
-	gr_start->GetXaxis()->SetTitle("Magnitude (adc)");
+	canvas22->cd(5); 
+	gr_start->SetTitle("#bf{e)} StdDev #Delta t_{start} vs amplitude");
+	gr_start->GetXaxis()->SetTitle("amplitude (adc)");
 	gr_start->GetXaxis()->SetTitleSize(0.05);
-	gr_start->GetYaxis()->SetTitle("Error (ns)");
+	gr_start->GetYaxis()->SetTitle("StdDev (ns)");
 	gr_start->GetYaxis()->SetTitleSize(0.05);
 	//gr2->SetLineStyle(1);
-	gr_start->SetLineColor(kBlue);
-	gr_start->SetMarkerColor(kBlue);
+	gr_start->SetLineColor(kBlue+2);
+	gr_start->SetMarkerColor(kRed);
 	gr_start->SetMarkerSize(5);
 	gr_start->Draw("ALP");
-	
+
+	// error t_cfd
+	Nbins = hist2d_cfd_magnitude->GetYaxis()->GetNbins();
+	wbins = hist2d_cfd_magnitude->GetYaxis()->GetBinWidth(0);
+	TGraph* gr_cfd = new TGraph(Nbins);
+	TH1D* hist_tmp2 = hist2d_cfd_magnitude->ProjectionX("_px21",Nbins/5,Nbins/5,"[20,21]"); canvas22->cd(4); hist_tmp2->SetTitle(TString::Format("#bf{d)} projection of #Delta t_{cfd} for amp = %.0lf", 400 + wbins*Nbins/5)); hist_tmp2->Draw();
+	for (int k=0;k<Nbins;k++){
+		stdev = hist2d_cfd_magnitude->ProjectionX("_pxx",k,k,"")->GetStdDev();
+		gr_cfd->SetPoint(k,k*wbins,stdev);
+	}
+	canvas22->cd(6); 
+	gr_cfd->SetTitle("#bf{f)} StdDev #Delta t_{cfd} vs amplitude");
+	gr_cfd->GetXaxis()->SetTitle("amplitude (adc)");
+	gr_cfd->GetXaxis()->SetTitleSize(0.05);
+	gr_cfd->GetYaxis()->SetTitle("StdDev (ns)");
+	gr_cfd->GetYaxis()->SetTitleSize(0.05);
+	//gr2_cfd->SetLineStyle(1);
+	gr_cfd->SetLineColor(kBlue+2);
+	gr_cfd->SetMarkerColor(kRed);
+	gr_cfd->SetMarkerSize(5);
+	gr_cfd->Draw("ALP");
 
 	// SAVE
-	canvas2->Print("./output/Decoding2d_analysis.pdf");
+	canvas22->Print("./output/Decoding2d2_analysis.pdf");
 	delete hist2d_start_cfd;
 	delete hist2d_start_mctime;
 	delete hist2d_cfd_mctime;
 	delete hist2d_cfd_magnitude;
 	delete hist2d_start_magnitude;
 	delete canvas2;
+
+	TCanvas* canvas222 = new TCanvas("c22","c22 title",2200,1200);
+	canvas222->Divide(2,2);
+	// hist2d_adc_mcEtot
+	canvas222->cd(1);
+	hist2d_adc_mcEtot->GetXaxis()->SetTitle("max_value");
+	hist2d_adc_mcEtot->GetXaxis()->SetTitleSize(0.05);
+	hist2d_adc_mcEtot->GetYaxis()->SetTitle("mcEtot");
+	hist2d_adc_mcEtot->GetYaxis()->SetTitleSize(0.05);
+		//hist2d_adc_mcEtot->SetStats(kFALSE);
+	hist2d_adc_mcEtot->Draw("COLZ");
+	// hist2d_integral_mcEtot
+	canvas222->cd(2);
+	hist2d_integral_mcEtot->GetXaxis()->SetTitle("integral");
+	hist2d_integral_mcEtot->GetXaxis()->SetTitleSize(0.05);
+	hist2d_integral_mcEtot->GetYaxis()->SetTitle("mcEtot");
+	hist2d_integral_mcEtot->GetYaxis()->SetTitleSize(0.05);
+		//hist2d_integral_mcEtot->SetStats(kFALSE);
+	hist2d_integral_mcEtot->Draw("COLZ");
+	// hist_mcEtot
+	canvas222->cd(3);
+	hist_mcEtot->GetXaxis()->SetTitle("mcEtot");
+	hist_mcEtot->GetXaxis()->SetTitleSize(0.05);
+	hist_mcEtot->GetYaxis()->SetTitle("#events");
+	hist_mcEtot->GetYaxis()->SetTitleSize(0.05);
+		//hist_mcEtot->SetStats(kFALSE);
+	hist_mcEtot->Draw();
+
+
+	// SAVE
+	canvas222->Print("./output/Decoding2d3_analysis.pdf");
+
+
 
 	// *****************************************
 	//          PlOT MC::Particle

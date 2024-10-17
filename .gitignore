@@ -1,10 +1,6 @@
 *.hipo
 *.exe
 *.o
-/code/ssh.txt
-/code/hipofile/*
 /code/output/*
-Am_1700_CMN.root
 /code/data/*
-
 

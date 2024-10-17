@@ -1,4 +1,4 @@
-# Generate a particle
+# Simulation parameters
 
 ## Particle
 The type of particle, the iniatial coordinates, momentum, ... are defined in a file called **alert.gcard** accessible in `gemc/detectors/clas12/alert`. Here is an example  of such a file.

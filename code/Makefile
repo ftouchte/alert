@@ -14,7 +14,7 @@
 # 	-I<path> : Ajoute le répertoire <path> au chemin de recherche des fichiers d'en-tête.
 # 	-L<path> : Ajoute le répertoire <path> au chemin de recherche des bibliothèques.
 
-PATH2HIPO := /homeijclab/touchte-codjo/hipo
+PATH2HIPO := /home/ftouchte/hipo
 
 HIPOCFLAGS  := -I$(PATH2HIPO)/hipo4 -I$(PATH2HIPO)/hipo4/chart   
 HIPOLIBS    := -L$(PATH2HIPO)/lib -lhipo4 
@@ -22,7 +22,7 @@ HIPOLIBS    := -L$(PATH2HIPO)/lib -lhipo4
 LZ4LIBS     := -L$(PATH2HIPO)/lz4/lib -llz4
 LZ4INCLUDES := -I$(PATH2HIPO)/lz4/lib
 
-FELIXFLAGS := -I/homeijclab/touchte-codjo/Bureau/alert/code
+FELIXFLAGS := -I/homeijclab/Desktop/alert/code
 
 # ROOT libraries 
 ROOTLIBS = $(shell root-config --libs)
@@ -44,13 +44,10 @@ LDFLAGS   :=
 
 
 #all:  showFile histo plot benchmark simu
-all: simu_CFD histo analyse
+all: histo analyse
 
 analyse: analyse.o futils.o
 	$(CXX) -o analyse.exe $^ $(HIPOLIBS) $(LZ4LIBS) $(ROOTLIBS)
-
-simu_CFD: simu_CFD.o 
-	$(CXX) -o simu_CFD.exe $^ $(HIPOLIBS) $(LZ4LIBS) $(ROOTLIBS)
 
 showFile: showFile.o
 	$(CXX) -o showFile.exe $<  $(HIPOLIBS) $(LZ4LIBS)

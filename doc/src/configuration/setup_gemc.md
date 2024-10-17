@@ -64,6 +64,20 @@ and copy and paste the following lines in the terminal (line by line)
 cd ../targets
 ./targets.pl config.dat
 cd ../alert/ahdc
+./ahdc.pl config.dat
+cd ../atof
+./atof.pl config.dat
+cd ../external_shell_nonActif
+./alertshell.pl config.dat
+cd ../He_bag
+./hebag.pl config.dat
+cd ../ 
+```
+
+<!-- ``` shell
+cd ../targets
+./targets.pl config.dat
+cd ../alert/ahdc
 run-groovy factory.groovy --variation default --runnumber 11
 run-groovy factory.groovy --variation rga_fall2018 --runnumber 11
 ./ahdc.pl config.dat
@@ -76,4 +90,4 @@ cd ../external_shell_nonActif
 cd ../He_bag
 ./hebag.pl config.dat
 cd ../ 
-```
+``` -->
