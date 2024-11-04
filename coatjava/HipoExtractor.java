@@ -3,12 +3,12 @@ import java.util.ArrayList;
 
 public class Test {
 	public static void main(String[] args) {
-		short[] samples = {1,2,3,4,5,6,7,1,1};
+		short[] samples = {1,2,3,4,5,6,7,6,5,4,3,2,1};
 		//short[] samples = {1,2,3,4,5,6,4095,4095,4095,4095,4095,4,3,2,1};
-
+		
 		System.out.println("=====> Test HipoExtractor");
 		HipoExtractor H = new HipoExtractor();
-
+		//System.out.println("samples : " + samples.toString());
 		System.out.println("=====> Setting parameters");
 		short adcOffset = 0;
 		if (samples.length > 5) {
@@ -18,13 +18,17 @@ public class Test {
 		adcOffset = Integer.valueOf(adcOffset / 5).shortValue();
 		adcOffset = 0;
 		H.adcOffset = adcOffset; // adc
-		H.samplingTime = 44; // ns
+		H.samplingTime = 1; // ns // 44 ns
 		H.sparseSample = 0;
 		H.timeStamp = 0;
 		H.fineTimeStampResolution = 0;
+		H.amplitudeFractionCFA = 0.5f;
+		H.binDelayCFD = 5;
+		H.fractionCFD = 0.3f;
 		System.out.println("adcOffset    = " + H.adcOffset + " adc");
 		System.out.println("samplingTime = " + H.samplingTime + " ns");
 		System.out.println("sparseSample = " + H.sparseSample);
+		System.out.println("binOffset = " + H.binOffset);
 		System.out.println("timeStample = " + H.timeStamp);
 		System.out.println("fineTimeStampleResolution = " + H.fineTimeStampResolution);
 		
@@ -32,6 +36,11 @@ public class Test {
 		List<Pulse> pulses = H.extract(samples);
 		System.out.println("binMax = " + H.binMax);
 		System.out.println("adcMax = " + H.adcMax);
+		System.out.println("timeMax = " + H.timeMax + " ns");
+		System.out.println("timeRiseCFA = " + H.timeRiseCFA + " ns");
+		System.out.println("timeFallCFA = " + H.timeFallCFA + " ns");
+		System.out.println("timeOverThreshold = " + H.timeOverThresholdCFA + " ns");
+		System.out.println("timeCFD = " + H.timeCFD + " ns");
 		System.out.println(pulses.get(0));
 	}
 }
@@ -72,13 +81,16 @@ public class HipoExtractor {
 	public float timeOverThresholdCFA; // is equal to (timeFallCFA - timeRiseCFA)
 	public float timeCFD; // time extracted using the Constant Fraction Discriminator (CFD) algorithm (fitted)
 
-	// Setting parameters
+	// Setting parameters // Should ideally be arguments in the extarct() methods by comparison to MVTFitter.java
 	public float samplingTime;
 	public int sparseSample;
 	public short adcOffset; // à discuter avec Raphaël, est-ce que je le définis moi-même comme en simulation ?
 	long timeStamp;
 	float fineTimeStampResolution;
 	public static final short ADC_LIMIT = 4095; // 2^12-1
+	public float amplitudeFractionCFA;
+	public int binDelayCFD;
+	public float fractionCFD;
 	
 
 	/**
@@ -89,6 +101,8 @@ public class HipoExtractor {
 	public List<Pulse> extract(short... samples){
 		waveformCorrection(adcOffset,samplingTime,samples,sparseSample);
 		fitAverage(samplingTime);
+		computeTimeAtConstantFractionAmplitude(samplingTime,amplitudeFractionCFA);
+		computeTimeUsingConstantFractionDiscriminator(samplingTime,fractionCFD,binDelayCFD);
 		fineTimeStampCorrection(timeStamp,fineTimeStampResolution);	
 		// output
 		Pulse pulse = new Pulse(integral,timeMax);
@@ -186,8 +200,42 @@ public class HipoExtractor {
 	 * @param samplingTime : time between 2 ADC bins
 	 * @param amplitudeFraction : a float between 0 and 1
 	 */
-	private void getTimeAtConstantFractionAmplitude(float samplingTime, float amplitudeFraction){
+	private void computeTimeAtConstantFractionAmplitude(float samplingTime, float amplitudeFractionCFA){
+		float threshold = amplitudeFractionCFA*adcMax;
+		// timeRiseCFA
+		int binRise = 0;
+		for (int bin = 0; bin < binMax; bin++){
+			if (samplesCorr[bin] < threshold)
+				binRise = bin;  // last pass below threshold and before adcMax
+		} // at this stage : binRise < timeRiseCFA/samplingTime <= binRise + 1 // timeRiseCFA is determined by assuming a linear fit between binRise and binRise + 1
+		float slopeRise = 0;
+		if (binRise + 1 <= binNumber-1)
+			slopeRise = samplesCorr[binRise+1] - samplesCorr[binRise];
+		float fittedBinRise = (slopeRise == 0) ? binRise : binRise + (threshold - samplesCorr[binRise])/slopeRise;
+		timeRiseCFA = (fittedBinRise + binOffset)*samplingTime; // binOffset is determined in wavefromCorrection() // must be the same for all time ? // or must be defined using fittedBinRise*sparseSample 
+		System.out.println("**** binRise : " + binRise);
+		System.out.println("**** fittedBinRise : " + fittedBinRise);
+		System.out.println("**** slopeRise : " + slopeRise);	
 		
+		// timeFallCFA
+		int binFall = binMax;
+		for (int bin = binMax; bin < binNumber; bin++){
+			if (samplesCorr[bin] > threshold){
+				binFall = bin;
+			}
+			else {
+				binFall = bin;
+				break; // first pass below the threshold
+			}
+		} // at this stage : binFall - 1 <= timeRiseCFA/samplingTime < binFall // timeFallCFA is determined by assuming a linear fit between binFall - 1 and binFall
+		float slopeFall = 0;
+		if (binFall - 1 >= 0)
+			slopeFall = samplesCorr[binFall] - samplesCorr[binFall-1];
+		float fittedBinFall = (slopeFall == 0) ? binFall : binFall + (threshold - samplesCorr[binFall-1])/slopeFall;
+		timeFallCFA = (fittedBinFall + binOffset)*samplingTime;	
+		
+		// timeOverThreshold
+		timeOverThresholdCFA = timeFallCFA - timeRiseCFA;
 	}
 
 	/**
@@ -197,7 +245,36 @@ public class HipoExtractor {
 	 * @param amplitudeFraction : a float between 0 and 1, CFD fraction parameter
 	 * @param binDelay : CFD delay parameter
 	 */
-	private void getTimeUsingConstantFractionDiscriminator(float samplingTime, float amplitudeFraction, int binDelay){
-
+	private void computeTimeUsingConstantFractionDiscriminator(float samplingTime, float fractionCFD, int binDelayCFD){
+		float[] signal = new float[binNumber];
+		// signal generation
+		for (int bin = 0; bin < binNumber; bin++){
+			signal[bin] = (1 - fractionCFD)*samplesCorr[bin]; // we fill it with a fraction of the original signal
+			if (bin < binNumber - binDelayCFD) 
+				signal[bin] += -1*fractionCFD*samplesCorr[bin + binDelayCFD]; // we advance and invert a complementary fraction of the original signal and superimpose it to the previous signal 
+		}
+		// determine the two humps
+		int binHumpSup = 0;
+		int binHumpInf = 0;
+		for (int bin = 0; bin < binNumber; bin++){
+			if (signal[bin] > signal[binHumpSup])
+				binHumpSup = bin;
+		}
+		for (int bin = 0; bin < binHumpSup; bin++){ // this loop has been added to be sure : binHumpInf < binHumpSup
+			if (signal[bin] < signal[binHumpInf])
+				binHumpInf = bin;
+		}
+		// research for zero
+		int binZero = 0;
+		for (int bin = binHumpInf; bin <= binHumpSup; bin++){
+			if (signal[bin] < 0)
+				binZero = bin; // last pass below zero
+		} // at this stage : binZero < timeCFD/samplingTime <= binZero + 1 // timeCFD is determined by assuming a linear fit between binZero and binZero + 1
+		float slopeCFD = 0;
+		if (binZero + 1 <= binNumber)
+			slopeCFD = signal[binZero+1] - signal[binZero];
+		float fittedBinZero = (slopeCFD == 0) ? binZero : binZero + (0 - signal[binZero])/slopeCFD;
+		timeCFD = (fittedBinZero + binOffset)*samplingTime;
+		
 	}
 }
