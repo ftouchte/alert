@@ -28,35 +28,46 @@ public class Test {
 		System.out.println("adcOffset    = " + H.adcOffset + " adc");
 		System.out.println("samplingTime = " + H.samplingTime + " ns");
 		System.out.println("sparseSample = " + H.sparseSample);
-		System.out.println("binOffset = " + H.binOffset);
+		//System.out.println("binOffset = " + H.binOffset);
 		System.out.println("timeStample = " + H.timeStamp);
 		System.out.println("fineTimeStampleResolution = " + H.fineTimeStampResolution);
 		
 		System.out.println("=====> Application of the HipoExtractor");
 		List<Pulse> pulses = H.extract(samples);
-		System.out.println("binMax = " + H.binMax);
-		System.out.println("adcMax = " + H.adcMax);
-		System.out.println("timeMax = " + H.timeMax + " ns");
-		System.out.println("timeRiseCFA = " + H.timeRiseCFA + " ns");
-		System.out.println("timeFallCFA = " + H.timeFallCFA + " ns");
-		System.out.println("timeOverThreshold = " + H.timeOverThresholdCFA + " ns");
-		System.out.println("timeCFD = " + H.timeCFD + " ns");
+		//System.out.println("binMax = " + pulses.get(0).binMax);
+		
+		System.out.println("adcMax = " + pulses.get(0).adcMax);
+		System.out.println("integral = " + pulses.get(0).integral);
+		System.out.println("timeMax = " + pulses.get(0).timeMax + " ns");
+		System.out.println("timestamp = " + pulses.get(0).timestamp);
+		System.out.println("timeRiseCFA = " + pulses.get(0).timeRiseCFA + " ns");
+		System.out.println("timeFallCFA = " + pulses.get(0).timeFallCFA + " ns");
+		System.out.println("timeOverThreshold = " + pulses.get(0).timeOverThresholdCFA + " ns");
+		System.out.println("timeCFD = " + pulses.get(0).timeCFD + " ns");
 		System.out.println(pulses.get(0));
 	}
 }
 
 public class Pulse {
+	// Standard information
+	public float adcMax;
 	public float integral;
-	public float time;
+	public float timeMax;
+	public long timestamp;
+	// New information
+	public float timeRiseCFA;
+	public float timeFallCFA;
+	public float timeOverThresholdCFA;
+	public float timeCFD;
 
-	public Pulse(float integral, float time) {
+	/*public Pulse(float integral, float time) {
 		this.integral = integral;
 		this.time = time;
-	}
+	}*/
 
 	@Override
 	public String toString() {
-		return String.format("pulse: integral=%f time=%f", integral, time);
+		return String.format("pulse: integral=%f timeMax=%f", integral, timeMax);
 	}
 }
 
@@ -65,21 +76,21 @@ public class Pulse {
 public class HipoExtractor {
 	
 	// Standard attributs to be filled
-	public int binMax; //Bin of the max ADC over the pulse
-	public int binOffset; //Offset due to sparse sample
-	public float adcMax; //Max value of ADC over the pulse (fitted)
-	public float timeMax; //Time of the max ADC over the pulse (fitted)
-	public float integral; //Sum of ADCs over the pulse (not fitted)
-	public long timestamp;
+	private int binMax; //Bin of the max ADC over the pulse
+	private int binOffset; //Offset due to sparse sample
+	private float adcMax; //Max value of ADC over the pulse (fitted)
+	private float timeMax; //Time of the max ADC over the pulse (fitted)
+	private float integral; //Sum of ADCs over the pulse (not fitted)
+	private long timestamp;
 
 	private short[] samplesCorr; //Waveform after offset (pedestal) correction
 	private int binNumber; //Number of bins in one waveform
 
 	// New attributs to be filled
-	public float timeRiseCFA; // moment when the signal reaches a Constant Fraction of its Amplitude uphill (fitted)
-	public float timeFallCFA; // moment when the signal reaches a Constant Fraction of its Amplitude downhill (fitted)
-	public float timeOverThresholdCFA; // is equal to (timeFallCFA - timeRiseCFA)
-	public float timeCFD; // time extracted using the Constant Fraction Discriminator (CFD) algorithm (fitted)
+	private float timeRiseCFA; // moment when the signal reaches a Constant Fraction of its Amplitude uphill (fitted)
+	private float timeFallCFA; // moment when the signal reaches a Constant Fraction of its Amplitude downhill (fitted)
+	private float timeOverThresholdCFA; // is equal to (timeFallCFA - timeRiseCFA)
+	private float timeCFD; // time extracted using the Constant Fraction Discriminator (CFD) algorithm (fitted)
 
 	// Setting parameters // Should ideally be arguments in the extarct() methods by comparison to MVTFitter.java
 	public float samplingTime;
@@ -105,7 +116,15 @@ public class HipoExtractor {
 		computeTimeUsingConstantFractionDiscriminator(samplingTime,fractionCFD,binDelayCFD);
 		fineTimeStampCorrection(timeStamp,fineTimeStampResolution);	
 		// output
-		Pulse pulse = new Pulse(integral,timeMax);
+		Pulse pulse = new Pulse();
+		pulse.adcMax = adcMax;
+		pulse.timeMax = timeMax;
+		pulse.timestamp = timestamp;
+		pulse.integral = integral;
+		pulse.timeRiseCFA = timeRiseCFA;
+		pulse.timeFallCFA = timeFallCFA;
+		pulse.timeOverThresholdCFA = timeOverThresholdCFA;
+		pulse.timeCFD = timeCFD;
 		List<Pulse> output = new ArrayList<>();
 		output.add(pulse);
 		return output;
