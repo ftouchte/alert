@@ -1,6 +1,4 @@
 *.hipo
 *.exe
 *.o
-/code/output/*
-/code/data/*
-
+data

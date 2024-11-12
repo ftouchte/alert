@@ -1,5 +1,3 @@
 # ALERT
 
-
-
-- [Link to the book](./doc/book/index.html)
+- [Corresponding web site](./doc/book/index.html)

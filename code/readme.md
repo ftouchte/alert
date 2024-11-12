@@ -1,6 +1,0 @@
-# readme 
-
-Hello everyone !
-
-
-
