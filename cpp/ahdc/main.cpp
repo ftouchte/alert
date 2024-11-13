@@ -43,9 +43,11 @@ int main(int argc, char const *argv[]){
 	// 2D Histograms : Time (X) versus Amplitude (Y)
 	int nBinX = 200;
 	int nBinY = 200;
-	TH2D* hist2d_timeMax = new TH2D("hist2d_timeMax", "timeMax vs adcMax", nBinX, 0.0, 6000.0, nBinY, 0, ahdcExtractor::ADC_LIMIT);
-	TH2D* hist2d_timeRiseCFA = new TH2D("hist2d_timeRiseCFA", TString::Format("timeRiseCFA vs adcMax, fraction = %.2f",amplitudeFractionCFA), nBinX, 0.0,6000.0, nBinY, 0, ahdcExtractor::ADC_LIMIT);
-	TH2D* hist2d_timeCFD = new TH2D("hist2d_timeCFD", TString::Format("timeCFD vs adcMax, fraction = %.2f, binDelay = %d",fractionCFD,binDelayCFD), nBinX, 0.0, 6000.0, nBinY, 0, ahdcExtractor::ADC_LIMIT);
+	double tmin = 0;
+	double tmax = 2000;
+	TH2D* hist2d_timeMax = new TH2D("hist2d_timeMax", "timeMax vs adcMax", nBinX, tmin, tmax, nBinY, 0, ahdcExtractor::ADC_LIMIT);
+	TH2D* hist2d_timeRiseCFA = new TH2D("hist2d_timeRiseCFA", TString::Format("timeRiseCFA vs adcMax, fraction = %.2f",amplitudeFractionCFA), nBinX, tmin, tmax, nBinY, 0, ahdcExtractor::ADC_LIMIT);
+	TH2D* hist2d_timeCFD = new TH2D("hist2d_timeCFD", TString::Format("timeCFD vs adcMax, fraction = %.2f, binDelay = %d",fractionCFD,binDelayCFD), nBinX, tmin, tmax, nBinY, 0, ahdcExtractor::ADC_LIMIT);
 
 	// loop over events
 	while( r.next(list)){
@@ -68,6 +70,10 @@ int main(int argc, char const *argv[]){
 			double timeMax = output["timeMax"];
 			double timeRiseCFA = output["timeRiseCFA"];
 			double timeCFD = output["timeCFD"];
+			double mctime = list[0].getFloat("mctime",col);
+			timeMax -= mctime;
+			timeRiseCFA -= mctime;
+			timeCFD -= mctime;
 			hist2d_timeMax->Fill(timeMax,adcMax);
 			hist2d_timeRiseCFA->Fill(timeRiseCFA,adcMax);
 			hist2d_timeCFD->Fill(timeCFD,adcMax);
