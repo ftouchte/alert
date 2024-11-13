@@ -44,13 +44,16 @@ LDFLAGS   :=
 
 
 #all:  showFile histo plot benchmark simu
-all: main
+all: main simpleTest
 
 #ahdcExtractor: ahdcExtractor.o 
 #	$(CXX) -o ahdcExtractor.exe $^ $(HIPOLIBS) $(LZ4LIBS) $(ROOTLIBS)
 
 main: main.o ahdcExtractor.o
 	$(CXX) -o main.exe $^ $(HIPOLIBS) $(LZ4LIBS) $(ROOTLIBS)
+
+simpleTest: simpleTest.o ahdcExtractor.o
+	$(CXX) -o simpleTest.exe $^ $(HIPOLIBS) $(LZ4LIBS) $(ROOTLIBS)
 
 #histo: histo.o futils.o
 #	$(CXX) -o histo.exe $^ $(HIPOLIBS) $(LZ4LIBS) $(ROOTLIBS)
@@ -64,9 +67,10 @@ main: main.o ahdcExtractor.o
 
 clean:
 	@echo 'Removing all build files'
-	@rm -rf *.o *~ *.exe example*hipo ./output/*.pdf
+	@rm -rf *.o *~ *.exe example*hipo Signal*.pdf
 
 %.o: %.cpp
 	$(CXX) -c $< -O2 $(CXXFLAGS) $(HIPOCFLAGS) $(LZ4INCLUDES) $(ROOTCFLAGS) 
-	#$(CXX) -c $< -O2 $(CXXFLAGS) $(HIPOCFLAGS) $(LZ4INCLUDES) $(ROOTCFLAGS) $(RAPID_CHECK_FLAGS) $(FELIXFLAGS)
+	
+#	$(CXX) -c $< -O2 $(CXXFLAGS) $(HIPOCFLAGS) $(LZ4INCLUDES) $(ROOTCFLAGS) $(RAPID_CHECK_FLAGS) $(FELIXFLAGS)
 

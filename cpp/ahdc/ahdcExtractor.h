@@ -83,7 +83,6 @@ class ahdcExtractor {
 		 * - `fineTimeStampResolution`
 		 */
 		void fineTimeStampCorrection();
-		//void fineTimeStampCorrection (long timeStamp, float fineTimeStampResolution);
 
 		/**
 		 * This method determines the moment when the signal reaches a Constant Fraction of its Amplitude (i.e amplitudeFraction*adcMax)
@@ -107,7 +106,17 @@ class ahdcExtractor {
 		void computeTimeUsingConstantFractionDiscriminator();
 	public:
 		std::vector<float> samplesCFD; ///< samples corresponding to the CFD signal
+		
+		/** @brief Show the extracted data in a figure
+		 * 
+		 * @return generate pdf file
+		 */
 		void Show(const char * filename);
+
+		/** @brief Show the CFD signal 
+		 *
+		 * @return generate a pdf file
+		 */
 		void ShowCFD(const char * filename);
 };
 
