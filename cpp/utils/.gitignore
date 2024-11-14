@@ -1,0 +1,5 @@
+*.hipo
+*.o
+*.exe
+latex
+*.pdf
