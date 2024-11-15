@@ -1,0 +1,147 @@
+\doxysection{ahdc\+Extractor Class Reference}
+\hypertarget{classahdcExtractor}{}\label{classahdcExtractor}\index{ahdcExtractor@{ahdcExtractor}}
+
+
+{\ttfamily \#include $<$ahdc\+Extractor.\+h$>$}
+
+\doxysubsubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{classahdcExtractor_ad11da29fe7057650b63ad514bcad203d}\label{classahdcExtractor_ad11da29fe7057650b63ad514bcad203d} 
+{\bfseries ahdc\+Extractor} ()=default
+\begin{DoxyCompactList}\small\item\em Default constructor. \end{DoxyCompactList}\item 
+\Hypertarget{classahdcExtractor_a801574f659508434290fc2d802edde30}\label{classahdcExtractor_a801574f659508434290fc2d802edde30} 
+{\bfseries ahdc\+Extractor} (float \+\_\+sampling\+Time, float \+\_\+amplitude\+Fraction\+CFA, int \+\_\+bin\+Delay\+CFD, float \+\_\+fraction\+CFD)
+\begin{DoxyCompactList}\small\item\em Constructor. \end{DoxyCompactList}\item 
+\Hypertarget{classahdcExtractor_aa186ae6c5f1c8fee31c3bd948f838b3b}\label{classahdcExtractor_aa186ae6c5f1c8fee31c3bd948f838b3b} 
+{\bfseries \texorpdfstring{$\sim$}{\string~}ahdc\+Extractor} ()
+\begin{DoxyCompactList}\small\item\em Destructor. \end{DoxyCompactList}\item 
+std\+::map$<$ std\+::string, double $>$ \mbox{\hyperlink{classahdcExtractor_a869faa0a9a135cc46fb6f5af50153561}{extract}} (const std\+::vector$<$ short $>$ samples)
+\item 
+void \mbox{\hyperlink{classahdcExtractor_a92fdd26c9d9c90fc52da4d51c86d2efb}{Show}} (const char \texorpdfstring{$\ast$}{*}filename)
+\begin{DoxyCompactList}\small\item\em Show the extracted data in a figure. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{classahdcExtractor_a9f935673e131d253f28b2b2fdeb993cd}{Show\+CFD}} (const char \texorpdfstring{$\ast$}{*}filename)
+\begin{DoxyCompactList}\small\item\em Show the CFD signal. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\doxysubsubsection*{Public Attributes}
+\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{classahdcExtractor_ae734222eb7223308c4365cae6a019d61}\label{classahdcExtractor_ae734222eb7223308c4365cae6a019d61} 
+float {\bfseries sampling\+Time}
+\begin{DoxyCompactList}\small\item\em time between two ADC bins \end{DoxyCompactList}\item 
+\Hypertarget{classahdcExtractor_a01b8c361d1acc280d298bc595a2692a1}\label{classahdcExtractor_a01b8c361d1acc280d298bc595a2692a1} 
+int {\bfseries sparse\+Sample} = 0
+\begin{DoxyCompactList}\small\item\em used to defined bin\+Offset \end{DoxyCompactList}\item 
+\Hypertarget{classahdcExtractor_a908590b94b223ec10123fb15b6dc5f77}\label{classahdcExtractor_a908590b94b223ec10123fb15b6dc5f77} 
+short {\bfseries adc\+Offset} = 0
+\begin{DoxyCompactList}\small\item\em pedestal or noise level \end{DoxyCompactList}\item 
+\Hypertarget{classahdcExtractor_ad348556ce8970f0826bda19458263cfc}\label{classahdcExtractor_ad348556ce8970f0826bda19458263cfc} 
+long {\bfseries time\+Stamp} = 0
+\begin{DoxyCompactList}\small\item\em time\+Stamp timing informations (used to make fine corrections) \end{DoxyCompactList}\item 
+\Hypertarget{classahdcExtractor_aa318ae262babd9d296957eb02b34f8ef}\label{classahdcExtractor_aa318ae262babd9d296957eb02b34f8ef} 
+float {\bfseries fine\+Time\+Stamp\+Resolution} = 0
+\begin{DoxyCompactList}\small\item\em precision of dream clock (usually 8) \end{DoxyCompactList}\item 
+\Hypertarget{classahdcExtractor_ad9a34a62e5d54d80b68f29f3de9cc5b8}\label{classahdcExtractor_ad9a34a62e5d54d80b68f29f3de9cc5b8} 
+float {\bfseries amplitude\+Fraction\+CFA}
+\begin{DoxyCompactList}\small\item\em amplitude fraction between 0 and 1 \end{DoxyCompactList}\item 
+\Hypertarget{classahdcExtractor_a6ebee535d5bd999f645d2b40126ee407}\label{classahdcExtractor_a6ebee535d5bd999f645d2b40126ee407} 
+int {\bfseries bin\+Delay\+CFD}
+\begin{DoxyCompactList}\small\item\em CFD delay parameter. \end{DoxyCompactList}\item 
+\Hypertarget{classahdcExtractor_af9d70cc17493ba99a8f30e53556f5a57}\label{classahdcExtractor_af9d70cc17493ba99a8f30e53556f5a57} 
+float {\bfseries fraction\+CFD}
+\begin{DoxyCompactList}\small\item\em CFD fraction parameter between 0 and 1. \end{DoxyCompactList}\item 
+\Hypertarget{classahdcExtractor_afd1d8fc6fcafa3596a289ca937fbd0ed}\label{classahdcExtractor_afd1d8fc6fcafa3596a289ca937fbd0ed} 
+int {\bfseries bin\+Max}
+\begin{DoxyCompactList}\small\item\em Bin of the max ADC over the pulse. \end{DoxyCompactList}\item 
+\Hypertarget{classahdcExtractor_a4cc30b7555d83e41b06c3ca23de51dce}\label{classahdcExtractor_a4cc30b7555d83e41b06c3ca23de51dce} 
+int {\bfseries bin\+Offset}
+\begin{DoxyCompactList}\small\item\em Offset due to sparse sample. \end{DoxyCompactList}\item 
+\Hypertarget{classahdcExtractor_a198ed573a6492534e2cae92ef493e2e2}\label{classahdcExtractor_a198ed573a6492534e2cae92ef493e2e2} 
+float {\bfseries adc\+Max}
+\begin{DoxyCompactList}\small\item\em Max value of ADC over the pulse (fitted) \end{DoxyCompactList}\item 
+\Hypertarget{classahdcExtractor_a49688b2c60e1a9db7eef4f105353056f}\label{classahdcExtractor_a49688b2c60e1a9db7eef4f105353056f} 
+float {\bfseries time\+Max}
+\begin{DoxyCompactList}\small\item\em Time of the max ADC over the pulse (fitted) \end{DoxyCompactList}\item 
+\Hypertarget{classahdcExtractor_a158e80efb35f3c36c8770afda2c4480f}\label{classahdcExtractor_a158e80efb35f3c36c8770afda2c4480f} 
+float {\bfseries integral}
+\begin{DoxyCompactList}\small\item\em Sum of ADCs over the pulse (not fitted) \end{DoxyCompactList}\item 
+\Hypertarget{classahdcExtractor_a77ef46dda9107b79dc8dd4850a69ddb2}\label{classahdcExtractor_a77ef46dda9107b79dc8dd4850a69ddb2} 
+std\+::vector$<$ short $>$ {\bfseries samples\+Corr}
+\begin{DoxyCompactList}\small\item\em Waveform after offset (pedestal) correction. \end{DoxyCompactList}\item 
+\Hypertarget{classahdcExtractor_ac9d6d8a627567c450fb872ef3c463b14}\label{classahdcExtractor_ac9d6d8a627567c450fb872ef3c463b14} 
+int {\bfseries bin\+Number}
+\begin{DoxyCompactList}\small\item\em Number of bins in one waveform. \end{DoxyCompactList}\item 
+\Hypertarget{classahdcExtractor_adf2d612ccbdcfedadb354a53e0f60f46}\label{classahdcExtractor_adf2d612ccbdcfedadb354a53e0f60f46} 
+float {\bfseries time\+Rise\+CFA}
+\begin{DoxyCompactList}\small\item\em moment when the signal reaches a Constant Fraction of its Amplitude uphill (fitted) \end{DoxyCompactList}\item 
+\Hypertarget{classahdcExtractor_a95be1f09a59b42f7e88b3096eed1e10a}\label{classahdcExtractor_a95be1f09a59b42f7e88b3096eed1e10a} 
+float {\bfseries time\+Fall\+CFA}
+\begin{DoxyCompactList}\small\item\em moment when the signal reaches a Constant Fraction of its Amplitude downhill (fitted) \end{DoxyCompactList}\item 
+\Hypertarget{classahdcExtractor_a2bdd5bca4c7fc05acd8a4c5d6beea2e8}\label{classahdcExtractor_a2bdd5bca4c7fc05acd8a4c5d6beea2e8} 
+float {\bfseries time\+Over\+Threshold\+CFA}
+\begin{DoxyCompactList}\small\item\em is equal to (time\+Fall\+CFA -\/ time\+Rise\+CFA) \end{DoxyCompactList}\item 
+\Hypertarget{classahdcExtractor_a2ada17d413124fd281784645ce6f778f}\label{classahdcExtractor_a2ada17d413124fd281784645ce6f778f} 
+float {\bfseries time\+CFD}
+\begin{DoxyCompactList}\small\item\em time extracted using the Constant Fraction Discriminator (CFD) algorithm (fitted) \end{DoxyCompactList}\item 
+\Hypertarget{classahdcExtractor_a08cd1f55fea550b63f9700e5d1534210}\label{classahdcExtractor_a08cd1f55fea550b63f9700e5d1534210} 
+std\+::vector$<$ float $>$ {\bfseries samples\+CFD}
+\begin{DoxyCompactList}\small\item\em samples corresponding to the CFD signal \end{DoxyCompactList}\end{DoxyCompactItemize}
+\doxysubsubsection*{Static Public Attributes}
+\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{classahdcExtractor_a40c60c59df4170d6aeda82770842b928}\label{classahdcExtractor_a40c60c59df4170d6aeda82770842b928} 
+static const short {\bfseries ADC\+\_\+\+LIMIT} = 4095
+\begin{DoxyCompactList}\small\item\em Maximum value of ADC \+: 2\texorpdfstring{$^\wedge$}{\string^}12-\/1. \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+\begin{DoxyAuthor}{Author}
+Felix Touchte Codjo 
+\end{DoxyAuthor}
+
+
+\doxysubsection{Member Function Documentation}
+\Hypertarget{classahdcExtractor_a869faa0a9a135cc46fb6f5af50153561}\index{ahdcExtractor@{ahdcExtractor}!extract@{extract}}
+\index{extract@{extract}!ahdcExtractor@{ahdcExtractor}}
+\doxysubsubsection{\texorpdfstring{extract()}{extract()}}
+{\footnotesize\ttfamily \label{classahdcExtractor_a869faa0a9a135cc46fb6f5af50153561} 
+std\+::map$<$ std\+::string, double $>$ ahdc\+Extractor\+::extract (\begin{DoxyParamCaption}\item[{const std\+::vector$<$ short $>$}]{samples}{}\end{DoxyParamCaption})}
+
+This method extracts relevant informations from the digitized signal (the samples) and store them in a Pulse
+
+
+\begin{DoxyParams}{Parameters}
+{\em samples} & ADC samples \\
+\hline
+\end{DoxyParams}
+\Hypertarget{classahdcExtractor_a92fdd26c9d9c90fc52da4d51c86d2efb}\index{ahdcExtractor@{ahdcExtractor}!Show@{Show}}
+\index{Show@{Show}!ahdcExtractor@{ahdcExtractor}}
+\doxysubsubsection{\texorpdfstring{Show()}{Show()}}
+{\footnotesize\ttfamily \label{classahdcExtractor_a92fdd26c9d9c90fc52da4d51c86d2efb} 
+void ahdc\+Extractor\+::\+Show (\begin{DoxyParamCaption}\item[{const char \texorpdfstring{$\ast$}{*}}]{filename}{}\end{DoxyParamCaption})}
+
+
+
+Show the extracted data in a figure. 
+
+\begin{DoxyReturn}{Returns}
+generate pdf file 
+\end{DoxyReturn}
+\Hypertarget{classahdcExtractor_a9f935673e131d253f28b2b2fdeb993cd}\index{ahdcExtractor@{ahdcExtractor}!ShowCFD@{ShowCFD}}
+\index{ShowCFD@{ShowCFD}!ahdcExtractor@{ahdcExtractor}}
+\doxysubsubsection{\texorpdfstring{ShowCFD()}{ShowCFD()}}
+{\footnotesize\ttfamily \label{classahdcExtractor_a9f935673e131d253f28b2b2fdeb993cd} 
+void ahdc\+Extractor\+::\+Show\+CFD (\begin{DoxyParamCaption}\item[{const char \texorpdfstring{$\ast$}{*}}]{filename}{}\end{DoxyParamCaption})}
+
+
+
+Show the CFD signal. 
+
+\begin{DoxyReturn}{Returns}
+generate a pdf file 
+\end{DoxyReturn}
+
+
+The documentation for this class was generated from the following files\+:\begin{DoxyCompactItemize}
+\item 
+/home/ftouchte/\+Desktop/alert/cpp/ahdc/ahdc\+Extractor.\+h\item 
+/home/ftouchte/\+Desktop/alert/cpp/ahdc/ahdc\+Extractor.\+cpp\end{DoxyCompactItemize}

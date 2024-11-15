@@ -1,0 +1,188 @@
+\doxysection{ahdc\+Signal Class Reference}
+\hypertarget{classahdcSignal}{}\label{classahdcSignal}\index{ahdcSignal@{ahdcSignal}}
+
+
+ahdc signal simulation  
+
+
+
+
+{\ttfamily \#include $<$ahdc\+Signal.\+h$>$}
+
+\doxysubsubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{classahdcSignal_ab8b143bde30788928089505594c520a3}\label{classahdcSignal_ab8b143bde30788928089505594c520a3} 
+{\bfseries ahdc\+Signal} ()=default
+\begin{DoxyCompactList}\small\item\em Default constructor. \end{DoxyCompactList}\item 
+\Hypertarget{classahdcSignal_af682edcafe7c06d1ddc1581b5f945f75}\label{classahdcSignal_af682edcafe7c06d1ddc1581b5f945f75} 
+{\bfseries ahdc\+Signal} (MHit \texorpdfstring{$\ast$}{*}a\+Hit, int \+\_\+hitn, double \+\_\+tmin, double \+\_\+tmax, double \+\_\+time\+Offset, double \+\_\+sampling\+Time, double \+\_\+\+Landau\+\_\+width)
+\begin{DoxyCompactList}\small\item\em Constructor. \end{DoxyCompactList}\item 
+\Hypertarget{classahdcSignal_a384a48dd0b03b729346bf934bd82665a}\label{classahdcSignal_a384a48dd0b03b729346bf934bd82665a} 
+{\bfseries \texorpdfstring{$\sim$}{\string~}ahdc\+Signal} ()
+\begin{DoxyCompactList}\small\item\em Destructor. \end{DoxyCompactList}\item 
+\Hypertarget{classahdcSignal_a91a558c4b1afc2cefc5a369477efcbe7}\label{classahdcSignal_a91a558c4b1afc2cefc5a369477efcbe7} 
+double {\bfseries Get\+Electron\+Yield} ()
+\begin{DoxyCompactList}\small\item\em Return the value of the attribut {\ttfamily electron\+Yield} \end{DoxyCompactList}\item 
+\Hypertarget{classahdcSignal_a70e16b25448d7352eb13aab330bfd4f9}\label{classahdcSignal_a70e16b25448d7352eb13aab330bfd4f9} 
+std\+::vector$<$ double $>$ {\bfseries Get\+Edep} ()
+\begin{DoxyCompactList}\small\item\em Return the content of the attribut {\ttfamily Edep} \end{DoxyCompactList}\item 
+\Hypertarget{classahdcSignal_a6c4457faf2f766590c2da03c62698ccd}\label{classahdcSignal_a6c4457faf2f766590c2da03c62698ccd} 
+std\+::vector$<$ double $>$ {\bfseries Get\+G4\+Time} ()
+\begin{DoxyCompactList}\small\item\em Return the content of the attribut {\ttfamily G4\+Time} \end{DoxyCompactList}\item 
+\Hypertarget{classahdcSignal_aeea37600ffe260a6db3f1a3ce267b44a}\label{classahdcSignal_aeea37600ffe260a6db3f1a3ce267b44a} 
+std\+::vector$<$ double $>$ {\bfseries Get\+Doca} ()
+\begin{DoxyCompactList}\small\item\em Return the content of the attribut {\ttfamily Doca} \end{DoxyCompactList}\item 
+\Hypertarget{classahdcSignal_a38c1a560bf9c127bd720d363dd36ef36}\label{classahdcSignal_a38c1a560bf9c127bd720d363dd36ef36} 
+std\+::vector$<$ double $>$ {\bfseries Get\+Drift\+Time} ()
+\begin{DoxyCompactList}\small\item\em Return the content of the attribut {\ttfamily Drift\+Time} \end{DoxyCompactList}\item 
+\Hypertarget{classahdcSignal_ac18ec3adcb1167864dbb1bfb1ce72e13}\label{classahdcSignal_ac18ec3adcb1167864dbb1bfb1ce72e13} 
+std\+::vector$<$ short $>$ {\bfseries Get\+Noise} ()
+\begin{DoxyCompactList}\small\item\em Return the content of the attribut {\ttfamily Noise} \end{DoxyCompactList}\item 
+\Hypertarget{classahdcSignal_a6966802bb2af5a6b023b50ed7a16f406}\label{classahdcSignal_a6966802bb2af5a6b023b50ed7a16f406} 
+std\+::vector$<$ short $>$ {\bfseries Get\+Dgtz} ()
+\begin{DoxyCompactList}\small\item\em Return the content of the attribut {\ttfamily Dgtz} \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{classahdcSignal_ab030caab84398dd071d480ca210a745a}{Set\+Electron\+Yield}} (double electron\+Yield\+\_\+)
+\begin{DoxyCompactList}\small\item\em Set the electron yield. \end{DoxyCompactList}\item 
+double \mbox{\hyperlink{classahdcSignal_a3fbf2273d91a212219e7794e7b60f6f3}{operator()}} (double time\+Point)
+\begin{DoxyCompactList}\small\item\em Overloaded {\ttfamily ()} operator to get the value of the signal at a given time. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{classahdcSignal_a4eabb959430fd1bdb78c793ca684e115}{Digitize}} ()
+\begin{DoxyCompactList}\small\item\em Digitize the simulated signal. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{classahdcSignal_a024a11709c2cd380df1d8f06598e7fe9}{Generate\+Noise}} (double mean, double stdev)
+\begin{DoxyCompactList}\small\item\em Generate gaussian noise. \end{DoxyCompactList}\item 
+\Hypertarget{classahdcSignal_a4ad6cfd0cae54c8971477a020547783b}\label{classahdcSignal_a4ad6cfd0cae54c8971477a020547783b} 
+double {\bfseries Get\+MCTime} ()
+\item 
+\Hypertarget{classahdcSignal_a632042966c75e0fb2e57dfefcb9d6287}\label{classahdcSignal_a632042966c75e0fb2e57dfefcb9d6287} 
+double {\bfseries Get\+MCEtot} ()
+\item 
+std\+::map$<$ std\+::string, double $>$ \mbox{\hyperlink{classahdcSignal_a579f9f774ca9b065b7186cb9caae837c}{Extract}} (bool expression=true)
+\begin{DoxyCompactList}\small\item\em Extract various informations from the digitized signal. \end{DoxyCompactList}\item 
+\Hypertarget{classahdcSignal_a52e0faab857fa8128de1bd968b2a95f0}\label{classahdcSignal_a52e0faab857fa8128de1bd968b2a95f0} 
+void {\bfseries Print\+Before\+Processing} (bool expression=true)
+\item 
+\Hypertarget{classahdcSignal_a7d3da55298a82d261af1ca44a904c52e}\label{classahdcSignal_a7d3da55298a82d261af1ca44a904c52e} 
+void {\bfseries Print\+All\+Shapes} (bool expression=true)
+\item 
+\Hypertarget{classahdcSignal_aa74e8c3403cd6eb55cce326c795fc4b7}\label{classahdcSignal_aa74e8c3403cd6eb55cce326c795fc4b7} 
+void {\bfseries Print\+After\+Processing} (bool expression=true)
+\item 
+\Hypertarget{classahdcSignal_a48282a6d31034efaf0c3fbc4edd14a91}\label{classahdcSignal_a48282a6d31034efaf0c3fbc4edd14a91} 
+void {\bfseries Print\+Noise} (bool expression=true)
+\item 
+\Hypertarget{classahdcSignal_a1c11ae663a7729f1647398d09537cb41}\label{classahdcSignal_a1c11ae663a7729f1647398d09537cb41} 
+void {\bfseries Print\+Signal} (bool expression=true)
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Public Attributes}
+\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{classahdcSignal_a21e05ed4756320eee50b675096e8de45}\label{classahdcSignal_a21e05ed4756320eee50b675096e8de45} 
+int {\bfseries hitn}
+\begin{DoxyCompactList}\small\item\em n-\/th MHit of the event, also corresponds to the n-\/th activated wire \end{DoxyCompactList}\item 
+\Hypertarget{classahdcSignal_af2f9dfb5de7997f7976d2114e4156253}\label{classahdcSignal_af2f9dfb5de7997f7976d2114e4156253} 
+int {\bfseries sector}
+\begin{DoxyCompactList}\small\item\em sector, first wire identifier \end{DoxyCompactList}\item 
+\Hypertarget{classahdcSignal_a62832cf4ccb56ea2f05f1b797c5b5a77}\label{classahdcSignal_a62832cf4ccb56ea2f05f1b797c5b5a77} 
+int {\bfseries layer}
+\begin{DoxyCompactList}\small\item\em layer, second wire identifer \end{DoxyCompactList}\item 
+\Hypertarget{classahdcSignal_ae25f4ffc667ae8fac6b426fad9ed6677}\label{classahdcSignal_ae25f4ffc667ae8fac6b426fad9ed6677} 
+int {\bfseries component}
+\begin{DoxyCompactList}\small\item\em component, third wire identifier \end{DoxyCompactList}\item 
+\Hypertarget{classahdcSignal_aa5c46af357e143260ed7560d2610340d}\label{classahdcSignal_aa5c46af357e143260ed7560d2610340d} 
+int {\bfseries nsteps}
+\begin{DoxyCompactList}\small\item\em number of steps in this MHit, i.\+e number of Geant4 calculation steps in the sensitive area of the wire \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+ahdc signal simulation 
+
+This class simulates the waveform of the ahdc signal and provide algorithms to extract relevant informations from this signal.
+
+As it is written, it can only be used on the ifarm \+:-\/(
+
+\begin{DoxyAuthor}{Author}
+Felix Touchte Codjo 
+\end{DoxyAuthor}
+
+
+\doxysubsection{Member Function Documentation}
+\Hypertarget{classahdcSignal_a4eabb959430fd1bdb78c793ca684e115}\index{ahdcSignal@{ahdcSignal}!Digitize@{Digitize}}
+\index{Digitize@{Digitize}!ahdcSignal@{ahdcSignal}}
+\doxysubsubsection{\texorpdfstring{Digitize()}{Digitize()}}
+{\footnotesize\ttfamily \label{classahdcSignal_a4eabb959430fd1bdb78c793ca684e115} 
+void ahdc\+Signal\+::\+Digitize (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption})}
+
+
+
+Digitize the simulated signal. 
+
+This method perfoms several steps
+\begin{DoxyItemize}
+\item step 1 \+: it produces samples from the simulated signal (using {\ttfamily sampling\+Time})
+\item step 2 \+: it converts ke\+V/ns in ADC units (using {\ttfamily electron\+Yield})
+\item step 3 \+: it adds noise
+\end{DoxyItemize}
+
+\begin{DoxyReturn}{Returns}
+Fill the attributs {\ttfamily Dgtz} and {\ttfamily Noise} 
+\end{DoxyReturn}
+\Hypertarget{classahdcSignal_a579f9f774ca9b065b7186cb9caae837c}\index{ahdcSignal@{ahdcSignal}!Extract@{Extract}}
+\index{Extract@{Extract}!ahdcSignal@{ahdcSignal}}
+\doxysubsubsection{\texorpdfstring{Extract()}{Extract()}}
+{\footnotesize\ttfamily \label{classahdcSignal_a579f9f774ca9b065b7186cb9caae837c} 
+std\+::map$<$ std\+::string, double $>$ ahdc\+Signal\+::\+Extract (\begin{DoxyParamCaption}\item[{bool}]{expression}{ = {\ttfamily true}}\end{DoxyParamCaption})}
+
+
+
+Extract various informations from the digitized signal. 
+
+This method computes
+\begin{DoxyItemize}
+\item {\ttfamily bin\+Max}, {\ttfamily bin\+Offset}, {\ttfamily adc\+Max}, {\ttfamily time\+Max}, {\ttfamily integral}
+\item {\ttfamily time\+Rise\+CFA}, {\ttfamily time\+Fall\+CFA}, {\ttfamily time\+Over\+Threshold\+CFA}, {\ttfamily time\+CFD} 
+\end{DoxyItemize}\Hypertarget{classahdcSignal_a024a11709c2cd380df1d8f06598e7fe9}\index{ahdcSignal@{ahdcSignal}!GenerateNoise@{GenerateNoise}}
+\index{GenerateNoise@{GenerateNoise}!ahdcSignal@{ahdcSignal}}
+\doxysubsubsection{\texorpdfstring{GenerateNoise()}{GenerateNoise()}}
+{\footnotesize\ttfamily \label{classahdcSignal_a024a11709c2cd380df1d8f06598e7fe9} 
+void ahdc\+Signal\+::\+Generate\+Noise (\begin{DoxyParamCaption}\item[{double}]{mean}{, }\item[{double}]{stdev}{}\end{DoxyParamCaption})}
+
+
+
+Generate gaussian noise. 
+
+\begin{DoxyReturn}{Returns}
+Fill the attribut {\ttfamily Noise} 
+\end{DoxyReturn}
+\Hypertarget{classahdcSignal_a3fbf2273d91a212219e7794e7b60f6f3}\index{ahdcSignal@{ahdcSignal}!operator()@{operator()}}
+\index{operator()@{operator()}!ahdcSignal@{ahdcSignal}}
+\doxysubsubsection{\texorpdfstring{operator()()}{operator()()}}
+{\footnotesize\ttfamily \label{classahdcSignal_a3fbf2273d91a212219e7794e7b60f6f3} 
+double ahdc\+Signal\+::operator() (\begin{DoxyParamCaption}\item[{double}]{time\+Point}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+Overloaded {\ttfamily ()} operator to get the value of the signal at a given time. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em t} & Time at which to calculate the signal\textquotesingle{}s value\\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+Value of the signal at the time {\ttfamily t} 
+\end{DoxyReturn}
+\Hypertarget{classahdcSignal_ab030caab84398dd071d480ca210a745a}\index{ahdcSignal@{ahdcSignal}!SetElectronYield@{SetElectronYield}}
+\index{SetElectronYield@{SetElectronYield}!ahdcSignal@{ahdcSignal}}
+\doxysubsubsection{\texorpdfstring{SetElectronYield()}{SetElectronYield()}}
+{\footnotesize\ttfamily \label{classahdcSignal_ab030caab84398dd071d480ca210a745a} 
+void ahdc\+Signal\+::\+Set\+Electron\+Yield (\begin{DoxyParamCaption}\item[{double}]{electron\+Yield\+\_\+}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+Set the electron yield. 
+
+Only relevant before the use of the method {\ttfamily Digitize} 
+
+The documentation for this class was generated from the following file\+:\begin{DoxyCompactItemize}
+\item 
+/home/ftouchte/\+Desktop/alert/cpp/ahdc/ahdc\+Signal.\+h\end{DoxyCompactItemize}

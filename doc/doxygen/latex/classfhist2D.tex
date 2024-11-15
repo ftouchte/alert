@@ -1,0 +1,91 @@
+\doxysection{fhist2D Class Reference}
+\hypertarget{classfhist2D}{}\label{classfhist2D}\index{fhist2D@{fhist2D}}
+\doxysubsubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{classfhist2D_abf6bdd077da46919c8bc030d60794914}\label{classfhist2D_abf6bdd077da46919c8bc030d60794914} 
+{\bfseries fhist2D} (const char \texorpdfstring{$\ast$}{*}\+\_\+title, int \+\_\+nbinsx, double \+\_\+xmin, double \+\_\+xmax, int \+\_\+nbinsy, double \+\_\+ymin, double \+\_\+ymax)
+\item 
+\Hypertarget{classfhist2D_a706cdf9795b1a7bcee7236c5525b8d67}\label{classfhist2D_a706cdf9795b1a7bcee7236c5525b8d67} 
+{\bfseries fhist2D} (const \mbox{\hyperlink{classfhist2D}{fhist2D}} \&hist)
+\item 
+void \mbox{\hyperlink{classfhist2D_ac4ca871607dcedb23b614f1f0acc42a1}{Fill}} (double xval, double yval)
+\item 
+int \mbox{\hyperlink{classfhist2D_a6e1b95f3980c5ecd9083a0d482827792}{Get\+Bin\+NumberX}} (double xval) const
+\begin{DoxyCompactList}\small\item\em Return the x bin number in which {\ttfamily xval} falls. \end{DoxyCompactList}\item 
+int \mbox{\hyperlink{classfhist2D_a583d90d65776a5eeed613fee29d34cb0}{Get\+Bin\+NumberY}} (double yval) const
+\begin{DoxyCompactList}\small\item\em Return the x bin number in which {\ttfamily xval} falls. \end{DoxyCompactList}\item 
+\Hypertarget{classfhist2D_aa54a71a1770f65f1901bba344d8e77b3}\label{classfhist2D_aa54a71a1770f65f1901bba344d8e77b3} 
+int {\bfseries Get\+Weight\+XY} (int xbin, int ybin) const
+\item 
+\Hypertarget{classfhist2D_aeb80b7352985f722b04ea61e6378940d}\label{classfhist2D_aeb80b7352985f722b04ea61e6378940d} 
+void {\bfseries Get\+Central\+Value\+XY} (int xbin, int ybin, double \&xval, double \&yval) const
+\item 
+\Hypertarget{classfhist2D_a92c7d0859516e3f020e4dbfa511769e3}\label{classfhist2D_a92c7d0859516e3f020e4dbfa511769e3} 
+double {\bfseries Cet\+Xmean} () const
+\item 
+\Hypertarget{classfhist2D_a9e17a8e54016d8c705c59d97daddc336}\label{classfhist2D_a9e17a8e54016d8c705c59d97daddc336} 
+double {\bfseries Get\+Ymean} () const
+\item 
+\Hypertarget{classfhist2D_a33797e01c4ce6946cfdbc63123d36f1f}\label{classfhist2D_a33797e01c4ce6946cfdbc63123d36f1f} 
+double {\bfseries Get\+Xstdev} () const
+\item 
+\Hypertarget{classfhist2D_aae0c1307d3f1d0e23f3a7fce1e1dd7cf}\label{classfhist2D_aae0c1307d3f1d0e23f3a7fce1e1dd7cf} 
+double {\bfseries Get\+Ystdev} () const
+\item 
+\Hypertarget{classfhist2D_ac652a1388faa2ffcec5245d70ac28b02}\label{classfhist2D_ac652a1388faa2ffcec5245d70ac28b02} 
+double {\bfseries Get\+Cov} () const
+\item 
+\Hypertarget{classfhist2D_aaa2c5f31dac4e45a8c1280e6c38bb72e}\label{classfhist2D_aaa2c5f31dac4e45a8c1280e6c38bb72e} 
+void {\bfseries Set\+Flag\+Stat\+Over\+Flows} (bool \+\_\+flag\+Stat\+Over\+Flows)
+\item 
+\Hypertarget{classfhist2D_af134b2275cbe40770e41838524a88bbf}\label{classfhist2D_af134b2275cbe40770e41838524a88bbf} 
+void {\bfseries Print} () const
+\item 
+\Hypertarget{classfhist2D_aedb2a04c9f5f70b61ed8aff3add9213e}\label{classfhist2D_aedb2a04c9f5f70b61ed8aff3add9213e} 
+\mbox{\hyperlink{classfhist1D}{fhist1D}} {\bfseries ProjectionX} (int ystart, int yend) const
+\item 
+\Hypertarget{classfhist2D_a7f1406f8f36768cf92e1be2bffccd304}\label{classfhist2D_a7f1406f8f36768cf92e1be2bffccd304} 
+\mbox{\hyperlink{classfhist1D}{fhist1D}} {\bfseries ProjectionY} (int xstart, int xend) const
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Member Function Documentation}
+\Hypertarget{classfhist2D_ac4ca871607dcedb23b614f1f0acc42a1}\index{fhist2D@{fhist2D}!Fill@{Fill}}
+\index{Fill@{Fill}!fhist2D@{fhist2D}}
+\doxysubsubsection{\texorpdfstring{Fill()}{Fill()}}
+{\footnotesize\ttfamily \label{classfhist2D_ac4ca871607dcedb23b614f1f0acc42a1} 
+void fhist2\+D\+::\+Fill (\begin{DoxyParamCaption}\item[{double}]{xval}{, }\item[{double}]{yval}{}\end{DoxyParamCaption})}
+
+ça m\textquotesingle{}a l\textquotesingle{}air très long\Hypertarget{classfhist2D_a6e1b95f3980c5ecd9083a0d482827792}\index{fhist2D@{fhist2D}!GetBinNumberX@{GetBinNumberX}}
+\index{GetBinNumberX@{GetBinNumberX}!fhist2D@{fhist2D}}
+\doxysubsubsection{\texorpdfstring{GetBinNumberX()}{GetBinNumberX()}}
+{\footnotesize\ttfamily \label{classfhist2D_a6e1b95f3980c5ecd9083a0d482827792} 
+int fhist2\+D\+::\+Get\+Bin\+NumberX (\begin{DoxyParamCaption}\item[{double}]{xval}{}\end{DoxyParamCaption}) const}
+
+
+
+Return the x bin number in which {\ttfamily xval} falls. 
+
+\begin{DoxyNote}{Note}
+return -\/1 if val \texorpdfstring{$<$}{<} xmin and -\/11 if val \texorpdfstring{$>$}{>} xmax 
+\end{DoxyNote}
+\Hypertarget{classfhist2D_a583d90d65776a5eeed613fee29d34cb0}\index{fhist2D@{fhist2D}!GetBinNumberY@{GetBinNumberY}}
+\index{GetBinNumberY@{GetBinNumberY}!fhist2D@{fhist2D}}
+\doxysubsubsection{\texorpdfstring{GetBinNumberY()}{GetBinNumberY()}}
+{\footnotesize\ttfamily \label{classfhist2D_a583d90d65776a5eeed613fee29d34cb0} 
+int fhist2\+D\+::\+Get\+Bin\+NumberY (\begin{DoxyParamCaption}\item[{double}]{yval}{}\end{DoxyParamCaption}) const}
+
+
+
+Return the x bin number in which {\ttfamily xval} falls. 
+
+\begin{DoxyNote}{Note}
+return -\/1 if val \texorpdfstring{$<$}{<} xmin and -\/11 if val \texorpdfstring{$>$}{>} xmax 
+\end{DoxyNote}
+
+
+The documentation for this class was generated from the following files\+:\begin{DoxyCompactItemize}
+\item 
+/home/ftouchte/\+Desktop/alert/cpp/utils/fhist.\+h\item 
+/home/ftouchte/\+Desktop/alert/cpp/utils/fhist.\+cpp\end{DoxyCompactItemize}

@@ -1,0 +1,47 @@
+\doxysection{futils.\+h}
+\hypertarget{backup_2futils_8h_source}{}\label{backup_2futils_8h_source}\index{/home/ftouchte/Desktop/alert/cpp/backup/futils.h@{/home/ftouchte/Desktop/alert/cpp/backup/futils.h}}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ \textcolor{comment}{//\ futils\ :\ f\ stands\ for\ felix}}
+\DoxyCodeLine{00002\ }
+\DoxyCodeLine{00003\ \textcolor{preprocessor}{\#ifndef\ FUTILS\_H}}
+\DoxyCodeLine{00004\ \textcolor{preprocessor}{\#define\ FUTILS\_H}}
+\DoxyCodeLine{00005\ }
+\DoxyCodeLine{00006\ \textcolor{preprocessor}{\#include\ "{}dictionary.h"{}}}
+\DoxyCodeLine{00007\ \textcolor{preprocessor}{\#include\ <vector>}}
+\DoxyCodeLine{00008\ }
+\DoxyCodeLine{00009\ \textcolor{keyword}{typedef}\ double\ (*Integrable)(double);}
+\DoxyCodeLine{00010\ }
+\DoxyCodeLine{00011\ \textcolor{comment}{/*}}
+\DoxyCodeLine{00012\ \textcolor{comment}{class\ Integrable\ \{}}
+\DoxyCodeLine{00013\ \textcolor{comment}{\ \ \ \ private\ :}}
+\DoxyCodeLine{00014\ \textcolor{comment}{\ \ \ \ \ \ \ \ double\ (*ptr)\ (double)\ =\ nullptr;}}
+\DoxyCodeLine{00015\ \textcolor{comment}{\ \ \ \ \ \ \ \ void\ get\_ptr(double\ (*ptr\_)\ (double))\ const\ \{ptr\_=ptr;\ return;\}}}
+\DoxyCodeLine{00016\ \textcolor{comment}{\ \ \ \ public\ :}}
+\DoxyCodeLine{00017\ \textcolor{comment}{\ \ \ \ \ \ \ \ Integrable(double\ (*ptr\_)\ (double))\{ptr\ =\ ptr\_;\}}}
+\DoxyCodeLine{00018\ \textcolor{comment}{\ \ \ \ \ \ \ \ Integrable(const\ Integrable\ \&\ func)\{func.get\_ptr(ptr);\}}}
+\DoxyCodeLine{00019\ \textcolor{comment}{\ \ \ \ \ \ \ \ Integrable()\{ptr=nullptr;\}}}
+\DoxyCodeLine{00020\ \textcolor{comment}{\ \ \ \ \ \ \ \ \string~Integrable()\{;\}}}
+\DoxyCodeLine{00021\ \textcolor{comment}{\ \ \ \ \ \ \ \ }}
+\DoxyCodeLine{00022\ \textcolor{comment}{\ \ \ \ \ \ \ \ virtual\ double\ operator()(double\ x)\{}}
+\DoxyCodeLine{00023\ \textcolor{comment}{\ \ \ \ \ \ \ \ \ \ \ \ return\ (*ptr)(x);}}
+\DoxyCodeLine{00024\ \textcolor{comment}{\ \ \ \ \ \ \ \ \}}}
+\DoxyCodeLine{00025\ \textcolor{comment}{\};*/}}
+\DoxyCodeLine{00026\ }
+\DoxyCodeLine{00027\ \textcolor{keyword}{namespace\ }futils\ \{}
+\DoxyCodeLine{00028\ }
+\DoxyCodeLine{00029\ \ \ \ \ \textcolor{comment}{//\ Statistical\ analysis}}
+\DoxyCodeLine{00030\ \ \ \ \ \textcolor{keywordtype}{double}\ mean(\textcolor{keyword}{const}\ std::vector<double>\ \&\ data);}
+\DoxyCodeLine{00031\ \ \ \ \ \textcolor{keywordtype}{double}\ variance(\textcolor{keyword}{const}\ std::vector<double>\ \&\ data);}
+\DoxyCodeLine{00032\ \ \ \ \ \textcolor{keywordtype}{double}\ std\_dev(\textcolor{keyword}{const}\ std::vector<double>\ \&\ data);}
+\DoxyCodeLine{00033\ \ \ \ \ \textcolor{keywordtype}{bool}\ cart2polar(\textcolor{keywordtype}{double}\ x,\ \textcolor{keywordtype}{double}\ y,\ \textcolor{keywordtype}{double}\ z,\ \textcolor{keywordtype}{double}\ \&\ rho,\ \textcolor{keywordtype}{double}\ \&\ theta,\ \textcolor{keywordtype}{double}\ \&\ phi);}
+\DoxyCodeLine{00034\ \ \ \ \ \textcolor{keywordtype}{bool}\ cart2polar(\textcolor{keywordtype}{double}\ x,\ \textcolor{keywordtype}{double}\ y,\ \textcolor{keywordtype}{double}\ \&\ rho,\ \textcolor{keywordtype}{double}\ \&\ theta);}
+\DoxyCodeLine{00035\ \ \ \ \ \textcolor{keywordtype}{double}\ integrate(Integrable\ f,\ \textcolor{keywordtype}{double}\ a,\ \textcolor{keywordtype}{double}\ b,\ \textcolor{keywordtype}{int}\ Npts);}
+\DoxyCodeLine{00036\ \}}
+\DoxyCodeLine{00037\ }
+\DoxyCodeLine{00038\ }
+\DoxyCodeLine{00039\ }
+\DoxyCodeLine{00040\ }
+\DoxyCodeLine{00041\ \textcolor{preprocessor}{\#endif}}
+
+\end{DoxyCode}

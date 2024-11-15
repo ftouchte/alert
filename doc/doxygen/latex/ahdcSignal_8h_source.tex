@@ -1,0 +1,109 @@
+\doxysection{ahdc\+Signal.\+h}
+\hypertarget{ahdcSignal_8h_source}{}\label{ahdcSignal_8h_source}\index{/home/ftouchte/Desktop/alert/cpp/ahdc/ahdcSignal.h@{/home/ftouchte/Desktop/alert/cpp/ahdc/ahdcSignal.h}}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ \textcolor{preprocessor}{\#ifndef\ AHDC\_SIGNAL\_H}}
+\DoxyCodeLine{00002\ \textcolor{preprocessor}{\#define\ AHDC\_SIGNAL\_H}}
+\DoxyCodeLine{00003\ }
+\DoxyCodeLine{00004\ }
+\DoxyCodeLine{00017\ \textcolor{keyword}{class\ }\mbox{\hyperlink{classahdcSignal}{ahdcSignal}}\ \{}
+\DoxyCodeLine{00018\ \ \ \ \ \textcolor{comment}{//\ MHit\ or\ wires\ identifiers}}
+\DoxyCodeLine{00019\ \ \ \ \ public\ :\ }
+\DoxyCodeLine{00020\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{classahdcSignal_a21e05ed4756320eee50b675096e8de45}{hitn}};\ }
+\DoxyCodeLine{00021\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{classahdcSignal_af2f9dfb5de7997f7976d2114e4156253}{sector}};\ }
+\DoxyCodeLine{00022\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{classahdcSignal_a62832cf4ccb56ea2f05f1b797c5b5a77}{layer}};\ }
+\DoxyCodeLine{00023\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{classahdcSignal_ae25f4ffc667ae8fac6b426fad9ed6677}{component}};\ }
+\DoxyCodeLine{00024\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{classahdcSignal_aa5c46af357e143260ed7560d2610340d}{nsteps}};\ }
+\DoxyCodeLine{00025\ \ \ \ \ \textcolor{comment}{//\ vectors}}
+\DoxyCodeLine{00026\ \ \ \ \ private\ :}
+\DoxyCodeLine{00027\ \ \ \ \ \ \ \ \ std::vector<double>\ Edep;\ }
+\DoxyCodeLine{00028\ \ \ \ \ \ \ \ \ std::vector<double>\ G4Time;\ }
+\DoxyCodeLine{00029\ \ \ \ \ \ \ \ \ std::vector<double>\ Doca;\ }
+\DoxyCodeLine{00030\ \ \ \ \ \ \ \ \ std::vector<double>\ DriftTime;\ }
+\DoxyCodeLine{00031\ \ \ \ \ \ \ \ \ }
+\DoxyCodeLine{00041\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{void}\ ComputeDocaAndTime(MHit\ *\ aHit);}
+\DoxyCodeLine{00042\ \ \ \ \ \ \ \ \ std::vector<short>\ Dgtz;\ }
+\DoxyCodeLine{00043\ \ \ \ \ \ \ \ \ std::vector<short>\ Noise;\ }
+\DoxyCodeLine{00044\ \ \ \ \ \textcolor{comment}{//\ setting\ parameters\ for\ digitization}}
+\DoxyCodeLine{00045\ \ \ \ \ private\ :\ }
+\DoxyCodeLine{00046\ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{double}\ tmin;\ }
+\DoxyCodeLine{00047\ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{double}\ tmax;\ }
+\DoxyCodeLine{00048\ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{double}\ timeOffset;\ }
+\DoxyCodeLine{00049\ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{double}\ samplingTime;\ }
+\DoxyCodeLine{00050\ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{double}\ Landau\_width;\ }
+\DoxyCodeLine{00051\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{double}\ electronYield\ =\ 9500;\ \ \ }
+\DoxyCodeLine{00052\ \ \ \ \ \ \ \ \ \textcolor{keyword}{static}\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{int}\ ADC\_LIMIT\ =\ 4095;\ }
+\DoxyCodeLine{00053\ \ \ \ \ \textcolor{comment}{//\ public\ methods}}
+\DoxyCodeLine{00054\ \ \ \ \ public\ :}
+\DoxyCodeLine{00056\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{classahdcSignal_ab8b143bde30788928089505594c520a3}{ahdcSignal}}()\ =\ \textcolor{keywordflow}{default};}
+\DoxyCodeLine{00057\ \ \ \ \ \ \ \ \ }
+\DoxyCodeLine{00059\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{classahdcSignal_af682edcafe7c06d1ddc1581b5f945f75}{ahdcSignal}}(MHit\ *\ aHit,\ \textcolor{keywordtype}{int}\ \_hitn,\ \textcolor{keywordtype}{double}\ \_tmin,\ \textcolor{keywordtype}{double}\ \_tmax,\ \textcolor{keywordtype}{double}\ \_timeOffset,\ \textcolor{keywordtype}{double}\ \_samplingTime,\ \textcolor{keywordtype}{double}\ \_Landau\_width)\ }
+\DoxyCodeLine{00060\ \ \ \ \ \ \ \ \ :\ tmin(\_tmin),\ tmax(\_tmax),\ timeOffset(\_timeOffset),\ samplingTime(\_samplingTime),\ Landau\_width(\_Landau\_width)\ \{}
+\DoxyCodeLine{00061\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ read\ identifiers}}
+\DoxyCodeLine{00062\ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{classahdcSignal_a21e05ed4756320eee50b675096e8de45}{hitn}}\ =\ \_hitn;}
+\DoxyCodeLine{00063\ \ \ \ \ \ \ \ \ \ \ \ \ vector<identifier>\ identity\ =\ aHit-\/>GetId();}
+\DoxyCodeLine{00064\ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{classahdcSignal_af2f9dfb5de7997f7976d2114e4156253}{sector}}\ =\ 0;}
+\DoxyCodeLine{00065\ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{classahdcSignal_a62832cf4ccb56ea2f05f1b797c5b5a77}{layer}}\ =\ 10\ *\ identity[0].id\ +\ identity[1].id\ ;\ \textcolor{comment}{//\ 10*superlayer\ +\ layer}}
+\DoxyCodeLine{00066\ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{classahdcSignal_ae25f4ffc667ae8fac6b426fad9ed6677}{component}}\ =\ identity[2].id;}
+\DoxyCodeLine{00067\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ fill\ vectors}}
+\DoxyCodeLine{00068\ \ \ \ \ \ \ \ \ \ \ \ \ Edep\ =\ aHit-\/>GetEdep();}
+\DoxyCodeLine{00069\ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{classahdcSignal_aa5c46af357e143260ed7560d2610340d}{nsteps}}\ =\ Edep.size();}
+\DoxyCodeLine{00070\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{int}\ s=0;s<\mbox{\hyperlink{classahdcSignal_aa5c46af357e143260ed7560d2610340d}{nsteps}};s++)\{Edep.at(s)\ =\ Edep.at(s)*1000;\}\ \textcolor{comment}{//\ convert\ MeV\ to\ keV}}
+\DoxyCodeLine{00071\ \ \ \ \ \ \ \ \ \ \ \ \ G4Time\ =\ aHit-\/>GetTime();}
+\DoxyCodeLine{00072\ \ \ \ \ \ \ \ \ \ \ \ \ this-\/>ComputeDocaAndTime(aHit);\ \textcolor{comment}{//\ fills\ Doca\ and\ DriftTime}}
+\DoxyCodeLine{00073\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00074\ \ \ \ \ \ \ \ \ }
+\DoxyCodeLine{00076\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{classahdcSignal_a384a48dd0b03b729346bf934bd82665a}{\string~ahdcSignal}}()\{;\}}
+\DoxyCodeLine{00077\ \ \ \ \ \ \ \ \ }
+\DoxyCodeLine{00079\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{double}\ \mbox{\hyperlink{classahdcSignal_a91a558c4b1afc2cefc5a369477efcbe7}{GetElectronYield}}()\ \{\textcolor{keywordflow}{return}\ electronYield;\}}
+\DoxyCodeLine{00080\ \ \ \ \ \ \ \ \ }
+\DoxyCodeLine{00082\ \ \ \ \ \ \ \ \ std::vector<double>\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{classahdcSignal_a70e16b25448d7352eb13aab330bfd4f9}{GetEdep}}()\ \ \ \ \ \ \ \ \{\textcolor{keywordflow}{return}\ Edep;\}}
+\DoxyCodeLine{00083\ \ \ \ \ \ \ \ \ }
+\DoxyCodeLine{00085\ \ \ \ \ \ \ \ \ std::vector<double>\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{classahdcSignal_a6c4457faf2f766590c2da03c62698ccd}{GetG4Time}}()\ \ \ \ \ \ \ \ \{\textcolor{keywordflow}{return}\ G4Time;\}}
+\DoxyCodeLine{00086\ \ \ \ \ \ \ \ \ }
+\DoxyCodeLine{00088\ \ \ \ \ \ \ \ \ std::vector<double>\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{classahdcSignal_aeea37600ffe260a6db3f1a3ce267b44a}{GetDoca}}()\ \ \ \ \ \ \ \ \{\textcolor{keywordflow}{return}\ Doca;\}}
+\DoxyCodeLine{00089\ \ \ \ \ \ \ \ \ }
+\DoxyCodeLine{00091\ \ \ \ \ \ \ \ \ std::vector<double>\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{classahdcSignal_a38c1a560bf9c127bd720d363dd36ef36}{GetDriftTime}}()\ \ \ \ \ \ \{\textcolor{keywordflow}{return}\ DriftTime;\}}
+\DoxyCodeLine{00092\ \ \ \ \ \ \ \ \ }
+\DoxyCodeLine{00094\ \ \ \ \ \ \ \ \ std::vector<short>\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{classahdcSignal_ac18ec3adcb1167864dbb1bfb1ce72e13}{GetNoise}}()\ \ \ \ \ \ \ \ \ \ \ \ \ \ \{\textcolor{keywordflow}{return}\ Noise;\}}
+\DoxyCodeLine{00095\ \ \ \ \ \ \ \ \ }
+\DoxyCodeLine{00097\ \ \ \ \ \ \ \ \ std::vector<short>\ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{classahdcSignal_a6966802bb2af5a6b023b50ed7a16f406}{GetDgtz}}()\ \ \ \ \ \ \ \ \{\textcolor{keywordflow}{return}\ Dgtz;\}}
+\DoxyCodeLine{00098\ \ \ \ \ \ \ \ \ }
+\DoxyCodeLine{00104\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{classahdcSignal_ab030caab84398dd071d480ca210a745a}{SetElectronYield}}(\textcolor{keywordtype}{double}\ electronYield\_)\ \ \ \ \ \ \ \ \{electronYield\ =\ electronYield\_;\}}
+\DoxyCodeLine{00105\ \ \ \ \ \ \ \ \ }
+\DoxyCodeLine{00113\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{double}\ \mbox{\hyperlink{classahdcSignal_a3fbf2273d91a212219e7794e7b60f6f3}{operator()}}(\textcolor{keywordtype}{double}\ timePoint)\{}
+\DoxyCodeLine{00114\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{using\ namespace\ }Genfun;}
+\DoxyCodeLine{00115\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{double}\ signalValue\ =\ 0;}
+\DoxyCodeLine{00116\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{int}\ s=0;\ s<\mbox{\hyperlink{classahdcSignal_aa5c46af357e143260ed7560d2610340d}{nsteps}};\ s++)\{}
+\DoxyCodeLine{00117\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ setting\ Landau's\ parameters}}
+\DoxyCodeLine{00118\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ Landau\ L;}
+\DoxyCodeLine{00119\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ L.peak()\ =\ Parameter(\textcolor{stringliteral}{"{}Peak"{}},DriftTime.at(s),tmin,tmax);\ }
+\DoxyCodeLine{00120\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ L.width()\ =\ Parameter(\textcolor{stringliteral}{"{}Width"{}},Landau\_width,0,400);\ }
+\DoxyCodeLine{00121\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ signalValue\ +=\ Edep.at(s)*L(timePoint-\/timeOffset);}
+\DoxyCodeLine{00122\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00123\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ signalValue;}
+\DoxyCodeLine{00124\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00125\ \ \ \ \ \ \ \ \ }
+\DoxyCodeLine{00136\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{classahdcSignal_a4eabb959430fd1bdb78c793ca684e115}{Digitize}}();}
+\DoxyCodeLine{00137\ }
+\DoxyCodeLine{00142\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{classahdcSignal_a024a11709c2cd380df1d8f06598e7fe9}{GenerateNoise}}(\textcolor{keywordtype}{double}\ mean,\ \textcolor{keywordtype}{double}\ stdev);}
+\DoxyCodeLine{00143\ \ \ \ \ \ \ \ \ }
+\DoxyCodeLine{00144\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{double}\ GetMCTime();\ \textcolor{comment}{//\ tmp}}
+\DoxyCodeLine{00145\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{double}\ GetMCEtot();\ \textcolor{comment}{//\ tmp}}
+\DoxyCodeLine{00146\ \ \ \ \ \ \ \ \ }
+\DoxyCodeLine{00154\ \ \ \ \ \ \ \ \ std::map<std::string,double>\ \mbox{\hyperlink{classahdcSignal_a579f9f774ca9b065b7186cb9caae837c}{Extract}}(\textcolor{keywordtype}{bool}\ expression\ =\ \textcolor{keyword}{true});}
+\DoxyCodeLine{00155\ }
+\DoxyCodeLine{00156\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{void}\ PrintBeforeProcessing(\textcolor{keywordtype}{bool}\ expression\ =\ \textcolor{keyword}{true});\ \textcolor{comment}{//\ e.g\ :\ this-\/>PrintBeforeProcessing(this-\/>nsteps\ >\ 10)}}
+\DoxyCodeLine{00157\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{void}\ PrintAllShapes(\textcolor{keywordtype}{bool}\ expression\ =\ \textcolor{keyword}{true});}
+\DoxyCodeLine{00158\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{void}\ PrintAfterProcessing(\textcolor{keywordtype}{bool}\ expression\ =\ \textcolor{keyword}{true});}
+\DoxyCodeLine{00159\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{void}\ PrintNoise(\textcolor{keywordtype}{bool}\ expression\ =\ \textcolor{keyword}{true});}
+\DoxyCodeLine{00160\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{void}\ PrintSignal(\textcolor{keywordtype}{bool}\ expression\ =\ \textcolor{keyword}{true});}
+\DoxyCodeLine{00161\ \};}
+\DoxyCodeLine{00162\ }
+\DoxyCodeLine{00163\ }
+\DoxyCodeLine{00164\ }
+\DoxyCodeLine{00165\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00166\ }
+\DoxyCodeLine{00167\ }
+
+\end{DoxyCode}

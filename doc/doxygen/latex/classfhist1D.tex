@@ -1,0 +1,84 @@
+\doxysection{fhist1D Class Reference}
+\hypertarget{classfhist1D}{}\label{classfhist1D}\index{fhist1D@{fhist1D}}
+\doxysubsubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{classfhist1D_adc584acf0e1008611d44ff99ac31b062}\label{classfhist1D_adc584acf0e1008611d44ff99ac31b062} 
+{\bfseries fhist1D} (const char \texorpdfstring{$\ast$}{*}\+\_\+title, int \+\_\+nbins, double \+\_\+xmin, double \+\_\+xmax)
+\begin{DoxyCompactList}\small\item\em Constructor. \end{DoxyCompactList}\item 
+\Hypertarget{classfhist1D_a9174b385cee7f1685ef456aab33fbd73}\label{classfhist1D_a9174b385cee7f1685ef456aab33fbd73} 
+void {\bfseries Fill} (double val)
+\begin{DoxyCompactList}\small\item\em Add a new entry in the histogram. \end{DoxyCompactList}\item 
+int \mbox{\hyperlink{classfhist1D_af59a683c2884c96305ff2fbc89bfb62d}{Get\+Bin\+Number}} (double val)
+\begin{DoxyCompactList}\small\item\em Return the bin number in which {\ttfamily val} falls. \end{DoxyCompactList}\item 
+int \mbox{\hyperlink{classfhist1D_a4cca6c25855bf3847dc251541f0db9de}{Get\+Weight}} (int bin)
+\begin{DoxyCompactList}\small\item\em Return the number of entries in this bin. \end{DoxyCompactList}\item 
+\Hypertarget{classfhist1D_a09d36c0876f1aa67225ba56228109707}\label{classfhist1D_a09d36c0876f1aa67225ba56228109707} 
+double {\bfseries Get\+Central\+Value} (int bin)
+\begin{DoxyCompactList}\small\item\em Return the center value of this bin. \end{DoxyCompactList}\item 
+\Hypertarget{classfhist1D_ace137edc174f809bd1f5d97595b0f2cc}\label{classfhist1D_ace137edc174f809bd1f5d97595b0f2cc} 
+std\+::vector$<$ double $>$ {\bfseries Get\+Xarray} ()
+\begin{DoxyCompactList}\small\item\em Return the array of values They are the center of each bins. \end{DoxyCompactList}\item 
+\Hypertarget{classfhist1D_aba64eaa179333a2e77f94088da62f5c7}\label{classfhist1D_aba64eaa179333a2e77f94088da62f5c7} 
+std\+::vector$<$ int $>$ {\bfseries Get\+Warray} ()
+\begin{DoxyCompactList}\small\item\em Return the array of weights. \end{DoxyCompactList}\item 
+\Hypertarget{classfhist1D_a26df6335a255271b919d38cd28a7719e}\label{classfhist1D_a26df6335a255271b919d38cd28a7719e} 
+double {\bfseries Get\+Mean} ()
+\begin{DoxyCompactList}\small\item\em Return the mean of the distribution. \end{DoxyCompactList}\item 
+\Hypertarget{classfhist1D_abd0844c573cf9a759f5a1a42bcc47aae}\label{classfhist1D_abd0844c573cf9a759f5a1a42bcc47aae} 
+double {\bfseries Get\+Stdev} ()
+\begin{DoxyCompactList}\small\item\em Return the standard deviation of the distribution. \end{DoxyCompactList}\item 
+\Hypertarget{classfhist1D_aee245e37c59938c2c92a903a3491755e}\label{classfhist1D_aee245e37c59938c2c92a903a3491755e} 
+void {\bfseries Set\+Flag\+Stat\+Over\+Flows} (bool \+\_\+flag\+Stat\+Over\+Flows)
+\begin{DoxyCompactList}\small\item\em If true, over/underflow values taken into account in the statistics. \end{DoxyCompactList}\item 
+\Hypertarget{classfhist1D_a6b3bf56e80b154b2bf613cf9ca2c3b9a}\label{classfhist1D_a6b3bf56e80b154b2bf613cf9ca2c3b9a} 
+void {\bfseries Print} ()
+\begin{DoxyCompactList}\small\item\em Print detailled informations on screen. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{classfhist1D_a4de079ad794c106c31a9bfa898a9cb66}{Draw\+Contour}} (const char \texorpdfstring{$\ast$}{*}filename)
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Member Function Documentation}
+\Hypertarget{classfhist1D_a4de079ad794c106c31a9bfa898a9cb66}\index{fhist1D@{fhist1D}!DrawContour@{DrawContour}}
+\index{DrawContour@{DrawContour}!fhist1D@{fhist1D}}
+\doxysubsubsection{\texorpdfstring{DrawContour()}{DrawContour()}}
+{\footnotesize\ttfamily \label{classfhist1D_a4de079ad794c106c31a9bfa898a9cb66} 
+void fhist1\+D\+::\+Draw\+Contour (\begin{DoxyParamCaption}\item[{const char \texorpdfstring{$\ast$}{*}}]{filename}{}\end{DoxyParamCaption})}
+
+brief Draw the contour of the histogram \Hypertarget{classfhist1D_af59a683c2884c96305ff2fbc89bfb62d}\index{fhist1D@{fhist1D}!GetBinNumber@{GetBinNumber}}
+\index{GetBinNumber@{GetBinNumber}!fhist1D@{fhist1D}}
+\doxysubsubsection{\texorpdfstring{GetBinNumber()}{GetBinNumber()}}
+{\footnotesize\ttfamily \label{classfhist1D_af59a683c2884c96305ff2fbc89bfb62d} 
+int fhist1\+D\+::\+Get\+Bin\+Number (\begin{DoxyParamCaption}\item[{double}]{val}{}\end{DoxyParamCaption})}
+
+
+
+Return the bin number in which {\ttfamily val} falls. 
+
+\begin{DoxyNote}{Note}
+return -\/1 if val \texorpdfstring{$<$}{<} xmin and -\/11 if val \texorpdfstring{$>$}{>} xmax 
+\end{DoxyNote}
+\Hypertarget{classfhist1D_a4cca6c25855bf3847dc251541f0db9de}\index{fhist1D@{fhist1D}!GetWeight@{GetWeight}}
+\index{GetWeight@{GetWeight}!fhist1D@{fhist1D}}
+\doxysubsubsection{\texorpdfstring{GetWeight()}{GetWeight()}}
+{\footnotesize\ttfamily \label{classfhist1D_a4cca6c25855bf3847dc251541f0db9de} 
+int fhist1\+D\+::\+Get\+Weight (\begin{DoxyParamCaption}\item[{int}]{bin}{}\end{DoxyParamCaption})}
+
+
+
+Return the number of entries in this bin. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em bin} & bin number (numerotation starts at 0) \\
+\hline
+\end{DoxyParams}
+\begin{DoxyNote}{Note}
+return -\/1 if bin \texorpdfstring{$<$}{<} 0 or bin \texorpdfstring{$>$}{>} {\ttfamily n\+Bins}-\/1 
+\end{DoxyNote}
+
+
+The documentation for this class was generated from the following files\+:\begin{DoxyCompactItemize}
+\item 
+/home/ftouchte/\+Desktop/alert/cpp/utils/fhist.\+h\item 
+/home/ftouchte/\+Desktop/alert/cpp/utils/fhist.\+cpp\end{DoxyCompactItemize}

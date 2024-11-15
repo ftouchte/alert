@@ -1,0 +1,109 @@
+\doxysection{fhist.\+h}
+\hypertarget{fhist_8h_source}{}\label{fhist_8h_source}\index{/home/ftouchte/Desktop/alert/cpp/utils/fhist.h@{/home/ftouchte/Desktop/alert/cpp/utils/fhist.h}}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ \textcolor{comment}{/*************************************************}}
+\DoxyCodeLine{00002\ \textcolor{comment}{\ *\ Class\ for\ 1D\ histograms}}
+\DoxyCodeLine{00003\ \textcolor{comment}{\ *}}
+\DoxyCodeLine{00004\ \textcolor{comment}{\ *\ @author\ Felix\ Touchte\ Codjo}}
+\DoxyCodeLine{00005\ \textcolor{comment}{\ *\ @date\ November\ 13,2024}}
+\DoxyCodeLine{00006\ \textcolor{comment}{\ *\ **********************************************/}}
+\DoxyCodeLine{00007\ }
+\DoxyCodeLine{00008\ \textcolor{preprocessor}{\#ifndef\ FELIX\_HIST\_H}}
+\DoxyCodeLine{00009\ \textcolor{preprocessor}{\#define\ FELIX\_HIST\_H}}
+\DoxyCodeLine{00010\ }
+\DoxyCodeLine{00011\ \textcolor{preprocessor}{\#include\ <vector>}}
+\DoxyCodeLine{00012\ }
+\DoxyCodeLine{00013\ \textcolor{keyword}{class\ }\mbox{\hyperlink{classfhist1D}{fhist1D}}\ \{}
+\DoxyCodeLine{00014\ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{char}\ *\ title;}
+\DoxyCodeLine{00015\ \ \ \ \ \textcolor{keywordtype}{int}\ nbins;\ }
+\DoxyCodeLine{00016\ \ \ \ \ \textcolor{keywordtype}{double}\ xmin;\ }
+\DoxyCodeLine{00017\ \ \ \ \ \textcolor{keywordtype}{double}\ xmax;\ }
+\DoxyCodeLine{00018\ \ \ \ \ \textcolor{keywordtype}{double}\ binWidth;\ }
+\DoxyCodeLine{00019\ \ \ \ \ \textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{long}\ \textcolor{keywordtype}{int}\ entriesAll\ =\ 0;\ }
+\DoxyCodeLine{00020\ \ \ \ \ std::vector<double>\ xarray;\ }
+\DoxyCodeLine{00021\ \ \ \ \ std::vector<int>\ warray;\ }
+\DoxyCodeLine{00022\ \ \ \ \ \textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{long}\ \textcolor{keywordtype}{int}\ underflow\ =\ 0;\ }
+\DoxyCodeLine{00023\ \ \ \ \ \textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{long}\ \textcolor{keywordtype}{int}\ overflow\ =\ 0;\ }
+\DoxyCodeLine{00024\ }
+\DoxyCodeLine{00025\ \ \ \ \ \textcolor{comment}{//\ Statistic\ quantities}}
+\DoxyCodeLine{00026\ \ \ \ \ \textcolor{keywordtype}{bool}\ flagStatOverFlows\ =\ \textcolor{keyword}{false};\ }
+\DoxyCodeLine{00027\ \ \ \ \ \textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{long}\ \textcolor{keywordtype}{int}\ entries\ =\ 0;\ }
+\DoxyCodeLine{00028\ \ \ \ \ }
+\DoxyCodeLine{00036\ \ \ \ \ std::vector<double>\ stats;}
+\DoxyCodeLine{00037\ \ \ \ \ \textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{long}\ \textcolor{keywordtype}{int}\ wmin\ =\ 0;\ }
+\DoxyCodeLine{00038\ \ \ \ \ \textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{long}\ \textcolor{keywordtype}{int}\ wmax\ =\ 0;\ }
+\DoxyCodeLine{00039\ }
+\DoxyCodeLine{00040\ \ \ \ \ public\ :}
+\DoxyCodeLine{00041\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{classfhist1D_adc584acf0e1008611d44ff99ac31b062}{fhist1D}}(\textcolor{keyword}{const}\ \textcolor{keywordtype}{char}\ *\ \_title,\ \textcolor{keywordtype}{int}\ \_nbins,\ \textcolor{keywordtype}{double}\ \_xmin,\ \textcolor{keywordtype}{double}\ \_xmax);\ }
+\DoxyCodeLine{00042\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{classfhist1D_a9174b385cee7f1685ef456aab33fbd73}{Fill}}(\textcolor{keywordtype}{double}\ val);}
+\DoxyCodeLine{00043\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ \ \ \ \mbox{\hyperlink{classfhist1D_af59a683c2884c96305ff2fbc89bfb62d}{GetBinNumber}}(\textcolor{keywordtype}{double}\ val);\ }
+\DoxyCodeLine{00044\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{classfhist1D_a4cca6c25855bf3847dc251541f0db9de}{GetWeight}}(\textcolor{keywordtype}{int}\ bin);}
+\DoxyCodeLine{00045\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{double}\ \mbox{\hyperlink{classfhist1D_a09d36c0876f1aa67225ba56228109707}{GetCentralValue}}(\textcolor{keywordtype}{int}\ bin);}
+\DoxyCodeLine{00046\ \ \ \ \ \ \ \ \ std::vector<double>\ \mbox{\hyperlink{classfhist1D_ace137edc174f809bd1f5d97595b0f2cc}{GetXarray}}();}
+\DoxyCodeLine{00047\ \ \ \ \ \ \ \ \ std::vector<int>\ \mbox{\hyperlink{classfhist1D_aba64eaa179333a2e77f94088da62f5c7}{GetWarray}}();}
+\DoxyCodeLine{00048\ \ \ \ \ \ \ \ \ }
+\DoxyCodeLine{00049\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Statistics}}
+\DoxyCodeLine{00050\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{double}\ \mbox{\hyperlink{classfhist1D_a26df6335a255271b919d38cd28a7719e}{GetMean}}();}
+\DoxyCodeLine{00051\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{double}\ \mbox{\hyperlink{classfhist1D_abd0844c573cf9a759f5a1a42bcc47aae}{GetStdev}}();}
+\DoxyCodeLine{00052\ }
+\DoxyCodeLine{00053\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{classfhist1D_aee245e37c59938c2c92a903a3491755e}{SetFlagStatOverFlows}}(\textcolor{keywordtype}{bool}\ \_flagStatOverFlows);}
+\DoxyCodeLine{00054\ }
+\DoxyCodeLine{00055\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{classfhist1D_a6b3bf56e80b154b2bf613cf9ca2c3b9a}{Print}}();}
+\DoxyCodeLine{00056\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{classfhist1D_a4de079ad794c106c31a9bfa898a9cb66}{DrawContour}}(\textcolor{keyword}{const}\ \textcolor{keywordtype}{char}\ *\ filename);}
+\DoxyCodeLine{00057\ \};}
+\DoxyCodeLine{00058\ }
+\DoxyCodeLine{00059\ \textcolor{keyword}{class\ }\mbox{\hyperlink{classfhist2D}{fhist2D}}\ \{}
+\DoxyCodeLine{00060\ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{char}\ *\ title;\ }
+\DoxyCodeLine{00061\ \ \ \ \ \textcolor{keywordtype}{int}\ nbinsx;\ }
+\DoxyCodeLine{00062\ \ \ \ \ \textcolor{keywordtype}{double}\ xmin;\ }
+\DoxyCodeLine{00063\ \ \ \ \ \textcolor{keywordtype}{double}\ xmax;\ }
+\DoxyCodeLine{00064\ \ \ \ \ \textcolor{keywordtype}{int}\ nbinsy;\ }
+\DoxyCodeLine{00065\ \ \ \ \ \textcolor{keywordtype}{double}\ ymin;\ }
+\DoxyCodeLine{00066\ \ \ \ \ \textcolor{keywordtype}{double}\ ymax;\ }
+\DoxyCodeLine{00067\ \ \ \ \ \textcolor{keywordtype}{double}\ binwx;\ }
+\DoxyCodeLine{00068\ \ \ \ \ \textcolor{keywordtype}{double}\ binwy;\ }
+\DoxyCodeLine{00069\ \ \ \ \ \textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{long}\ \textcolor{keywordtype}{int}\ entriesAll\ =\ 0;\ }
+\DoxyCodeLine{00070\ }
+\DoxyCodeLine{00071\ \ \ \ \ \textcolor{keywordtype}{double}\ *\ xarray\ =\ \textcolor{keyword}{nullptr};\ }
+\DoxyCodeLine{00072\ \ \ \ \ \textcolor{keywordtype}{double}\ *\ yarray\ =\ \textcolor{keyword}{nullptr};\ }
+\DoxyCodeLine{00073\ \ \ \ \ \textcolor{keywordtype}{double}\ **\ warray\ =\ \textcolor{keyword}{nullptr};\ }
+\DoxyCodeLine{00074\ \ \ \ \ }
+\DoxyCodeLine{00075\ \ \ \ \ \textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{long}\ \textcolor{keywordtype}{int}\ xunderflow\ =\ 0;\ }
+\DoxyCodeLine{00076\ \ \ \ \ \textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{long}\ \textcolor{keywordtype}{int}\ xoverflow\ =\ 0;\ }
+\DoxyCodeLine{00077\ \ \ \ \ \textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{long}\ \textcolor{keywordtype}{int}\ yunderflow\ =\ 0;\ }
+\DoxyCodeLine{00078\ \ \ \ \ \textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{long}\ \textcolor{keywordtype}{int}\ yoverflow\ =\ 0;\ }
+\DoxyCodeLine{00079\ }
+\DoxyCodeLine{00080\ \ \ \ \ \textcolor{keywordtype}{bool}\ flagStatOverFlows\ =\ \textcolor{keyword}{false};\ }
+\DoxyCodeLine{00081\ }
+\DoxyCodeLine{00082\ \ \ \ \ \textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{long}\ \textcolor{keywordtype}{int}\ entries\ =\ 0;\ }
+\DoxyCodeLine{00083\ }
+\DoxyCodeLine{00094\ \ \ \ \ \textcolor{keywordtype}{double}\ *\ stats\ =\ \textcolor{keyword}{nullptr};}
+\DoxyCodeLine{00095\ \ \ \ \ }
+\DoxyCodeLine{00096\ \ \ \ \ public\ :}
+\DoxyCodeLine{00097\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{classfhist2D}{fhist2D}}(\textcolor{keyword}{const}\ \textcolor{keywordtype}{char}\ *\ \_title,\ \textcolor{keywordtype}{int}\ \_nbinsx,\ \textcolor{keywordtype}{double}\ \_xmin,\ \textcolor{keywordtype}{double}\ \_xmax,\ \textcolor{keywordtype}{int}\ \_nbinsy,\ \textcolor{keywordtype}{double}\ \_ymin,\ \textcolor{keywordtype}{double}\ \_ymax);}
+\DoxyCodeLine{00098\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{classfhist2D}{fhist2D}}(\textcolor{keyword}{const}\ \mbox{\hyperlink{classfhist2D}{fhist2D}}\ \&\ hist);}
+\DoxyCodeLine{00099\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{classfhist2D}{\string~fhist2D}}();}
+\DoxyCodeLine{00100\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{classfhist2D_ac4ca871607dcedb23b614f1f0acc42a1}{Fill}}(\textcolor{keywordtype}{double}\ xval,\ \textcolor{keywordtype}{double}\ yval);}
+\DoxyCodeLine{00101\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{classfhist2D_a6e1b95f3980c5ecd9083a0d482827792}{GetBinNumberX}}(\textcolor{keywordtype}{double}\ xval)\ \textcolor{keyword}{const};}
+\DoxyCodeLine{00102\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{classfhist2D_a583d90d65776a5eeed613fee29d34cb0}{GetBinNumberY}}(\textcolor{keywordtype}{double}\ yval)\ \textcolor{keyword}{const};}
+\DoxyCodeLine{00103\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ GetWeightXY(\textcolor{keywordtype}{int}\ xbin,\ \textcolor{keywordtype}{int}\ ybin)\ \textcolor{keyword}{const};}
+\DoxyCodeLine{00104\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{void}\ GetCentralValueXY(\textcolor{keywordtype}{int}\ xbin,\ \textcolor{keywordtype}{int}\ ybin,\ \textcolor{keywordtype}{double}\ \&\ xval,\ \textcolor{keywordtype}{double}\ \&\ yval)\ \textcolor{keyword}{const};}
+\DoxyCodeLine{00105\ }
+\DoxyCodeLine{00106\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{double}\ CetXmean()\ \textcolor{keyword}{const};}
+\DoxyCodeLine{00107\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{double}\ GetYmean()\ \textcolor{keyword}{const};}
+\DoxyCodeLine{00108\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{double}\ GetXstdev()\ \textcolor{keyword}{const};}
+\DoxyCodeLine{00109\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{double}\ GetYstdev()\ \textcolor{keyword}{const};}
+\DoxyCodeLine{00110\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{double}\ GetCov()\ \textcolor{keyword}{const};}
+\DoxyCodeLine{00111\ }
+\DoxyCodeLine{00112\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{void}\ SetFlagStatOverFlows(\textcolor{keywordtype}{bool}\ \_flagStatOverFlows);}
+\DoxyCodeLine{00113\ }
+\DoxyCodeLine{00114\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{void}\ Print()\ \textcolor{keyword}{const};}
+\DoxyCodeLine{00115\ }
+\DoxyCodeLine{00116\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{classfhist1D}{fhist1D}}\ ProjectionX(\textcolor{keywordtype}{int}\ ystart,\ \textcolor{keywordtype}{int}\ yend)\ \textcolor{keyword}{const};}
+\DoxyCodeLine{00117\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{classfhist1D}{fhist1D}}\ ProjectionY(\textcolor{keywordtype}{int}\ xstart,\ \textcolor{keywordtype}{int}\ xend)\ \textcolor{keyword}{const};}
+\DoxyCodeLine{00118\ \};}
+\DoxyCodeLine{00119\ }
+\DoxyCodeLine{00120\ \textcolor{preprocessor}{\#endif}}
+
+\end{DoxyCode}

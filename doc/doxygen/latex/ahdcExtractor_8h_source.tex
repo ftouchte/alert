@@ -1,0 +1,68 @@
+\doxysection{ahdc\+Extractor.\+h}
+\hypertarget{ahdcExtractor_8h_source}{}\label{ahdcExtractor_8h_source}\index{/home/ftouchte/Desktop/alert/cpp/ahdc/ahdcExtractor.h@{/home/ftouchte/Desktop/alert/cpp/ahdc/ahdcExtractor.h}}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ \textcolor{preprocessor}{\#ifndef\ AHDC\_EXTRACTOR\_H}}
+\DoxyCodeLine{00002\ \textcolor{preprocessor}{\#define\ AHDC\_EXTRACTOR\_H}}
+\DoxyCodeLine{00003\ }
+\DoxyCodeLine{00004\ \textcolor{preprocessor}{\#include\ <vector>}}
+\DoxyCodeLine{00005\ \textcolor{preprocessor}{\#include\ <map>}}
+\DoxyCodeLine{00011\ \textcolor{keyword}{class\ }\mbox{\hyperlink{classahdcExtractor}{ahdcExtractor}}\ \{}
+\DoxyCodeLine{00012\ \ \ \ \ public\ :}
+\DoxyCodeLine{00013\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{float}\ \mbox{\hyperlink{classahdcExtractor_ae734222eb7223308c4365cae6a019d61}{samplingTime}};\ }
+\DoxyCodeLine{00014\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{classahdcExtractor_a01b8c361d1acc280d298bc595a2692a1}{sparseSample}}\ =\ 0;\ }
+\DoxyCodeLine{00015\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{short}\ \mbox{\hyperlink{classahdcExtractor_a908590b94b223ec10123fb15b6dc5f77}{adcOffset}}\ =\ 0;\ }
+\DoxyCodeLine{00016\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{long}\ \mbox{\hyperlink{classahdcExtractor_ad348556ce8970f0826bda19458263cfc}{timeStamp}}\ =\ 0;\ }
+\DoxyCodeLine{00017\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{float}\ \mbox{\hyperlink{classahdcExtractor_aa318ae262babd9d296957eb02b34f8ef}{fineTimeStampResolution}}\ =\ 0;\ }
+\DoxyCodeLine{00018\ \ \ \ \ \ \ \ \ \textcolor{keyword}{static}\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{short}\ \mbox{\hyperlink{classahdcExtractor_a40c60c59df4170d6aeda82770842b928}{ADC\_LIMIT}}\ =\ 4095;\ }
+\DoxyCodeLine{00019\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{float}\ \mbox{\hyperlink{classahdcExtractor_ad9a34a62e5d54d80b68f29f3de9cc5b8}{amplitudeFractionCFA}};\ }
+\DoxyCodeLine{00020\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{classahdcExtractor_a6ebee535d5bd999f645d2b40126ee407}{binDelayCFD}};\ }
+\DoxyCodeLine{00021\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{float}\ \mbox{\hyperlink{classahdcExtractor_af9d70cc17493ba99a8f30e53556f5a57}{fractionCFD}};\ }
+\DoxyCodeLine{00022\ }
+\DoxyCodeLine{00023\ \ \ \ \ public\ :}
+\DoxyCodeLine{00024\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{classahdcExtractor_afd1d8fc6fcafa3596a289ca937fbd0ed}{binMax}};\ }
+\DoxyCodeLine{00025\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{classahdcExtractor_a4cc30b7555d83e41b06c3ca23de51dce}{binOffset}};\ }
+\DoxyCodeLine{00026\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{float}\ \mbox{\hyperlink{classahdcExtractor_a198ed573a6492534e2cae92ef493e2e2}{adcMax}};\ }
+\DoxyCodeLine{00027\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{float}\ \mbox{\hyperlink{classahdcExtractor_a49688b2c60e1a9db7eef4f105353056f}{timeMax}};\ }
+\DoxyCodeLine{00028\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{float}\ \mbox{\hyperlink{classahdcExtractor_a158e80efb35f3c36c8770afda2c4480f}{integral}};\ }
+\DoxyCodeLine{00029\ }
+\DoxyCodeLine{00030\ \ \ \ \ \ \ \ \ std::vector<short>\ \mbox{\hyperlink{classahdcExtractor_a77ef46dda9107b79dc8dd4850a69ddb2}{samplesCorr}};\ }
+\DoxyCodeLine{00031\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{classahdcExtractor_ac9d6d8a627567c450fb872ef3c463b14}{binNumber}};\ }
+\DoxyCodeLine{00032\ }
+\DoxyCodeLine{00033\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{float}\ \mbox{\hyperlink{classahdcExtractor_adf2d612ccbdcfedadb354a53e0f60f46}{timeRiseCFA}};\ }
+\DoxyCodeLine{00034\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{float}\ \mbox{\hyperlink{classahdcExtractor_a95be1f09a59b42f7e88b3096eed1e10a}{timeFallCFA}};\ }
+\DoxyCodeLine{00035\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{float}\ \mbox{\hyperlink{classahdcExtractor_a2bdd5bca4c7fc05acd8a4c5d6beea2e8}{timeOverThresholdCFA}};\ }
+\DoxyCodeLine{00036\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{float}\ \mbox{\hyperlink{classahdcExtractor_a2ada17d413124fd281784645ce6f778f}{timeCFD}};\ }
+\DoxyCodeLine{00037\ }
+\DoxyCodeLine{00039\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{classahdcExtractor_ad11da29fe7057650b63ad514bcad203d}{ahdcExtractor}}()\ =\ \textcolor{keywordflow}{default};}
+\DoxyCodeLine{00040\ }
+\DoxyCodeLine{00042\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{classahdcExtractor_a801574f659508434290fc2d802edde30}{ahdcExtractor}}(\textcolor{keywordtype}{float}\ \_samplingTime,\textcolor{keywordtype}{float}\ \_amplitudeFractionCFA,\ \textcolor{keywordtype}{int}\ \_binDelayCFD,\ \textcolor{keywordtype}{float}\ \_fractionCFD)\ :}
+\DoxyCodeLine{00043\ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{classahdcExtractor_ae734222eb7223308c4365cae6a019d61}{samplingTime}}(\_samplingTime),\ \mbox{\hyperlink{classahdcExtractor_ad9a34a62e5d54d80b68f29f3de9cc5b8}{amplitudeFractionCFA}}(\_amplitudeFractionCFA),\ \mbox{\hyperlink{classahdcExtractor_a6ebee535d5bd999f645d2b40126ee407}{binDelayCFD}}(\_binDelayCFD),\ \mbox{\hyperlink{classahdcExtractor_af9d70cc17493ba99a8f30e53556f5a57}{fractionCFD}}(\_fractionCFD)\ \{\}}
+\DoxyCodeLine{00044\ }
+\DoxyCodeLine{00046\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{classahdcExtractor_aa186ae6c5f1c8fee31c3bd948f838b3b}{\string~ahdcExtractor}}()\{;\}}
+\DoxyCodeLine{00047\ }
+\DoxyCodeLine{00054\ \ \ \ \ \ \ \ \ std::map<std::string,double>\ \mbox{\hyperlink{classahdcExtractor_a869faa0a9a135cc46fb6f5af50153561}{extract}}(\textcolor{keyword}{const}\ std::vector<short>\ samples);}
+\DoxyCodeLine{00055\ }
+\DoxyCodeLine{00056\ \ \ \ \ private\ :}
+\DoxyCodeLine{00062\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{void}\ waveformCorrection();}
+\DoxyCodeLine{00063\ }
+\DoxyCodeLine{00070\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{void}\ fitAverage();}
+\DoxyCodeLine{00071\ }
+\DoxyCodeLine{00075\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{void}\ fitParabolic();}
+\DoxyCodeLine{00076\ }
+\DoxyCodeLine{00085\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{void}\ fineTimeStampCorrection();}
+\DoxyCodeLine{00086\ }
+\DoxyCodeLine{00095\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{void}\ computeTimeAtConstantFractionAmplitude();}
+\DoxyCodeLine{00096\ }
+\DoxyCodeLine{00106\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{void}\ computeTimeUsingConstantFractionDiscriminator();}
+\DoxyCodeLine{00107\ \ \ \ \ \textcolor{keyword}{public}:}
+\DoxyCodeLine{00108\ \ \ \ \ \ \ \ \ std::vector<float>\ \mbox{\hyperlink{classahdcExtractor_a08cd1f55fea550b63f9700e5d1534210}{samplesCFD}};\ }
+\DoxyCodeLine{00109\ \ \ \ \ \ \ \ \ }
+\DoxyCodeLine{00114\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{classahdcExtractor_a92fdd26c9d9c90fc52da4d51c86d2efb}{Show}}(\textcolor{keyword}{const}\ \textcolor{keywordtype}{char}\ *\ filename);}
+\DoxyCodeLine{00115\ }
+\DoxyCodeLine{00120\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{classahdcExtractor_a9f935673e131d253f28b2b2fdeb993cd}{ShowCFD}}(\textcolor{keyword}{const}\ \textcolor{keywordtype}{char}\ *\ filename);}
+\DoxyCodeLine{00121\ \};}
+\DoxyCodeLine{00122\ }
+\DoxyCodeLine{00123\ \textcolor{preprocessor}{\#endif}}
+
+\end{DoxyCode}
