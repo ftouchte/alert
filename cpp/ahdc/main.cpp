@@ -1,7 +1,8 @@
 /****************************************************
- * This code is study of the correlation between the
+ * This code studies the correlation between the
  * various extracted time (timeMax, timeRiseCFA, 
- * timeCFD) and the amplitude (adcMax) of the signal.
+ * timeCFD, timeOverThresholdCFA) and the amplitude (adcMax) 
+ * of the signal.
  *
  * @author Felix Touchte Codjo
  * @date November 13, 2024
@@ -47,6 +48,7 @@ int main(int argc, char const *argv[]){
 	double tmax = 2000;
 	TH2D* hist2d_timeMax = new TH2D("hist2d_timeMax", "timeMax vs adcMax", nBinX, tmin, tmax, nBinY, 0, ahdcExtractor::ADC_LIMIT);
 	TH2D* hist2d_timeRiseCFA = new TH2D("hist2d_timeRiseCFA", TString::Format("timeRiseCFA vs adcMax, fraction = %.2f",amplitudeFractionCFA), nBinX, tmin, tmax, nBinY, 0, ahdcExtractor::ADC_LIMIT);
+	TH2D* hist2d_timeOT = new TH2D("hist2d_timeOT", TString::Format("timeOverThresholdCFA vs adcMax, fraction = %.2f",amplitudeFractionCFA), nBinX, tmin, tmax, nBinY, 0, ahdcExtractor::ADC_LIMIT);
 	TH2D* hist2d_timeCFD = new TH2D("hist2d_timeCFD", TString::Format("timeCFD vs adcMax, fraction = %.2f, binDelay = %d",fractionCFD,binDelayCFD), nBinX, tmin, tmax, nBinY, 0, ahdcExtractor::ADC_LIMIT);
 
 	// loop over events
@@ -69,6 +71,7 @@ int main(int argc, char const *argv[]){
 			double adcMax = output["adcMax"];
 			double timeMax = output["timeMax"];
 			double timeRiseCFA = output["timeRiseCFA"];
+			double timeOT = output["timeOverThresholdCFA"];
 			double timeCFD = output["timeCFD"];
 			double mctime = list[0].getFloat("mctime",col);
 			timeMax -= mctime;
@@ -77,19 +80,17 @@ int main(int argc, char const *argv[]){
 			hist2d_timeMax->Fill(timeMax,adcMax);
 			hist2d_timeRiseCFA->Fill(timeRiseCFA,adcMax);
 			hist2d_timeCFD->Fill(timeCFD,adcMax);
-
-			//std::string outputName1 = "SignalDecoded_e" + to_string(nEvent) + "l" + to_string(layer) + "c" + to_string(component) + ".pdf"; 
-			//std::string outputName2 = "SignalCFD_e" + to_string(nEvent) + "l" + to_string(layer) + "c" + to_string(component) + ".pdf";
-			//T.Show(outputName1.c_str());
-			//T.ShowCFD(outputName2.c_str());
+			hist2d_timeOT->Fill(timeOT,adcMax);
 
 		} // end loop over columns of AHDC::wf:136
 	nEvent++;
 	} // end loop over events
 
 	// Plots
-	TCanvas* canvas1 = new TCanvas("c1","c1 title",2000,3000);
-	canvas1->Divide(1,3);
+	//TCanvas* canvas1 = new TCanvas("c1","c1 title",2000,3000);
+	TCanvas* canvas1 = new TCanvas("c1","c1 title",3500,2000);
+	//canvas1->Divide(1,3);
+	canvas1->Divide(2,2);
 	gStyle->SetOptStat("nemruo");
 
 	// timeMax vs adcMax
@@ -115,6 +116,14 @@ int main(int argc, char const *argv[]){
 	hist2d_timeCFD->GetYaxis()->SetTitle("adcMax");
 	hist2d_timeCFD->GetYaxis()->SetTitleSize(0.05);
 	hist2d_timeCFD->Draw("COLZ");
+
+	// timeOT vs adcMax
+	canvas1->cd(4);
+	hist2d_timeOT->GetXaxis()->SetTitle("timeOT");
+	hist2d_timeOT->GetXaxis()->SetTitleSize(0.05);
+	hist2d_timeOT->GetYaxis()->SetTitle("adcMax");
+	hist2d_timeOT->GetYaxis()->SetTitleSize(0.05);
+	hist2d_timeOT->Draw("COLZ");
 
 	// output
 	canvas1->Print(TString::Format("CorrelationTimeAmplitude.pdf"));
