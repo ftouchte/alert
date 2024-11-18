@@ -65,7 +65,7 @@ main: main.o fhist.o
 
 clean:
 	@echo 'Removing all build files'
-	@rm -rf *.o *~ *.exe example*hipo Signal*.pdf
+	@rm -rf *.o *~ *.exe example*hipo *.pdf
 
 %.o: %.cpp
 	$(CXX) -c $< -O2 $(CXXFLAGS) $(HIPOCFLAGS) $(LZ4INCLUDES) $(ROOTCFLAGS) 

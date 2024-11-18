@@ -22,7 +22,7 @@ HIPOLIBS    := -L$(PATH2HIPO)/lib -lhipo4
 LZ4LIBS     := -L$(PATH2HIPO)/lz4/lib -llz4
 LZ4INCLUDES := -I$(PATH2HIPO)/lz4/lib
 
-FELIXFLAGS := -I/homeijclab/touchte-codjo/Bureau/alert/cpp/ahdc
+FELIXFLAGS := -I/homeijclab/touchte-codjo/Bureau/alert/cpp/ahdc -I/homeijclab/touchte-codjo/Bureau/alert/cpp/utils
 
 # ROOT libraries 
 ROOTLIBS = $(shell root-config --libs)
@@ -44,16 +44,14 @@ LDFLAGS   :=
 
 
 #all:  showFile histo plot benchmark simu
-all: main simpleTest
+all: main
 
 #ahdcExtractor: ahdcExtractor.o 
 #	$(CXX) -o ahdcExtractor.exe $^ $(HIPOLIBS) $(LZ4LIBS) $(ROOTLIBS)
 
-main: main.o ahdcExtractor.o
+main: main.o fhist.o
 	$(CXX) -o main.exe $^ $(HIPOLIBS) $(LZ4LIBS) $(ROOTLIBS)
 
-simpleTest: simpleTest.o ahdcExtractor.o
-	$(CXX) -o simpleTest.exe $^ $(HIPOLIBS) $(LZ4LIBS) $(ROOTLIBS)
 
 #histo: histo.o futils.o
 #	$(CXX) -o histo.exe $^ $(HIPOLIBS) $(LZ4LIBS) $(ROOTLIBS)
@@ -67,7 +65,7 @@ simpleTest: simpleTest.o ahdcExtractor.o
 
 clean:
 	@echo 'Removing all build files'
-	@rm -rf *.o *~ *.exe example*hipo Signal*.pdf
+	@rm -rf *.o *~ *.exe example*hipo *.pdf
 
 %.o: %.cpp
 	$(CXX) -c $< -O2 $(CXXFLAGS) $(HIPOCFLAGS) $(LZ4INCLUDES) $(ROOTCFLAGS) 
