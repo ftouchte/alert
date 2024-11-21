@@ -31,6 +31,7 @@ int main(int argc, char const *argv[]){
 	}
 
 	using namespace std::__cxx11; // for the to_string() method
+	// open file and read bank
 	const char* filename = argv[1];
 	hipo::reader  r(filename);
 	hipo::banklist list = r.getBanks({"AHDC::adc","AHDC::wf:136"});

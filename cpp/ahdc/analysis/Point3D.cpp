@@ -22,3 +22,10 @@ Point3D::Point3D(const Point3D & pt) {
 void Point3D::Print(){
 	printf("(%.1lf,%.1lf,%.1lf)\n",x,y,z);
 }
+
+/** Apply a linear translation */
+void Point3D::Translate(double a, double  b, double c){
+	x += a;
+	y += b;
+	z += c;
+}

@@ -1,5 +1,5 @@
 /****************************************************
- * GeomAhdc.h
+ * AhdcGeom.h
  *
  *
  * @author Felix Touchte Codjo
@@ -14,13 +14,6 @@
 //#define PI 3.14159265358979323846
 
 
-/**
- * @class GeomAhdc
- * Endoces all the sense wires of the AHDC
- */
-class GeomAhdc {
-
-};
 
 /**
  * @class AhdcWire
@@ -86,7 +79,25 @@ public :
 	AhdcCell(int _sector, int _superlayer, int _layer, int _component);	
 };
 
+/**
+ * @class AhdcGeom
+ * Endoces all the sense wires of the AHDC
+ */
+class AhdcGeom {
+	int db[8] = {11147,12156,12256,13172,13272,14187,14287,15199}; ///< sector*10000+superlayer*1000+layer*100+NumberOfWires*1
+public :
+	bool IsAhdcSector(int sector);
+	bool IsAhdcSuperLayer(int sector, int superlayer);
+	bool IsAhdcLayer(int sector, int superlayer,int layer);
+	bool IsAhdcWire(int sector, int superlayer, int layer, int component);
+	AhdcSector GetAhdcSector(int sector);
+	void Show();
+	int GetDataBaseEntry(int entry);
+	int GetDataBaseSize();
+};
+
 namespace futils {
 	double toRadian(double);
 }
+
 #endif

@@ -44,19 +44,22 @@ LDFLAGS   :=
 
 
 #all:  showFile histo plot benchmark simu
-all: monitor timeAmp simpleTest
+all: monitor ahdcView corrTimeAmp simpleTest
 
 #ahdcExtractor: ahdcExtractor.o 
 #	$(CXX) -o ahdcExtractor.exe $^ $(HIPOLIBS) $(LZ4LIBS) $(ROOTLIBS)
 
-monitor: monitor.o ahdcExtractor.o Point3D.o GeomAhdc.o
+monitor: monitor.o ahdcExtractor.o Point3D.o AhdcGeom.o
 	$(CXX) -o monitor.exe $^ $(HIPOLIBS) $(LZ4LIBS) $(ROOTLIBS)
+
+ahdcView: ahdcView.o ahdcExtractor.o Point3D.o AhdcGeom.o
+	$(CXX) -o ahdcView.exe $^ $(HIPOLIBS) $(LZ4LIBS) $(ROOTLIBS)
 
 simpleTest: simpleTest.o ahdcExtractor.o
 	$(CXX) -o simpleTest.exe $^ $(HIPOLIBS) $(LZ4LIBS) $(ROOTLIBS)
 
-timeAmp: timeAmp.o ahdcExtractor.o
-	$(CXX) -o timeAmp.exe $^ $(HIPOLIBS) $(LZ4LIBS) $(ROOTLIBS)
+corrTimeAmp: corrTimeAmp.o ahdcExtractor.o
+	$(CXX) -o corrTimeAmp.exe $^ $(HIPOLIBS) $(LZ4LIBS) $(ROOTLIBS)
 
 #histo: histo.o futils.o
 #	$(CXX) -o histo.exe $^ $(HIPOLIBS) $(LZ4LIBS) $(ROOTLIBS)

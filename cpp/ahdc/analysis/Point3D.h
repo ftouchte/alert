@@ -19,7 +19,7 @@ public :
 	//Point3D & operator=(const Point3D & pt);
 	void Print();
 
-
+	void Translate(double a, double b, double c);
 };
 
 #endif
