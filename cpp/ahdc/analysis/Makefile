@@ -14,7 +14,8 @@
 # 	-I<path> : Ajoute le répertoire <path> au chemin de recherche des fichiers d'en-tête.
 # 	-L<path> : Ajoute le répertoire <path> au chemin de recherche des bibliothèques.
 
-PATH2HIPO := /homeijclab/touchte-codjo/hipo
+#PATH2HIPO := /homeijclab/touchte-codjo/hipo
+PATH2HIPO := /home/ftouchte/hipo
 
 HIPOCFLAGS  := -I$(PATH2HIPO)/hipo4 -I$(PATH2HIPO)/hipo4/chart   
 HIPOLIBS    := -L$(PATH2HIPO)/lib -lhipo4 

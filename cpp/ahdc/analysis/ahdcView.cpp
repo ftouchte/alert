@@ -7,7 +7,7 @@
  * - alpha angle to simulate the z axis in a 2D plan
  * - scale factor
  *
- * Remark : some can be done to plot specifif 
+ * Remark : some cuts can be done to plot specific 
  * superlayer, layer, component (wire)
  *
  * This code is an example of use of AhdcGeom.h
@@ -56,6 +56,7 @@ int main(int argc, char const *argv[]){
 	double scale = 200/z; // scale*z >= 2*R_max >= 136
 
 	TMultiGraph  *mg  = new TMultiGraph();
+	// loop over (super)layer
 	for (int entry = 0; entry < ahdc.GetDataBaseSize(); entry++) {
 		//if (entry != 0) {break;} // can be commented
 		int info = ahdc.GetDataBaseEntry(entry);
@@ -63,8 +64,9 @@ int main(int argc, char const *argv[]){
 		int superlayer = (info-10000*sector)/1000;
 		int layer = (info-10000*sector-1000*superlayer)/100;
 		int NumberOfWires = info-10000*sector-1000*superlayer-100*layer;
-		TGraph* gr1t = new TGraph(NumberOfWires);
-		TGraph* gr1b = new TGraph(NumberOfWires);
+		TGraph* gr1t = new TGraph(NumberOfWires); // top face of this layer
+		TGraph* gr1b = new TGraph(NumberOfWires); // bottom face of this layer
+		// loop over layer wires
 		for (int component = 1; component <= NumberOfWires; component++){
 			AhdcWire wire(sector,superlayer,layer,component);
 			// wire top face

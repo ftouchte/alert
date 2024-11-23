@@ -25,6 +25,27 @@
 #include "TMultiGraph.h"
 #include "TLatex.h"
 
+class DepositCircle : public TGraph {
+	double x; ///< x-coordiante of the center
+	double y; ///< y-coordinate of the center
+	double rmax = 2; ///< maximum radius
+	double fraction; ///< `fraction*rmax` is the real radius of the circle
+	int resolution; ///< number of points to draw the circle
+public :
+	DepositCircle(double _x, double _y, double _fraction = 0.5, int _resolution = 100) : TGraph(_resolution+1), x(_x), y(_y), fraction(_fraction), resolution(_resolution) {
+		for (int k = 0; k < resolution; k++){
+			this->SetPoint(k,x+rmax*fraction*cos(2*M_PI*k/resolution),y+rmax*fraction*sin(2*M_PI*k/resolution)); // set circle points
+		}
+		this->SetPoint(resolution,x+rmax*fraction,0); // close the circle
+	}
+	void SetRmax(double _rmax) {rmax = _rmax;}
+	/*void Draw(Option_t* chopt = "F") override {
+		//this->SetFillStyle(3001);
+		this->SetFillColorAlpha(kRed,1.0);
+		this->TGraph::Draw(chopt);
+	}*/
+};
+
 
 int main(int argc, char const *argv[]){
 	
@@ -43,7 +64,8 @@ int main(int argc, char const *argv[]){
 	TLegend* legend = new TLegend();
 	
 	TMultiGraph  *mg  = new TMultiGraph();
-	for (int entry = 0; entry < ahdc.GetDataBaseSize(); entry++) {
+	//for (int entry = 0; entry < ahdc.GetDataBaseSize(); entry++) {
+	for (int entry = ahdc.GetDataBaseSize()-1; entry >= 0; entry--) {
 		int info = ahdc.GetDataBaseEntry(entry);
 		int sector = info/10000;
 		int superlayer = (info-10000*sector)/1000;
@@ -83,7 +105,7 @@ int main(int argc, char const *argv[]){
 	 * Following process each events of the 
 	 * given hipofile
 	 * ******************************************/
-	
+	cout << "argv[0] : " << argv[0] << endl;	
 	// open file and read banks
 	const char* filename = argv[1];
 	hipo::reader  r(filename);
@@ -94,10 +116,27 @@ int main(int argc, char const *argv[]){
         double amplitudeFractionCFA = 0.5;
         double fractionCFD = 0.3;
         int binDelayCFD = 5;
+	
+	// Print AHDC without event
+	TLatex latex0;
+	latex0.SetTextSize(0.02);
+	latex0.DrawLatex(0+1,0+1,"no event");
+	canvas1->Print("./thisEvent.pdf");
 
 	// loop over events
         while( r.next(list)){
-		if (nEvent != 0) {break;}
+		//if (nEvent != 0) {break;}
+		/*****************  AHDC without event ******************/
+		canvas1->Clear();
+		mg->Draw("AP");
+		legend->Draw();
+		gr2t->Draw("P");
+		TLatex latex;
+		latex.SetTextSize(0.025);
+		latex.DrawLatex(0+1,0+1,TString::Format("ev : %ld",nEvent));
+		/********************************************************/
+
+		mg->SetTitle(TString::Format("event : %ld",nEvent));
                 // loop over columns of AHDC::wf:136
                 for(int col = 0; col < list[1].getRows(); col++){
                         std::vector<short> samples; // waveform samples
@@ -131,22 +170,43 @@ int main(int argc, char const *argv[]){
 			AhdcGeom ahdc;
 			if (ahdc.IsAhdcWire(sector,superlayer,layer,component)){
 				AhdcWire wire(sector,superlayer,layer,component);
-				TGraph* gr1t = new TGraph(1);
+				DepositCircle * depo = new DepositCircle(wire.start.x,wire.start.y,1.0);
+				depo->SetFillColorAlpha(kRed,1.0);
+				depo->Draw("F");
+				/*TGraph* gr1t = new TGraph(1);
 				gr1t->SetPoint(0,wire.start.x,wire.start.y);
 				// overdraw this activated wire in the canvas
 				gr1t->SetMarkerStyle(20);
 				gr1t->SetMarkerColor(kRed);
 				gr1t->SetMarkerSize(2);
-				gr1t->Draw("P");
-				cout << "GOOD   : sector(" << sector << "), superlayer(" << superlayer << "), layer(" << layer << "), component(" << component << ")\n" << endl;
+				gr1t->Draw("P");*/
+				//cout << "GOOD   : sector(" << sector << "), superlayer(" << superlayer << "), layer(" << layer << "), component(" << component << ")\n" << endl;
 			} else { // should not happen
 				cout << "BAD    : sector(" << sector << "), superlayer(" << superlayer << "), layer(" << layer << "), component(" << component << ")\n" << endl;
 			}
                 } // end loop over columns of AHDC::wf:136
-        nEvent++;
+        	nEvent++;
+		/*********************  API    ***********************/
+		string action;
+		cout << "Choose (n=next, p=previous, q=quit, h=help), Type action : ";
+		cin >> action;
+		while (action != string("q")){
+			if (action == string("n")){
+				canvas1->Print("./thisEvent.pdf");
+				break;
+			}
+			cout << "Choose (n=next, p=previous, q=quit, h=help), Type action : ";
+			cin >> action;
+		}
+		if (action == string("q")) {
+			cout << "API action : event number >= " << nEvent-1 << " not read" << endl;
+			break;
+		}
+		/*******************  END API  ***********************/
         } // end loop over events
 	
-	
 	// print canvas
-	canvas1->Print("./thisEvent.pdf");
+	//canvas1->Print("./thisEvent.pdf");
 }
+
+
