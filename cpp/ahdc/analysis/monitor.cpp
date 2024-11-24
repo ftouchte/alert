@@ -29,7 +29,7 @@ class DepositCircle : public TGraph {
 	double x; ///< x-coordiante of the center
 	double y; ///< y-coordinate of the center
 	double rmax = 2; ///< maximum radius
-	double fraction; ///< `fraction*rmax` is the real radius of the circle
+	double fraction; ///< between 0 and 1, `fraction*rmax` is the real radius of the circle
 	int resolution; ///< number of points to draw the circle
 public :
 	DepositCircle(double _x, double _y, double _fraction = 0.5, int _resolution = 100) : TGraph(_resolution+1), x(_x), y(_y), fraction(_fraction), resolution(_resolution) {
@@ -55,16 +55,26 @@ int main(int argc, char const *argv[]){
         }
 	using namespace std::__cxx11; // for the to_string() method
 	using namespace std; 
-	/*************************************
-	 * The following lines print the top 
-	 * face of AHDC
-	 * **********************************/
+
+	TCanvas* canvas1 = new TCanvas("c1","c1 title",2000,3000);
+
+	/*********************************************
+	 * A representation of the top face (z=0 cut)
+	 * of the AHDC stored in the multigraph mg
+	 * ******************************************/
 	AhdcGeom ahdc;
-	TCanvas* canvas1 = new TCanvas("c1","c1 title",3000,3000);
-	TLegend* legend = new TLegend();
-	
 	TMultiGraph  *mg  = new TMultiGraph();
+	TMultiGraph  *mg_adcMax  = new TMultiGraph();
+	TMultiGraph  *mg_timeOT  = new TMultiGraph();
+	TMultiGraph  *mg_integral  = new TMultiGraph();
+	// title
+	mg_adcMax->SetTitle("adcMax");
+	mg_timeOT->SetTitle("TimeOT");
+	mg_integral->SetTitle("integral");
+
+	TLegend* legend = new TLegend(); 
 	//for (int entry = 0; entry < ahdc.GetDataBaseSize(); entry++) {
+	// loop over (super)layers
 	for (int entry = ahdc.GetDataBaseSize()-1; entry >= 0; entry--) {
 		int info = ahdc.GetDataBaseEntry(entry);
 		int sector = info/10000;
@@ -74,38 +84,47 @@ int main(int argc, char const *argv[]){
 		TGraph* gr1t = new TGraph(NumberOfWires);
 		for (int component = 1; component <= NumberOfWires; component++){
 			AhdcWire wire(sector,superlayer,layer,component);
-			// wire top face
+			// top face wires (z == 0)
 			gr1t->SetPoint(component-1,wire.start.x,wire.start.y);
 		}
-		// setting top face
+		// setting 
 		gr1t->SetMarkerStyle(4);
-		gr1t->SetMarkerColor(40+superlayer);
-		gr1t->SetMarkerSize(2);
+		//gr1t->SetMarkerColor(40+superlayer);
+		//gr1t->SetMarkerColor(40);
+		gr1t->SetMarkerColorAlpha(40, 0.35);
+		gr1t->SetMarkerSize(1);
 		gr1t->SetLineColor(40+superlayer);
+		// add this layer in mg
 		mg->Add(gr1t);
+		mg_adcMax->Add(gr1t);
+		mg_timeOT->Add(gr1t);
+		mg_integral->Add(gr1t);
 		legend->AddEntry(gr1t,TString::Format("layer %d%d",superlayer,layer).Data(),"p");
 	}
-	// Draw multigraph
-	mg->Draw("AP");
-	// Draw legend
-	legend->Draw();
 	// top face center
 	TGraph* gr2t = new TGraph(1);
 	gr2t->SetPoint(0,0,0);
 	gr2t->SetMarkerStyle(2);
 	gr2t->SetMarkerSize(2);
 	gr2t->SetMarkerColor(kBlack);
-	gr2t->Draw("P");
-	// Draw text
-	//TLatex latex;
-	//latex.SetTextSize(0.015);
-	//latex.DrawLatex(0+1,0+1,"top face");
+	mg->Add(gr2t);
+	mg_adcMax->Add(gr2t);
+	mg_timeOT->Add(gr2t);
+	mg_integral->Add(gr2t);
+	// at this stage mg is well defined
+	
+	// set axis name
+	mg_adcMax->GetXaxis()->SetTitle("x");
+	mg_adcMax->GetYaxis()->SetTitle("y");
+	mg_timeOT->GetXaxis()->SetTitle("x");
+	mg_timeOT->GetYaxis()->SetTitle("y");
+	mg_integral->GetXaxis()->SetTitle("x");
+	mg_integral->GetYaxis()->SetTitle("y");
 	
 	/*********************************************
-	 * Following process each events of the 
-	 * given hipofile
+	 * Event visualisation 
 	 * ******************************************/
-	cout << "argv[0] : " << argv[0] << endl;	
+	//cout << "argv[0] : " << argv[0] << endl;	
 	// open file and read banks
 	const char* filename = argv[1];
 	hipo::reader  r(filename);
@@ -118,26 +137,48 @@ int main(int argc, char const *argv[]){
         int binDelayCFD = 5;
 	
 	// Print AHDC without event
-	TLatex latex0;
-	latex0.SetTextSize(0.02);
-	latex0.DrawLatex(0+1,0+1,"no event");
+	canvas1->Divide(2,3);
+	TLatex latex;
+	latex.SetTextSize(0.02);
+	
+	// adcMax
+	canvas1->cd(1);
+	mg_adcMax->Draw("AP");
+	latex.DrawLatex(0+1,0+1,"no event");
+	// timeOT
+	canvas1->cd(3);
+	mg_timeOT->Draw("AP");
+	latex.DrawLatex(0+1,0+1,"no event");
+	// integral
+	canvas1->cd(5);
+	mg_integral->Draw("AP");
+	latex.DrawLatex(0+1,0+1,"no event");
+	// output
 	canvas1->Print("./thisEvent.pdf");
 
 	// loop over events
         while( r.next(list)){
 		//if (nEvent != 0) {break;}
-		/*****************  AHDC without event ******************/
+		/************************  Refresh AHDC  ************************/
 		canvas1->Clear();
-		mg->Draw("AP");
-		legend->Draw();
-		gr2t->Draw("P");
+		canvas1->Divide(2,3);
 		TLatex latex;
 		latex.SetTextSize(0.025);
+		// adcMax
+		canvas1->cd(1);
+		mg_adcMax->Draw("AP");
 		latex.DrawLatex(0+1,0+1,TString::Format("ev : %ld",nEvent));
-		/********************************************************/
+		// timeOT
+		canvas1->cd(3);
+		mg_timeOT->Draw("AP");
+		latex.DrawLatex(0+1,0+1,TString::Format("ev : %ld",nEvent));
+		// integral
+		canvas1->cd(5);
+		mg_integral->Draw("AP");
+		latex.DrawLatex(0+1,0+1,TString::Format("ev : %ld",nEvent));
+		/******************************************************************/
 
-		mg->SetTitle(TString::Format("event : %ld",nEvent));
-                // loop over columns of AHDC::wf:136
+                // loop over columns of AHDC::wf:136 i.e HITS
                 for(int col = 0; col < list[1].getRows(); col++){
                         std::vector<short> samples; // waveform samples
                         for (int bin=0; bin < 136; bin++){
@@ -170,17 +211,30 @@ int main(int argc, char const *argv[]){
 			AhdcGeom ahdc;
 			if (ahdc.IsAhdcWire(sector,superlayer,layer,component)){
 				AhdcWire wire(sector,superlayer,layer,component);
-				DepositCircle * depo = new DepositCircle(wire.start.x,wire.start.y,1.0);
-				depo->SetFillColorAlpha(kRed,1.0);
-				depo->Draw("F");
-				/*TGraph* gr1t = new TGraph(1);
-				gr1t->SetPoint(0,wire.start.x,wire.start.y);
-				// overdraw this activated wire in the canvas
-				gr1t->SetMarkerStyle(20);
-				gr1t->SetMarkerColor(kRed);
-				gr1t->SetMarkerSize(2);
-				gr1t->Draw("P");*/
-				//cout << "GOOD   : sector(" << sector << "), superlayer(" << superlayer << "), layer(" << layer << "), component(" << component << ")\n" << endl;
+				// adcMax
+				double fraction_adcMax = adcMax/3600; // to be improved 
+				if (fraction_adcMax < 0) fraction_adcMax = 0;
+				if (fraction_adcMax > 1) fraction_adcMax = 1;	
+				DepositCircle * depo_adcMax = new DepositCircle(wire.start.x,wire.start.y,fraction_adcMax);
+				depo_adcMax->SetFillColorAlpha(kRed,1.0);
+				canvas1->cd(1);
+				depo_adcMax->Draw("F");
+				// timeOT
+				double fraction_timeOT = timeOT/1400; // to be improved
+				if (fraction_timeOT < 0) fraction_timeOT = 0;
+				if (fraction_timeOT > 1) fraction_timeOT = 1;	
+				DepositCircle * depo_timeOT = new DepositCircle(wire.start.x,wire.start.y,fraction_timeOT);
+				depo_timeOT->SetFillColorAlpha(kRed,1.0);
+				canvas1->cd(3);
+				depo_timeOT->Draw("F");
+				// integral
+				double fraction_integral = integral/60000; // to be improved
+				if (fraction_integral < 0) fraction_integral = 0;
+				if (fraction_integral > 1) fraction_integral = 1;	
+				DepositCircle * depo_integral = new DepositCircle(wire.start.x,wire.start.y,fraction_integral);
+				depo_integral->SetFillColorAlpha(kRed,1.0);
+				canvas1->cd(5);
+				depo_integral->Draw("F");
 			} else { // should not happen
 				cout << "BAD    : sector(" << sector << "), superlayer(" << superlayer << "), layer(" << layer << "), component(" << component << ")\n" << endl;
 			}
