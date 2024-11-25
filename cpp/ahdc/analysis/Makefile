@@ -14,8 +14,8 @@
 # 	-I<path> : Ajoute le répertoire <path> au chemin de recherche des fichiers d'en-tête.
 # 	-L<path> : Ajoute le répertoire <path> au chemin de recherche des bibliothèques.
 
-#PATH2HIPO := /homeijclab/touchte-codjo/hipo
-PATH2HIPO := /home/ftouchte/hipo
+PATH2HIPO := /homeijclab/touchte-codjo/hipo
+#PATH2HIPO := /home/ftouchte/hipo
 
 HIPOCFLAGS  := -I$(PATH2HIPO)/hipo4 -I$(PATH2HIPO)/hipo4/chart   
 HIPOLIBS    := -L$(PATH2HIPO)/lib -lhipo4 
@@ -45,13 +45,16 @@ LDFLAGS   :=
 
 
 #all:  showFile histo plot benchmark simu
-all: monitor ahdcView histAhdcAdc corrTimeAmp simpleTest
+all: monitor color ahdcView histAhdcAdc corrTimeAmp simpleTest
 
 #ahdcExtractor: ahdcExtractor.o 
 #	$(CXX) -o ahdcExtractor.exe $^ $(HIPOLIBS) $(LZ4LIBS) $(ROOTLIBS)
 
 monitor: monitor.o ahdcExtractor.o Point3D.o AhdcGeom.o
 	$(CXX) -o monitor.exe $^ $(HIPOLIBS) $(LZ4LIBS) $(ROOTLIBS)
+
+color: color.o 
+	$(CXX) -o color.exe $^ $(HIPOLIBS) $(LZ4LIBS) $(ROOTLIBS)
 
 ahdcView: ahdcView.o ahdcExtractor.o Point3D.o AhdcGeom.o
 	$(CXX) -o ahdcView.exe $^ $(HIPOLIBS) $(LZ4LIBS) $(ROOTLIBS)

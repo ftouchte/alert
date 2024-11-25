@@ -36,7 +36,7 @@ public :
 		for (int k = 0; k < resolution; k++){
 			this->SetPoint(k,x+rmax*fraction*cos(2*M_PI*k/resolution),y+rmax*fraction*sin(2*M_PI*k/resolution)); // set circle points
 		}
-		this->SetPoint(resolution,x+rmax*fraction,0); // close the circle
+		this->SetPoint(resolution,x+rmax*fraction,y); // close the circle
 	}
 	void SetRmax(double _rmax) {rmax = _rmax;}
 	/*void Draw(Option_t* chopt = "F") override {
@@ -46,6 +46,41 @@ public :
 	}*/
 };
 
+class DepositBar : public TGraph {
+	double x; ///< x-coordiante of the center 
+	double y; ///< y-coordinate of the center
+	double width = 0.1;
+public :
+	DepositBar(double _x, double _y) : TGraph(5), x(_x), y(_y) {
+		this->SetPoint(0,x-width,0);
+		this->SetPoint(1,x+width,0);
+		this->SetPoint(2,x+width,y);
+		this->SetPoint(3,x-width,y);
+		this->SetPoint(4,x-width,0); // close the rectangle for the filling step
+	}
+	void SetWidth(double _width) {width = _width;}
+};
+
+int layer2number(int superlayer, int layer) {
+	int id = 10*superlayer + layer;
+	if (id == 11) {
+		return 1;
+	} else if (id == 21) {
+		return 2;
+	} else if (id == 22) {
+		return 3;
+	} else if (id == 31) {
+		return 4;
+	} else if (id == 32) {
+		return 5;
+	} else if (id == 41) {
+		return 6;
+	} else if (id == 42) {
+		return 7;
+	} else { // (id == 51)
+		return 8;
+	}
+}
 
 int main(int argc, char const *argv[]){
 	
@@ -114,12 +149,12 @@ int main(int argc, char const *argv[]){
 	// at this stage mg is well defined
 	
 	// set axis name
-	mg_adcMax->GetXaxis()->SetTitle("x");
-	mg_adcMax->GetYaxis()->SetTitle("y");
-	mg_timeOT->GetXaxis()->SetTitle("x");
-	mg_timeOT->GetYaxis()->SetTitle("y");
-	mg_integral->GetXaxis()->SetTitle("x");
-	mg_integral->GetYaxis()->SetTitle("y");
+	mg_adcMax->GetXaxis()->SetTitle("x (mm)");
+	mg_adcMax->GetYaxis()->SetTitle("y (mm)");
+	mg_timeOT->GetXaxis()->SetTitle("x (mm)");
+	mg_timeOT->GetYaxis()->SetTitle("y (mm)");
+	mg_integral->GetXaxis()->SetTitle("x (mm)");
+	mg_integral->GetYaxis()->SetTitle("y (mm)");
 	
 	/*********************************************
 	 * Event visualisation 
@@ -141,18 +176,58 @@ int main(int argc, char const *argv[]){
 	TLatex latex;
 	latex.SetTextSize(0.02);
 	
-	// adcMax
+	// adcMax (left)
 	canvas1->cd(1);
 	mg_adcMax->Draw("AP");
 	latex.DrawLatex(0+1,0+1,"no event");
-	// timeOT
+	// adcMax (right)
+	canvas1->cd(2);
+	TGraph * gr_adcMax = new TGraph(8);
+	for (int i=0;i<8;i++){
+		gr_adcMax->SetPoint(i,i+1,0);
+	}
+	gr_adcMax->SetTitle("adcMax (adc)");
+	gr_adcMax->GetXaxis()->SetTitle("layer");
+	gr_adcMax->GetYaxis()->SetTitle("");
+	gr_adcMax->SetMarkerStyle(1);
+	gr_adcMax->SetMarkerSize(2);
+	gr_adcMax->SetMarkerColor(kRed);
+	gr_adcMax->Draw("AP");
+	// timeOT (left)
 	canvas1->cd(3);
 	mg_timeOT->Draw("AP");
 	latex.DrawLatex(0+1,0+1,"no event");
-	// integral
+	// timeOT (right)
+	canvas1->cd(4);
+	TGraph * gr_timeOT = new TGraph(8);
+	for (int i=0;i<8;i++){
+		gr_timeOT->SetPoint(i,i+1,0);
+	}
+	gr_timeOT->SetTitle("timeOT (ns)");
+	gr_timeOT->GetXaxis()->SetTitle("layer");
+	gr_timeOT->GetYaxis()->SetTitle("");
+	gr_timeOT->SetMarkerStyle(1);
+	gr_timeOT->SetMarkerSize(2);
+	gr_timeOT->SetMarkerColor(kRed);
+	gr_timeOT->Draw("AP");
+	// integral (left)
 	canvas1->cd(5);
 	mg_integral->Draw("AP");
 	latex.DrawLatex(0+1,0+1,"no event");
+	// integral (right)
+	canvas1->cd(6);
+	TGraph * gr_integral = new TGraph(8);
+	gr_integral->SetTitle("integral (adc per 44 ns)");
+	gr_integral->GetXaxis()->SetTitle("layer");
+	gr_integral->GetYaxis()->SetTitle("");
+	for (int i=0;i<8;i++){
+		gr_integral->SetPoint(i,i+1,0);
+	}
+
+	gr_integral->SetMarkerStyle(1);
+	gr_integral->SetMarkerSize(2);
+	gr_integral->SetMarkerColor(kRed);
+	gr_integral->Draw("AP");
 	// output
 	canvas1->Print("./thisEvent.pdf");
 
@@ -179,7 +254,11 @@ int main(int argc, char const *argv[]){
 		/******************************************************************/
 
                 // loop over columns of AHDC::wf:136 i.e HITS
-                for(int col = 0; col < list[1].getRows(); col++){
+		// it may have multiple hits on the same layer
+		double tab_adcMax[8] = {0}; // plot the sum of adcMax "collected" each of the 8 layers 
+		double tab_timeOT[8] = {0};
+		double tab_integral[8] = {0};
+		for(int col = 0; col < list[1].getRows(); col++){
                         std::vector<short> samples; // waveform samples
                         for (int bin=0; bin < 136; bin++){
                                 std::string binName = "s" + to_string(bin+1);
@@ -207,11 +286,17 @@ int main(int argc, char const *argv[]){
 			int layer = layerId % 10;
 			int component = list[1].getInt("component",col);
 
+			// adcMax (right plot)
+			tab_adcMax[layer2number(superlayer,layer)-1] += adcMax;
+			// timeOT (right plot)
+			tab_timeOT[layer2number(superlayer,layer)-1] += timeOT;
+			// integral (right plot)
+			tab_integral[layer2number(superlayer,layer)-1] += integral;
 			// deducte its geometry
 			AhdcGeom ahdc;
 			if (ahdc.IsAhdcWire(sector,superlayer,layer,component)){
 				AhdcWire wire(sector,superlayer,layer,component);
-				// adcMax
+				// adcMax (left plot)
 				double fraction_adcMax = adcMax/3600; // to be improved 
 				if (fraction_adcMax < 0) fraction_adcMax = 0;
 				if (fraction_adcMax > 1) fraction_adcMax = 1;	
@@ -219,7 +304,7 @@ int main(int argc, char const *argv[]){
 				depo_adcMax->SetFillColorAlpha(kRed,1.0);
 				canvas1->cd(1);
 				depo_adcMax->Draw("F");
-				// timeOT
+				// timeOT (left plot)
 				double fraction_timeOT = timeOT/1400; // to be improved
 				if (fraction_timeOT < 0) fraction_timeOT = 0;
 				if (fraction_timeOT > 1) fraction_timeOT = 1;	
@@ -227,7 +312,7 @@ int main(int argc, char const *argv[]){
 				depo_timeOT->SetFillColorAlpha(kRed,1.0);
 				canvas1->cd(3);
 				depo_timeOT->Draw("F");
-				// integral
+				// integral (left plot)
 				double fraction_integral = integral/60000; // to be improved
 				if (fraction_integral < 0) fraction_integral = 0;
 				if (fraction_integral > 1) fraction_integral = 1;	
@@ -238,9 +323,39 @@ int main(int argc, char const *argv[]){
 			} else { // should not happen
 				cout << "BAD    : sector(" << sector << "), superlayer(" << superlayer << "), layer(" << layer << "), component(" << component << ")\n" << endl;
 			}
+		// reset right plots
+		for (int i=0; i<8; i++){
+			gr_adcMax->SetPoint(i,i+1,tab_adcMax[i]);
+			gr_timeOT->SetPoint(i,i+1,tab_timeOT[i]);
+			gr_integral->SetPoint(i,i+1,tab_integral[i]);
+		}
+		// adcMax (right plot)
+		canvas1->cd(2);
+		gr_adcMax->Draw("AP");
+		for (int i=0; i<8; i++){
+			DepositBar * bar_adcMax = new DepositBar(gr_adcMax->GetPointX(i),gr_adcMax->GetPointY(i));
+			bar_adcMax->SetFillColorAlpha(kRed,1.0);
+			bar_adcMax->Draw("F");
+		}
+		// timeOT (right plot)
+		canvas1->cd(4);
+		gr_timeOT->Draw("AP");
+		for (int i=0; i<8; i++){
+			DepositBar * bar_timeOT = new DepositBar(gr_timeOT->GetPointX(i),gr_timeOT->GetPointY(i));
+			bar_timeOT->SetFillColorAlpha(kRed,1.0);
+			bar_timeOT->Draw("F");
+		}
+		// integral (right plot)
+		canvas1->cd(6);
+		gr_integral->Draw("AP");
+		for (int i=0; i<8; i++){
+			DepositBar * bar_integral = new DepositBar(gr_integral->GetPointX(i),gr_integral->GetPointY(i));
+			bar_integral->SetFillColorAlpha(kRed,1.0);
+			bar_integral->Draw("F");
+		}
                 } // end loop over columns of AHDC::wf:136
         	nEvent++;
-		/*********************  API    ***********************/
+		/**********************************  API    ******************************************/
 		string action;
 		cout << "Choose (n=next, p=previous, q=quit, h=help), Type action : ";
 		cin >> action;
@@ -256,7 +371,7 @@ int main(int argc, char const *argv[]){
 			cout << "API action : event number >= " << nEvent-1 << " not read" << endl;
 			break;
 		}
-		/*******************  END API  ***********************/
+		/*********************************  END API   *****************************************/
         } // end loop over events
 	
 	// print canvas

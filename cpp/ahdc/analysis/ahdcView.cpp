@@ -57,7 +57,8 @@ int main(int argc, char const *argv[]){
 
 	TMultiGraph  *mg  = new TMultiGraph();
 	// loop over (super)layer
-	for (int entry = 0; entry < ahdc.GetDataBaseSize(); entry++) {
+	//for (int entry = 0; entry < ahdc.GetDataBaseSize(); entry++) {
+	for (int entry = ahdc.GetDataBaseSize()-1; entry >= 0; entry--) {
 		//if (entry != 0) {break;} // can be commented
 		int info = ahdc.GetDataBaseEntry(entry);
 		int sector = info/10000;
