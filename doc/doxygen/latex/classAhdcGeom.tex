@@ -1,0 +1,83 @@
+\doxysection{Ahdc\+Geom Class Reference}
+\hypertarget{classAhdcGeom}{}\label{classAhdcGeom}\index{AhdcGeom@{AhdcGeom}}
+
+
+{\ttfamily \#include $<$Ahdc\+Geom.\+h$>$}
+
+\doxysubsubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+bool \mbox{\hyperlink{classAhdcGeom_a595fa21b36e98d3fde3710295b25c90c}{Is\+Ahdc\+Sector}} (int sector)
+\item 
+bool \mbox{\hyperlink{classAhdcGeom_a2622d3768f0bc159d7db6cc9bf8d26ac}{Is\+Ahdc\+Super\+Layer}} (int sector, int superlayer)
+\item 
+bool \mbox{\hyperlink{classAhdcGeom_aa9d5e645611f42c45675cd051595604a}{Is\+Ahdc\+Layer}} (int sector, int superlayer, int layer)
+\item 
+bool \mbox{\hyperlink{classAhdcGeom_a623e372864c12869dc4f1f660fd06be5}{Is\+Ahdc\+Wire}} (int sector, int superlayer, int layer, int component)
+\item 
+\mbox{\hyperlink{classAhdcSector}{Ahdc\+Sector}} \mbox{\hyperlink{classAhdcGeom_a5db7607f473b3fe33db4d8fe672116f3}{Get\+Ahdc\+Sector}} (int sector)
+\item 
+void \mbox{\hyperlink{classAhdcGeom_a62838dcc41a64464b776aa5ca6d2fdf0}{Show}} ()
+\item 
+int \mbox{\hyperlink{classAhdcGeom_a89ac55103a74402c75b17d3f95ec35c1}{Get\+Data\+Base\+Entry}} (int entry)
+\item 
+\Hypertarget{classAhdcGeom_a03b68d6ed10167793847a068a6edb8dc}\label{classAhdcGeom_a03b68d6ed10167793847a068a6edb8dc} 
+int {\bfseries Get\+Data\+Base\+Size} ()
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+Endoces all the sense wires of the AHDC 
+
+\doxysubsection{Member Function Documentation}
+\Hypertarget{classAhdcGeom_a5db7607f473b3fe33db4d8fe672116f3}\index{AhdcGeom@{AhdcGeom}!GetAhdcSector@{GetAhdcSector}}
+\index{GetAhdcSector@{GetAhdcSector}!AhdcGeom@{AhdcGeom}}
+\doxysubsubsection{\texorpdfstring{GetAhdcSector()}{GetAhdcSector()}}
+{\footnotesize\ttfamily \label{classAhdcGeom_a5db7607f473b3fe33db4d8fe672116f3} 
+\mbox{\hyperlink{classAhdcSector}{Ahdc\+Sector}} Ahdc\+Geom\+::\+Get\+Ahdc\+Sector (\begin{DoxyParamCaption}\item[{int}]{sector}{}\end{DoxyParamCaption})}
+
+Get the sector number {\ttfamily sector} \Hypertarget{classAhdcGeom_a89ac55103a74402c75b17d3f95ec35c1}\index{AhdcGeom@{AhdcGeom}!GetDataBaseEntry@{GetDataBaseEntry}}
+\index{GetDataBaseEntry@{GetDataBaseEntry}!AhdcGeom@{AhdcGeom}}
+\doxysubsubsection{\texorpdfstring{GetDataBaseEntry()}{GetDataBaseEntry()}}
+{\footnotesize\ttfamily \label{classAhdcGeom_a89ac55103a74402c75b17d3f95ec35c1} 
+int Ahdc\+Geom\+::\+Get\+Data\+Base\+Entry (\begin{DoxyParamCaption}\item[{int}]{entry}{}\end{DoxyParamCaption})}
+
+Get a database entry \begin{DoxyNote}{Note}
+return -\/1 if {\ttfamily entry} \texorpdfstring{$>$}{>}= Data\+Base\+Size 
+\end{DoxyNote}
+\Hypertarget{classAhdcGeom_aa9d5e645611f42c45675cd051595604a}\index{AhdcGeom@{AhdcGeom}!IsAhdcLayer@{IsAhdcLayer}}
+\index{IsAhdcLayer@{IsAhdcLayer}!AhdcGeom@{AhdcGeom}}
+\doxysubsubsection{\texorpdfstring{IsAhdcLayer()}{IsAhdcLayer()}}
+{\footnotesize\ttfamily \label{classAhdcGeom_aa9d5e645611f42c45675cd051595604a} 
+bool Ahdc\+Geom\+::\+Is\+Ahdc\+Layer (\begin{DoxyParamCaption}\item[{int}]{sector}{, }\item[{int}]{superlayer}{, }\item[{int}]{layer}{}\end{DoxyParamCaption})}
+
+Return true if this layer exists \Hypertarget{classAhdcGeom_a595fa21b36e98d3fde3710295b25c90c}\index{AhdcGeom@{AhdcGeom}!IsAhdcSector@{IsAhdcSector}}
+\index{IsAhdcSector@{IsAhdcSector}!AhdcGeom@{AhdcGeom}}
+\doxysubsubsection{\texorpdfstring{IsAhdcSector()}{IsAhdcSector()}}
+{\footnotesize\ttfamily \label{classAhdcGeom_a595fa21b36e98d3fde3710295b25c90c} 
+bool Ahdc\+Geom\+::\+Is\+Ahdc\+Sector (\begin{DoxyParamCaption}\item[{int}]{sector}{}\end{DoxyParamCaption})}
+
+Return true if this sector exists \Hypertarget{classAhdcGeom_a2622d3768f0bc159d7db6cc9bf8d26ac}\index{AhdcGeom@{AhdcGeom}!IsAhdcSuperLayer@{IsAhdcSuperLayer}}
+\index{IsAhdcSuperLayer@{IsAhdcSuperLayer}!AhdcGeom@{AhdcGeom}}
+\doxysubsubsection{\texorpdfstring{IsAhdcSuperLayer()}{IsAhdcSuperLayer()}}
+{\footnotesize\ttfamily \label{classAhdcGeom_a2622d3768f0bc159d7db6cc9bf8d26ac} 
+bool Ahdc\+Geom\+::\+Is\+Ahdc\+Super\+Layer (\begin{DoxyParamCaption}\item[{int}]{sector}{, }\item[{int}]{superlayer}{}\end{DoxyParamCaption})}
+
+Return true if this superlayer exists \Hypertarget{classAhdcGeom_a623e372864c12869dc4f1f660fd06be5}\index{AhdcGeom@{AhdcGeom}!IsAhdcWire@{IsAhdcWire}}
+\index{IsAhdcWire@{IsAhdcWire}!AhdcGeom@{AhdcGeom}}
+\doxysubsubsection{\texorpdfstring{IsAhdcWire()}{IsAhdcWire()}}
+{\footnotesize\ttfamily \label{classAhdcGeom_a623e372864c12869dc4f1f660fd06be5} 
+bool Ahdc\+Geom\+::\+Is\+Ahdc\+Wire (\begin{DoxyParamCaption}\item[{int}]{sector}{, }\item[{int}]{superlayer}{, }\item[{int}]{layer}{, }\item[{int}]{component}{}\end{DoxyParamCaption})}
+
+Return true if this wire exists \Hypertarget{classAhdcGeom_a62838dcc41a64464b776aa5ca6d2fdf0}\index{AhdcGeom@{AhdcGeom}!Show@{Show}}
+\index{Show@{Show}!AhdcGeom@{AhdcGeom}}
+\doxysubsubsection{\texorpdfstring{Show()}{Show()}}
+{\footnotesize\ttfamily \label{classAhdcGeom_a62838dcc41a64464b776aa5ca6d2fdf0} 
+void Ahdc\+Geom\+::\+Show (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption})}
+
+Show simplified AHDC geometry 
+
+The documentation for this class was generated from the following files\+:\begin{DoxyCompactItemize}
+\item 
+/home/ftouchte/\+Desktop/alert/cpp/ahdc/analysis/Ahdc\+Geom.\+h\item 
+/home/ftouchte/\+Desktop/alert/cpp/ahdc/analysis/Ahdc\+Geom.\+cpp\end{DoxyCompactItemize}

@@ -1,9 +1,9 @@
 var searchData=
 [
-  ['timecfd_0',['timeCFD',['../classahdcExtractor.html#a2ada17d413124fd281784645ce6f778f',1,'ahdcExtractor']]],
-  ['timefallcfa_1',['timeFallCFA',['../classahdcExtractor.html#a95be1f09a59b42f7e88b3096eed1e10a',1,'ahdcExtractor']]],
-  ['timemax_2',['timeMax',['../classahdcExtractor.html#a49688b2c60e1a9db7eef4f105353056f',1,'ahdcExtractor']]],
-  ['timeoverthresholdcfa_3',['timeOverThresholdCFA',['../classahdcExtractor.html#a2bdd5bca4c7fc05acd8a4c5d6beea2e8',1,'ahdcExtractor']]],
-  ['timerisecfa_4',['timeRiseCFA',['../classahdcExtractor.html#adf2d612ccbdcfedadb354a53e0f60f46',1,'ahdcExtractor']]],
-  ['timestamp_5',['timeStamp',['../classahdcExtractor.html#ad348556ce8970f0826bda19458263cfc',1,'ahdcExtractor']]]
+  ['samplescfd_0',['samplesCFD',['../classahdcExtractor.html#a08cd1f55fea550b63f9700e5d1534210',1,'ahdcExtractor']]],
+  ['samplescorr_1',['samplesCorr',['../classahdcExtractor.html#a77ef46dda9107b79dc8dd4850a69ddb2',1,'ahdcExtractor']]],
+  ['samplingtime_2',['samplingTime',['../classahdcExtractor.html#ae734222eb7223308c4365cae6a019d61',1,'ahdcExtractor']]],
+  ['sector_3',['sector',['../classahdcSignal.html#af2f9dfb5de7997f7976d2114e4156253',1,'ahdcSignal']]],
+  ['sparsesample_4',['sparseSample',['../classahdcExtractor.html#a01b8c361d1acc280d298bc595a2692a1',1,'ahdcExtractor']]],
+  ['start_5',['start',['../classAhdcWire.html#a5305b323aff59d909400a7543cbdee5f',1,'AhdcWire']]]
 ];

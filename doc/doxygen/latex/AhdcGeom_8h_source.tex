@@ -1,0 +1,83 @@
+\doxysection{Ahdc\+Geom.\+h}
+\hypertarget{AhdcGeom_8h_source}{}\label{AhdcGeom_8h_source}\index{/home/ftouchte/Desktop/alert/cpp/ahdc/analysis/AhdcGeom.h@{/home/ftouchte/Desktop/alert/cpp/ahdc/analysis/AhdcGeom.h}}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ \textcolor{comment}{/****************************************************}}
+\DoxyCodeLine{00002\ \textcolor{comment}{\ *\ AhdcGeom.h}}
+\DoxyCodeLine{00003\ \textcolor{comment}{\ *}}
+\DoxyCodeLine{00004\ \textcolor{comment}{\ *}}
+\DoxyCodeLine{00005\ \textcolor{comment}{\ *\ @author\ Felix\ Touchte\ Codjo}}
+\DoxyCodeLine{00006\ \textcolor{comment}{\ *\ @date\ November\ 20,\ 2024}}
+\DoxyCodeLine{00007\ \textcolor{comment}{\ *\ *************************************************/}}
+\DoxyCodeLine{00008\ }
+\DoxyCodeLine{00009\ \textcolor{preprocessor}{\#ifndef\ GEOM\_AHDC}}
+\DoxyCodeLine{00010\ \textcolor{preprocessor}{\#define\ GEOM\_AHDC}}
+\DoxyCodeLine{00011\ }
+\DoxyCodeLine{00012\ \textcolor{preprocessor}{\#include\ "{}Point3D.h"{}}}
+\DoxyCodeLine{00013\ }
+\DoxyCodeLine{00014\ \textcolor{comment}{//\#define\ PI\ 3.14159265358979323846}}
+\DoxyCodeLine{00015\ }
+\DoxyCodeLine{00016\ }
+\DoxyCodeLine{00017\ }
+\DoxyCodeLine{00024\ \textcolor{keyword}{class\ }\mbox{\hyperlink{classAhdcWire}{AhdcWire}}\ \{}
+\DoxyCodeLine{00025\ \ \ \ \ \textcolor{keywordtype}{int}\ sector;\ }
+\DoxyCodeLine{00026\ \ \ \ \ \textcolor{keywordtype}{int}\ superlayer;\ }
+\DoxyCodeLine{00027\ \ \ \ \ \textcolor{keywordtype}{int}\ layer;\ }
+\DoxyCodeLine{00028\ \ \ \ \ \textcolor{keywordtype}{int}\ component;\ }
+\DoxyCodeLine{00029\ public\ :}
+\DoxyCodeLine{00030\ \ \ \ \ \mbox{\hyperlink{classPoint3D}{Point3D}}\ \mbox{\hyperlink{classAhdcWire_a5305b323aff59d909400a7543cbdee5f}{start}};\ }
+\DoxyCodeLine{00031\ \ \ \ \ \mbox{\hyperlink{classPoint3D}{Point3D}}\ \mbox{\hyperlink{classAhdcWire_a2bbd89d9ca070f2a8160c70faecba206}{end}};\ }
+\DoxyCodeLine{00032\ \ \ \ \ \mbox{\hyperlink{classAhdcWire_ac02fa7bc6fceac8a10c1c41d887de0c3}{AhdcWire}}(\textcolor{keywordtype}{int}\ \_sector,\ \textcolor{keywordtype}{int}\ \_superlayer,\ \textcolor{keywordtype}{int}\ \_layer,\ \textcolor{keywordtype}{int}\ \_component);}
+\DoxyCodeLine{00033\ \};}
+\DoxyCodeLine{00034\ }
+\DoxyCodeLine{00039\ \textcolor{keyword}{class\ }\mbox{\hyperlink{classAhdcLayer}{AhdcLayer}}\ \{}
+\DoxyCodeLine{00040\ \ \ \ \ \textcolor{keywordtype}{int}\ sector;}
+\DoxyCodeLine{00041\ \ \ \ \ \textcolor{keywordtype}{int}\ superlayer;}
+\DoxyCodeLine{00042\ \ \ \ \ \textcolor{keywordtype}{int}\ layer;}
+\DoxyCodeLine{00043\ public\ :}
+\DoxyCodeLine{00044\ \ \ \ \ \mbox{\hyperlink{classAhdcLayer_a0e6e2663ce3c58697df0a651d1ecb59d}{AhdcLayer}}(\textcolor{keywordtype}{int}\ \_sector,\ \textcolor{keywordtype}{int}\ \_superlayer,\ \textcolor{keywordtype}{int}\ \_layer);}
+\DoxyCodeLine{00045\ \ \ \ \ \mbox{\hyperlink{classAhdcWire}{AhdcWire}}\ \mbox{\hyperlink{classAhdcLayer_abea36cbd7c8b5316ea262ba82b5ef70d}{GetAhdcWire}}(\textcolor{keywordtype}{int}\ component);}
+\DoxyCodeLine{00046\ \};}
+\DoxyCodeLine{00047\ }
+\DoxyCodeLine{00052\ \textcolor{keyword}{class\ }\mbox{\hyperlink{classAhdcSuperLayer}{AhdcSuperLayer}}\ \{}
+\DoxyCodeLine{00053\ \ \ \ \ \textcolor{keywordtype}{int}\ sector;}
+\DoxyCodeLine{00054\ \ \ \ \ \textcolor{keywordtype}{int}\ superlayer;}
+\DoxyCodeLine{00055\ public\ :}
+\DoxyCodeLine{00056\ \ \ \ \ \mbox{\hyperlink{classAhdcSuperLayer_ad0addd1b58df665e56e61f64acc3425a}{AhdcSuperLayer}}(\textcolor{keywordtype}{int}\ \_sector,\ \textcolor{keywordtype}{int}\ \_superlayer);}
+\DoxyCodeLine{00057\ \ \ \ \ \mbox{\hyperlink{classAhdcLayer}{AhdcLayer}}\ \mbox{\hyperlink{classAhdcSuperLayer_a1ec05070f6724aead117ad9cf05734a6}{GetAhdcLayer}}(\textcolor{keywordtype}{int}\ layer);}
+\DoxyCodeLine{00058\ \};}
+\DoxyCodeLine{00059\ }
+\DoxyCodeLine{00064\ \textcolor{keyword}{class\ }\mbox{\hyperlink{classAhdcSector}{AhdcSector}}\ \{}
+\DoxyCodeLine{00065\ \ \ \ \ \textcolor{keywordtype}{int}\ sector;}
+\DoxyCodeLine{00066\ public\ :}
+\DoxyCodeLine{00067\ \ \ \ \ \mbox{\hyperlink{classAhdcSector_a94e89b2b19bf4d8871d67779c165b404}{AhdcSector}}(\textcolor{keywordtype}{int}\ \_sector);}
+\DoxyCodeLine{00068\ \ \ \ \ \mbox{\hyperlink{classAhdcSuperLayer}{AhdcSuperLayer}}\ \mbox{\hyperlink{classAhdcSector_aa1c3f2fd7cde65b5c38173282a98db40}{GetAhdcSuperLayer}}(\textcolor{keywordtype}{int}\ superlayer);}
+\DoxyCodeLine{00069\ \};}
+\DoxyCodeLine{00070\ }
+\DoxyCodeLine{00075\ \textcolor{keyword}{class\ }\mbox{\hyperlink{classAhdcCell}{AhdcCell}}\ :\ \textcolor{keyword}{public}\ \mbox{\hyperlink{classAhdcWire}{AhdcWire}}\ \{}
+\DoxyCodeLine{00076\ \ \ \ \ \mbox{\hyperlink{classPoint3D}{Point3D}}\ topFaces[6];}
+\DoxyCodeLine{00077\ \ \ \ \ \mbox{\hyperlink{classPoint3D}{Point3D}}\ bottomfaces[6];}
+\DoxyCodeLine{00078\ public\ :}
+\DoxyCodeLine{00079\ \ \ \ \ \mbox{\hyperlink{classAhdcCell_a3b8047b91042e4cf262deedd3631b88d}{AhdcCell}}(\textcolor{keywordtype}{int}\ \_sector,\ \textcolor{keywordtype}{int}\ \_superlayer,\ \textcolor{keywordtype}{int}\ \_layer,\ \textcolor{keywordtype}{int}\ \_component);\ }
+\DoxyCodeLine{00080\ \};}
+\DoxyCodeLine{00081\ }
+\DoxyCodeLine{00086\ \textcolor{keyword}{class\ }\mbox{\hyperlink{classAhdcGeom}{AhdcGeom}}\ \{}
+\DoxyCodeLine{00087\ \ \ \ \ \textcolor{keywordtype}{int}\ db[8]\ =\ \{11147,12156,12256,13172,13272,14187,14287,15199\};\ }
+\DoxyCodeLine{00088\ public\ :}
+\DoxyCodeLine{00089\ \ \ \ \ \textcolor{keywordtype}{bool}\ \mbox{\hyperlink{classAhdcGeom_a595fa21b36e98d3fde3710295b25c90c}{IsAhdcSector}}(\textcolor{keywordtype}{int}\ sector);}
+\DoxyCodeLine{00090\ \ \ \ \ \textcolor{keywordtype}{bool}\ \mbox{\hyperlink{classAhdcGeom_a2622d3768f0bc159d7db6cc9bf8d26ac}{IsAhdcSuperLayer}}(\textcolor{keywordtype}{int}\ sector,\ \textcolor{keywordtype}{int}\ superlayer);}
+\DoxyCodeLine{00091\ \ \ \ \ \textcolor{keywordtype}{bool}\ \mbox{\hyperlink{classAhdcGeom_aa9d5e645611f42c45675cd051595604a}{IsAhdcLayer}}(\textcolor{keywordtype}{int}\ sector,\ \textcolor{keywordtype}{int}\ superlayer,\textcolor{keywordtype}{int}\ layer);}
+\DoxyCodeLine{00092\ \ \ \ \ \textcolor{keywordtype}{bool}\ \mbox{\hyperlink{classAhdcGeom_a623e372864c12869dc4f1f660fd06be5}{IsAhdcWire}}(\textcolor{keywordtype}{int}\ sector,\ \textcolor{keywordtype}{int}\ superlayer,\ \textcolor{keywordtype}{int}\ layer,\ \textcolor{keywordtype}{int}\ component);}
+\DoxyCodeLine{00093\ \ \ \ \ \mbox{\hyperlink{classAhdcSector}{AhdcSector}}\ \mbox{\hyperlink{classAhdcGeom_a5db7607f473b3fe33db4d8fe672116f3}{GetAhdcSector}}(\textcolor{keywordtype}{int}\ sector);}
+\DoxyCodeLine{00094\ \ \ \ \ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{classAhdcGeom_a62838dcc41a64464b776aa5ca6d2fdf0}{Show}}();}
+\DoxyCodeLine{00095\ \ \ \ \ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{classAhdcGeom_a89ac55103a74402c75b17d3f95ec35c1}{GetDataBaseEntry}}(\textcolor{keywordtype}{int}\ entry);}
+\DoxyCodeLine{00096\ \ \ \ \ \textcolor{keywordtype}{int}\ GetDataBaseSize();}
+\DoxyCodeLine{00097\ \};}
+\DoxyCodeLine{00098\ }
+\DoxyCodeLine{00099\ \textcolor{keyword}{namespace\ }futils\ \{}
+\DoxyCodeLine{00100\ \ \ \ \ \textcolor{keywordtype}{double}\ toRadian(\textcolor{keywordtype}{double});}
+\DoxyCodeLine{00101\ \}}
+\DoxyCodeLine{00102\ }
+\DoxyCodeLine{00103\ \textcolor{preprocessor}{\#endif}}
+
+\end{DoxyCode}

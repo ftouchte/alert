@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['print_0',['Print',['../classfhist1D.html#a6b3bf56e80b154b2bf613cf9ca2c3b9a',1,'fhist1D']]]
+  ['operator_28_29_0',['operator()',['../classahdcSignal.html#a3fbf2273d91a212219e7794e7b60f6f3',1,'ahdcSignal']]]
 ];

@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['nsteps_0',['nsteps',['../classahdcSignal.html#aa5c46af357e143260ed7560d2610340d',1,'ahdcSignal']]]
+  ['layer_0',['layer',['../classahdcSignal.html#a62832cf4ccb56ea2f05f1b797c5b5a77',1,'ahdcSignal']]]
 ];

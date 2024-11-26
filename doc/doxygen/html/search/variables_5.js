@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['integral_0',['integral',['../classahdcExtractor.html#a158e80efb35f3c36c8770afda2c4480f',1,'ahdcExtractor']]]
+  ['hitn_0',['hitn',['../classahdcSignal.html#a21e05ed4756320eee50b675096e8de45',1,'ahdcSignal']]]
 ];

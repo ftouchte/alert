@@ -1,5 +1,7 @@
 var searchData=
 [
-  ['_7eahdcextractor_0',['~ahdcExtractor',['../classahdcExtractor.html#aa186ae6c5f1c8fee31c3bd948f838b3b',1,'ahdcExtractor']]],
-  ['_7eahdcsignal_1',['~ahdcSignal',['../classahdcSignal.html#a384a48dd0b03b729346bf934bd82665a',1,'ahdcSignal']]]
+  ['setelectronyield_0',['SetElectronYield',['../classahdcSignal.html#ab030caab84398dd071d480ca210a745a',1,'ahdcSignal']]],
+  ['setflagstatoverflows_1',['SetFlagStatOverFlows',['../classfhist1D.html#aee245e37c59938c2c92a903a3491755e',1,'fhist1D']]],
+  ['show_2',['Show',['../classahdcExtractor.html#a92fdd26c9d9c90fc52da4d51c86d2efb',1,'ahdcExtractor::Show()'],['../classAhdcGeom.html#a62838dcc41a64464b776aa5ca6d2fdf0',1,'AhdcGeom::Show()']]],
+  ['showcfd_3',['ShowCFD',['../classahdcExtractor.html#a9f935673e131d253f28b2b2fdeb993cd',1,'ahdcExtractor']]]
 ];
