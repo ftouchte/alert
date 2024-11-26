@@ -46,7 +46,7 @@ int main(int argc, char const *argv[]){
 	double tmax = 2000;
 	int bins = 200;
 	TH1D* hist1d_adcMax = new TH1D("hist1d_adcMax", "histogram : adcMax (adc)",bins,0,ahdcExtractor::ADC_LIMIT);
-	TH1D* hist1d_integral = new TH1D("hist1d_integral", "histogram : integral (adc per 44 ns)",bins,0,60000);
+	TH1D* hist1d_integral = new TH1D("hist1d_integral", "histogram : integral (adc per 44 ns)",bins,0,6); // we store log10(integral) 
 	TH1D* hist1d_mcEtot = new TH1D("hist1d_mcEtot", "histogram : mcEtot (keV)",bins,0,100);
 	TH1D* hist1d_adcOffset = new TH1D("hist1d_adcOffset", "histogram : adcOffest (adc)",bins,100,500);
 	TH1D* hist1d_timeMax = new TH1D("hist1d_timeMax", "histogram : timeMax (ns)",bins,tmin,tmax);
@@ -85,7 +85,7 @@ int main(int argc, char const *argv[]){
 			//timeRiseCFA -= mctime;
 			//timeCFD -= mctime;
 			hist1d_adcMax->Fill(adcMax);
-			hist1d_integral->Fill(integral);
+			hist1d_integral->Fill(integral > 1 ? log10(integral) : 0);
 			hist1d_mcEtot->Fill(mcEtot);
 			hist1d_adcOffset->Fill(adcOffset);
 			hist1d_timeMax->Fill(timeMax);
@@ -113,7 +113,8 @@ int main(int argc, char const *argv[]){
 	
 	// integral 
         canvas1->cd(2);
-        hist1d_integral->GetXaxis()->SetTitle("integral (adc per 44 ns)");
+	//gPad->SetLogx(1);
+        hist1d_integral->GetXaxis()->SetTitle("Log10 integral (adc per 44 ns)");
         hist1d_integral->GetXaxis()->SetTitleSize(0.05);
         hist1d_integral->GetYaxis()->SetTitle("count");
         hist1d_integral->GetYaxis()->SetTitleSize(0.05);

@@ -12,6 +12,8 @@
 #include "TCanvas.h"
 #include "TColor.h"
 #include "TMultiGraph.h"
+#include "TPad.h"
+#include "TGaxis.h"
 
 int main(int argc, const char * argv[]){
 	using namespace std;
@@ -42,6 +44,9 @@ int main(int argc, const char * argv[]){
 
 	// new color definitions
 	TCanvas* canvas1 = new TCanvas("c1","c1 title",2000,2000);
+	canvas1->Divide(1,2);
+	canvas1->cd(1);
+
 	TMultiGraph  *mg  = new TMultiGraph();	
 	for (int i=0;i<=2*Npts;i++){
 		TGraph * carre = new TGraph(5);
@@ -56,6 +61,24 @@ int main(int argc, const char * argv[]){
 		mg->Add(carre);
 	}
 	mg->Draw("APLF");
+	
+	TGaxis* axis1 = new TGaxis(35,0,35,1,0,30,10,"+L");
+	axis1->Draw();
+
+	TMultiGraph  *mg2  = new TMultiGraph();	
+	for (int i=0;i<=2*Npts;i++){
+		TGraph * carre = new TGraph(5);
+		carre->SetPoint(0,0+32,i/30.);
+		carre->SetPoint(1,0+32,(i+1)/30.);
+		carre->SetPoint(2,1+32,(i+1)/30.);
+		carre->SetPoint(3,1+32,i/30.);
+		carre->SetPoint(4,0+32,i/30.);
+		int ci = TColor::GetFreeColorIndex();
+		auto color = new TColor(ci, palette[i][0], palette[i][1], palette[i][2]);
+		carre->SetFillColorAlpha(ci,1.0);
+		mg2->Add(carre);
+	}
+	mg2->Draw("PLF");
 	canvas1->Print("color.pdf");
 	
 }

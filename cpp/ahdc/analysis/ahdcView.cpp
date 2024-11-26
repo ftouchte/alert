@@ -75,7 +75,8 @@ int main(int argc, char const *argv[]){
 			// wire bottom face
 			wire.end.Translate(z*scale*ux,z*scale*uy,0);
 			gr1b->SetPoint(component-1,wire.end.x,wire.end.y);
-			// wire line
+			// draw wire line
+			//if (true) {
 			if (((superlayer == 4) || superlayer == 3) && (layer == 1) && (wire.start.x > 0 ) && (wire.start.y > 0)){
 				TGraph* gr1tb = new TGraph(2);
 				gr1tb->SetPoint(0,wire.start.x,wire.start.y);

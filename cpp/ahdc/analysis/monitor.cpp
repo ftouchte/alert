@@ -1,9 +1,23 @@
-/*************************************************
+/**********************************************************************
  * Monitor 
+ * 
+ * Principle 
+ * ---
+ * For the left plot, we draw the top face of the AHDC.
+ * Each wire is represented by a circle marker.
+ * During one event, each hit correspond to an activated wire.
+ * We deducte the position of this wire from its superlayer ID,
+ * layer ID and component ID using the AhdcGeom class. Then we 
+ * overdraw a (red) filled circle with a radius proportional to adcMax,
+ * timeOT, or integral at this position. We use the DepositCircle class.
+ *
+ * For the right plot, we display the collected adcMax, "timeOT" and
+ * integral in each of the 8 layer. We use the DepositBar class. When 
+ * there are two hits in the same layer, we do the mean of the timeOT.
  *
  * @author Felix Touchte Codjo
  * @date November 20, 2024
- * **********************************************/
+ * **********************************************************************/
 
 #include "ahdcExtractor.h"
 #include "AhdcGeom.h"
@@ -12,6 +26,7 @@
 #include <string>
 #include <iostream>
 #include <cmath>
+#include <ctime>
 
 #include "TH1.h"
 #include "TH2.h"
@@ -104,7 +119,7 @@ int main(int argc, char const *argv[]){
 	TMultiGraph  *mg_integral  = new TMultiGraph();
 	// title
 	mg_adcMax->SetTitle("adcMax");
-	mg_timeOT->SetTitle("TimeOT");
+	mg_timeOT->SetTitle("timeOT");
 	mg_integral->SetTitle("integral");
 
 	TLegend* legend = new TLegend(); 
@@ -231,9 +246,28 @@ int main(int argc, char const *argv[]){
 	// output
 	canvas1->Print("./thisEvent.pdf");
 
+	// execution option
+	bool isrand = false;
+	if (argc >= 3) { // there is an option ("-rand 1") for example
+		string option(argv[2]);
+		if (option == string("-rand")){
+			if (string("1") == string(argv[3])){
+				isrand = true;
+			}
+		}
+	}
+	unsigned long int nstart = 0;	
+	if (isrand) {
+		srand(std::time(nullptr));
+		nstart = rand() % 10000;
+	}
+	cout << "nstart : " << nstart << endl;
 	// loop over events
         while( r.next(list)){
-		//if (nEvent != 0) {break;}
+		if (nEvent < nstart) {
+			nEvent++;
+			continue;
+		}
 		/************************  Refresh AHDC  ************************/
 		canvas1->Clear();
 		canvas1->Divide(2,3);
@@ -258,6 +292,7 @@ int main(int argc, char const *argv[]){
 		double tab_adcMax[8] = {0}; // plot the sum of adcMax "collected" each of the 8 layers 
 		double tab_timeOT[8] = {0};
 		double tab_integral[8] = {0};
+		double tab_count[8] = {0};
 		for(int col = 0; col < list[1].getRows(); col++){
                         std::vector<short> samples; // waveform samples
                         for (int bin=0; bin < 136; bin++){
@@ -286,6 +321,8 @@ int main(int argc, char const *argv[]){
 			int layer = layerId % 10;
 			int component = list[1].getInt("component",col);
 
+			// hit count
+			tab_count[layer2number(superlayer,layer)-1] += 1;
 			// adcMax (right plot)
 			tab_adcMax[layer2number(superlayer,layer)-1] += adcMax;
 			// timeOT (right plot)
@@ -326,7 +363,11 @@ int main(int argc, char const *argv[]){
 		// reset right plots
 		for (int i=0; i<8; i++){
 			gr_adcMax->SetPoint(i,i+1,tab_adcMax[i]);
-			gr_timeOT->SetPoint(i,i+1,tab_timeOT[i]);
+			if (tab_count[i] != 0) {
+				gr_timeOT->SetPoint(i,i+1,tab_timeOT[i]/tab_count[i]);
+			} else {
+				gr_timeOT->SetPoint(i,i+1,tab_timeOT[i]);
+			}
 			gr_integral->SetPoint(i,i+1,tab_integral[i]);
 		}
 		// adcMax (right plot)
@@ -363,6 +404,17 @@ int main(int argc, char const *argv[]){
 			if (action == string("n")){
 				canvas1->Print("./thisEvent.pdf");
 				break;
+			}
+			if (action == string("h")){
+				cout << "\n\n" << endl;
+				cout << "     Usage : ./monitor.exe [filename.hipo] [option] [value]" << endl;
+				cout << "\n" << endl;
+				cout << "   Options : " << endl;
+				cout << "     -rand : if set to 1, display events starting to a random number one" << endl;
+				cout << "\n" << endl;
+				cout << "   Example : " << endl;
+			       	cout << "             ./monitor.exe alert_10k.hipo -rand 1" << endl;
+				cout << "\n\n" << endl;	
 			}
 			cout << "Choose (n=next, p=previous, q=quit, h=help), Type action : ";
 			cin >> action;
