@@ -50,7 +50,7 @@ all: monitor color ahdcView histAhdcAdc corrTimeAmp simpleTest
 #ahdcExtractor: ahdcExtractor.o 
 #	$(CXX) -o ahdcExtractor.exe $^ $(HIPOLIBS) $(LZ4LIBS) $(ROOTLIBS)
 
-monitor: monitor.o ahdcExtractor.o Point3D.o AhdcGeom.o
+monitor: monitor.o ahdcExtractor.o Point3D.o AhdcGeom.o 
 	$(CXX) -o monitor.exe $^ $(HIPOLIBS) $(LZ4LIBS) $(ROOTLIBS)
 
 color: color.o 
