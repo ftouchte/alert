@@ -16,7 +16,7 @@ public :
 
 	Point3D(double _x = 0, double _y = 0, double _z = 0);
 	Point3D(const Point3D & pt);
-	//Point3D & operator=(const Point3D & pt);
+	Point3D & operator=(const Point3D & pt);
 	void Print();
 
 	void Translate(double a, double b, double c);
