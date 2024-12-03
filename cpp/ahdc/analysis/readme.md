@@ -14,6 +14,10 @@ Executables
 
 	1. monitor.cpp
 
+	1. exampleAhdcDetecor.cpp
+
+	1. mon12.cpp
+
 The description is given in each file. 
 
 ## simpleTest (decoding)
@@ -45,3 +49,11 @@ The description is given in each file.
 ![monitor_timeOT](./img/monitor_timeOT.png)
 
 ![monitor_integral](./img/monitor_integral.png)
+
+## exampleAhdcDetector
+
+![exampleAhdcDetector](./img/exampleAhdcDetector.png)
+
+## mon12
+
+![mon12](./img/mon12.png)

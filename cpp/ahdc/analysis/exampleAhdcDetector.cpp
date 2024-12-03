@@ -1,9 +1,7 @@
 /**********************************************************************
- * mon12 
+ * exampleAhdcDetector 
  * 
- * Principle 
- * ---
- * Like monitor.cpp but using AhdcDetector.h instead AhdcGeom.h 
+ * Simple code showing an example of use of the AhdcDetector class.
  *
  * @author Felix Touchte Codjo
  * @date December 2, 2024
