@@ -29,32 +29,64 @@
 #include "TGaxis.h"
 #include "TMultiGraph.h"
 #include "TLatex.h"
+#include "TColor.h"
 
 int main(int argc, char const *argv[]){
 	using namespace std;
 	
 	AhdcDetector * ahdc = new AhdcDetector();
 	
-	TCanvas* canvas1 = new TCanvas("c1","c1 title",2000,2000);
-	cout << "Try to plot" << endl;
-	ahdc->Draw("AP");
-	//AhdcSector *sector = ahdc->GetSector(0);
-	//sector->Draw("AP");
-	AhdcSuperLayer *slayer = ahdc->GetSector(0)->GetSuperLayer(2);
-	slayer->SetMarkerColor(1);
-	slayer->Draw("P");
-	AhdcLayer *layer2 = ahdc->GetSector(0)->GetSuperLayer(1)->GetLayer(1);
-	AhdcLayer *layer1 = ahdc->GetSector(0)->GetSuperLayer(1)->GetLayer(0);
-	layer2->SetMarkerColor(2);
-	layer1->SetMarkerColor(2);
-	layer2->Draw("P");
-	layer1->Draw("P");
-	AhdcWire *wire = ahdc->GetSector(0)->GetSuperLayer(1)->GetLayer(0)->GetWire(20);	
-	//wire->SetMarkerSize(2);
-	//wire->SetMarkerStyle(2);
-	//wire->SetMarkerColor(kRed);
-	wire->Draw("P");
-	canvas1->Print("./TestAhdcDetector.pdf");
+	TCanvas* canvas1 = new TCanvas("c1","c1 title",2400,2000);
+	canvas1->Range(-80,-80,120,80);
+	ahdc->Draw("P");
+	// Color palette
+	double blue[3] = {0.,0.,1.};
+	double green[3] = {0.,1.,0.};
+	double yellow[3] = {1.,1.,0.};
+	int Npts = 12;
+	double palette[2*Npts][3]; // 24 color range
+	for (int i=0;i<Npts;i++){ // from blue to green
+		double t = i/(1.*Npts);
+		palette[i][0] = (1-t)*blue[0] + t*green[0];
+		palette[i][1] = (1-t)*blue[1] + t*green[1];
+		palette[i][2] = (1-t)*blue[2] + t*green[2];
+	}
+	for (int i=0;i<Npts;i++){ // from green to yellow
+		double t = i/(1.*Npts);
+		palette[i+Npts][0] = (1-t)*green[0] + t*yellow[0];
+		palette[i+Npts][1] = (1-t)*green[1] + t*yellow[1];
+		palette[i+Npts][2] = (1-t)*green[2] + t*yellow[2];
+	}
+	// bar axis goes from -65 to 65 in y coord
+	// bar aixs is located at x = 100
+	// each color range is represented by a rectangle
+	// rectangle size in x 100 -> 80
+	// rectangle size in y -65*(1-i/24) + (i/24)*63 
+	// where i goes from 0 to 23 (24 points)
+	TMultiGraph  *mg_palette  = new TMultiGraph();	
+	for (int i = 0; i<2*Npts; i++) {
+		TGraph * box = new TGraph(5);
+		double t = (1.0*i)/(2*Npts);
+		double y1 = -65*(1-t) + t*65;
+		double tplus1 = t + 1.0/(2*Npts);
+		double y2 = -65*(1-tplus1) + tplus1*65;
+		box->SetPoint(0,100,y1);
+		box->SetPoint(1,100,y2);
+		box->SetPoint(2,80,y2);
+		box->SetPoint(3,80,y1);
+		box->SetPoint(4,100,y1);
+		int ci = TColor::GetFreeColorIndex();
+		auto color = new TColor(ci, palette[i][0], palette[i][1], palette[i][2]);
+		box->SetFillColorAlpha(ci,1.0);
+		mg_palette->Add(box);
+	}
+	mg_palette->Draw("F");
+	// axis
+	TGaxis * baraxis = new TGaxis(100,-65,100,65,0,4000,10,"+L");
+	//baraxis->SetTickSize(0.009);
+	baraxis->SetLabelSize(0.025);
+	baraxis->Draw();
+	canvas1->Print("./mon12.pdf");
 	delete canvas1;
 	return 0;	
 }

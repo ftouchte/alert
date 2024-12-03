@@ -45,13 +45,17 @@ LDFLAGS   :=
 
 
 #all:  showFile histo plot benchmark simu
-all: mon12 monitor color ahdcView histAhdcAdc corrTimeAmp simpleTest
+all: mon12 exampleAhdcDetector monitor color ahdcView histAhdcAdc corrTimeAmp simpleTest
 
 #ahdcExtractor: ahdcExtractor.o 
 #	$(CXX) -o ahdcExtractor.exe $^ $(HIPOLIBS) $(LZ4LIBS) $(ROOTLIBS)
 
+
 mon12: mon12.o ahdcExtractor.o Point3D.o AhdcDetector.o
 	$(CXX) -o mon12.exe $^ $(HIPOLIBS) $(LZ4LIBS) $(ROOTLIBS)
+
+exampleAhdcDetector: exampleAhdcDetector.o ahdcExtractor.o Point3D.o AhdcDetector.o
+	$(CXX) -o exampleAhdcDetector.exe $^ $(HIPOLIBS) $(LZ4LIBS) $(ROOTLIBS)
 
 monitor: monitor.o ahdcExtractor.o Point3D.o AhdcGeom.o 
 	$(CXX) -o monitor.exe $^ $(HIPOLIBS) $(LZ4LIBS) $(ROOTLIBS)
