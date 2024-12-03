@@ -29,3 +29,11 @@ void Point3D::Translate(double a, double  b, double c){
 	y += b;
 	z += c;
 }
+
+/** Operator= */
+Point3D & Point3D::operator=(const Point3D & pt){
+	x = pt.x;
+	y = pt.y;
+	z = pt.z;
+	return *this;
+}
