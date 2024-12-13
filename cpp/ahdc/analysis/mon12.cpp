@@ -35,6 +35,12 @@ int main(int argc, char const *argv[]){
 	using namespace std;
 	
 	AhdcDetector * ahdc = new AhdcDetector();
+
+	Point3D top = ahdc->GetSector(0)->GetSuperLayer(0)->GetLayer(0)->GetWire(0)->top;
+	Point3D bot = ahdc->GetSector(0)->GetSuperLayer(0)->GetLayer(0)->GetWire(0)->bot;
+	cout << "x : " << (top.x + bot.x)/2 << endl;
+	cout << "y : " << (top.y + bot.y)/2 << endl;
+	cout << "z : " << (top.z + bot.z)/2 << endl;
 	
 	TCanvas* canvas1 = new TCanvas("c1","c1 title",2400,2000);
 	canvas1->Range(-80,-80,120,80);
