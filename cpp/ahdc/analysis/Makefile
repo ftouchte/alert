@@ -14,8 +14,9 @@
 # 	-I<path> : Ajoute le répertoire <path> au chemin de recherche des fichiers d'en-tête.
 # 	-L<path> : Ajoute le répertoire <path> au chemin de recherche des bibliothèques.
 
-PATH2HIPO := /homeijclab/touchte-codjo/hipo
+#PATH2HIPO := /homeijclab/touchte-codjo/hipo
 #PATH2HIPO := /home/ftouchte/hipo
+PATH2HIPO := /home/touchte-codjo/framework/hipo
 
 HIPOCFLAGS  := -I$(PATH2HIPO)/hipo4 -I$(PATH2HIPO)/hipo4/chart   
 HIPOLIBS    := -L$(PATH2HIPO)/lib -lhipo4 
@@ -30,13 +31,8 @@ ROOTLIBS = $(shell root-config --libs)
 # ROOT include flags
 ROOTCFLAGS = $(shell root-config --cflags)
 
-#rapidCheck include directories
-#RAPID_CHECK_FLAGS := -I/home/ftouchte/rapidcheck/include #-I/home/ftouchte/rapidcheck/include/rapidcheck
-#rapidCheck linking directories
-#RAPID_CHECK_LIBS := -L/home/ftouchte/rapidcheck -lrapidcheck
-
-# Catch2
-#CATCH2_FLLAGS := -L/home/ftouchte/Catch2/build/src -lCatch2 -lCatch2Main
+GTKLIBS = $(shell pkg-config --libs gtkmm-4.0)
+GTKFLAGS = $(shell pkg-config --cflags gtkmm-4.0)
 
 CXX       := g++
 CXXFLAGS  += -Wall -fPIC -std=c++17
@@ -45,11 +41,12 @@ LDFLAGS   :=
 
 
 #all:  showFile histo plot benchmark simu
-all: mon12 exampleAhdcDetector monitor color ahdcView histAhdcAdc corrTimeAmp simpleTest
+all: gui mon12 exampleAhdcDetector monitor color ahdcView histAhdcAdc corrTimeAmp simpleTest
 
 #ahdcExtractor: ahdcExtractor.o 
 #	$(CXX) -o ahdcExtractor.exe $^ $(HIPOLIBS) $(LZ4LIBS) $(ROOTLIBS)
-
+gui: gui.o ahdcExtractor.o
+	$(CXX) -o gui.exe $^ $(HIPOLIBS) $(LZ4LIBS) $(ROOTLIBS) $(GTKLIBS)
 
 mon12: mon12.o ahdcExtractor.o Point3D.o AhdcDetector.o
 	$(CXX) -o mon12.exe $^ $(HIPOLIBS) $(LZ4LIBS) $(ROOTLIBS)
@@ -76,7 +73,7 @@ corrTimeAmp: corrTimeAmp.o ahdcExtractor.o
 	$(CXX) -o corrTimeAmp.exe $^ $(HIPOLIBS) $(LZ4LIBS) $(ROOTLIBS)
 
 #histo: histo.o futils.o
-#	$(CXX) -o histo.exe $^ $(HIPOLIBS) $(LZ4LIBS) $(ROOTLIBS)
+#	$(CXX) -o histo.exe $^ $(HIPOLIBS) $(LZ4LIBS) $(ROOTLIBS) 
 
 #benchmark: benchmark.o futils.o
 #	$(CXX) -o benchmark.exe $^  $(RAPID_CHECK_LIBS) $(CATCH2_FLLAGS)
@@ -90,7 +87,7 @@ clean:
 	@rm -rf *.o *~ *.exe example*hipo *.pdf
 
 %.o: %.cpp
-	$(CXX) -c $< -O2 $(CXXFLAGS) $(HIPOCFLAGS) $(LZ4INCLUDES) $(ROOTCFLAGS) 
+	$(CXX) -c $< -O2 $(CXXFLAGS) $(HIPOCFLAGS) $(LZ4INCLUDES) $(ROOTCFLAGS) $(GTKFLAGS) 
 	
 #	$(CXX) -c $< -O2 $(CXXFLAGS) $(HIPOCFLAGS) $(LZ4INCLUDES) $(ROOTCFLAGS) $(RAPID_CHECK_FLAGS) $(FELIXFLAGS)
 
