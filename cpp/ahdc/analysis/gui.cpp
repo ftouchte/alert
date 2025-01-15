@@ -266,7 +266,14 @@ public :
 		//Grid_Event.attach(*Gtk::make_managed<Gtk::ToggleButton>("button"),1,1);
 		//Grid_Event.attach(*Gtk::make_managed<Gtk::ToggleButton>("button"),1,2);
 		// Body (page 2)
-		Pages.append_page(*Gtk::make_managed<Gtk::Label>("Page 2"));
+		//Pages.append_page(*Gtk::make_managed<Gtk::Label>("Page 2"));
+		auto picture1 = Gtk::make_managed<Gtk::Picture>("./waveform_0_0.png");
+		auto picture2 = Gtk::make_managed<Gtk::Picture>("./waveform_0_0.png");
+		auto grid = Gtk::make_managed<Gtk::Grid>();
+		grid->attach(*picture1,1,1);
+		grid->attach(*picture2,2,1);
+		//picture->set_keep_aspect_ratio(true);
+		Pages.append_page(*grid, "Page 2");
 		// Footpage
 		VBox_main.append(VBox_footpage);
 		VBox_footpage.append(*Gtk::make_managed<Gtk::Label>("Footpage") ); // tmp // better to define a variable Gtk::Label to use set_expand()
