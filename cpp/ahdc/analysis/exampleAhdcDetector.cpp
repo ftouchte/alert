@@ -36,6 +36,7 @@ int main(int argc, char const *argv[]){
 	TCanvas* canvas1 = new TCanvas("c1","c1 title",2000,2000);
 	cout << "Try to plot" << endl;
 	ahdc->Draw("AP");
+	canvas1->Print("./empty.pdf");
 	//AhdcSector *sector = ahdc->GetSector(0);
 	//sector->Draw("AP");
 	AhdcSuperLayer *slayer = ahdc->GetSector(0)->GetSuperLayer(2);
