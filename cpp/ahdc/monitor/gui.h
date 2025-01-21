@@ -10,6 +10,7 @@
 
 #include <gtkmm.h>
 #include <string>
+#include <vector>
 #include "reader.h"
 
 #include "AhdcDetector.h"
@@ -34,6 +35,7 @@ protected :
 	Gtk::Grid Grid_eventViewer, Grid_waveforms; // 2x1 and NxP 
 	Gtk::Picture Picture_event;
 	Gtk::DrawingArea DrawingArea_event;
+	Gtk::DrawingArea DrawingArea_test;
 	// page 1
 	Gtk::Box HBox_histograms;
 
@@ -78,7 +80,9 @@ public :
 	void on_button_reset_clicked();
 	void on_book_switch_page(Gtk::Widget * _pages, guint page_num); // le template est imposé ! page_num == Pages.get_current_page()
 	void on_file_dialog_finish(const Glib::RefPtr<Gio::AsyncResult>& result, const Glib::RefPtr<Gtk::FileDialog>& dialog); // used in on_button_hipo4_clicked()
-	void on_draw_event(const Cairo::RefPtr<Cairo::Context>& cr, int width, int height);	
+	void on_draw_event(const Cairo::RefPtr<Cairo::Context>& cr, int width, int height);
+	void on_draw_test(const Cairo::RefPtr<Cairo::Context>& cr, int width, int height);
+	void cairo_plot_graph(const Cairo::RefPtr<Cairo::Context>& cr, int width, int height, std::vector<double> vx, std::vector<double> vy);
 };
 
 #endif

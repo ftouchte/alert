@@ -68,7 +68,9 @@ Window::Window() :
 	// Page 1
 	Book.append_page(HBox_histograms, "Histograms");
 	HBox_histograms.append(*Gtk::make_managed<Gtk::Label>("Missing histograms ! Add a widget here !") );
-
+	// Page 2 (test)
+	Book.append_page(DrawingArea_test, "Test");
+	DrawingArea_test.set_draw_func(sigc::mem_fun(*this, &Window::on_draw_test) );
 
 	/******************
 	 * FOOTER
@@ -307,6 +309,101 @@ void Window::on_draw_event(const Cairo::RefPtr<Cairo::Context>& cr, int width, i
 void Window::normalise_coords(double scale, double x_max, double y_max, double x_old, double y_old, double & x_new, double & y_new){
 	x_new = scale*x_old/x_max;
 	y_new = scale*y_old/y_max;
+}
+
+void Window::on_draw_test(const Cairo::RefPtr<Cairo::Context>& cr, int width, int height){
+	cr->save();
+	
+	/*cr->set_line_width(4);
+	cr->set_source_rgb(0.0, 0.0, 0.0);
+	int offset = 20;
+	cr->move_to(offset,offset);
+	cr->line_to(width-offset,offset);
+	cr->line_to(width-offset,height-offset);
+	cr->line_to(offset,height-offset);
+	cr->close_path();
+	cr->stroke();
+	// Rescale
+	cr->translate(width/2.0, height/2.0);
+	cr->scale(width / 2.0, height / 2.0);
+	
+	cr->set_line_width(LINE_SIZE);
+	cr->set_source_rgb(0.0, 0.0, 0.0);
+	cr->rectangle(-0.5,-0.5,1.0,1.0);
+	cr->stroke();*/
+	
+	//std::vector<double> vx = {1,2,3,4,5};
+	//std::vector<double> vy = {1,4,9,16,25};
+	std::vector<double> vx, vy;
+	for (int i = 0; i< 100; i++) {
+		double angle = i*2*M_PI/100;
+		vx.push_back(angle);
+		vy.push_back(sin(angle));
+	}
+
+	cairo_plot_graph(cr,width,height,vx,vy);
+
+	cr->restore();
+}
+void Window::cairo_plot_graph(const Cairo::RefPtr<Cairo::Context>& cr, int width, int height, std::vector<double> vx, std::vector<double> vy){
+	int Npts = vx.size();
+	if (Npts != vy.size()) {return ;}
+	// Determine min and max
+	double xmin = vx[0], xmax = vx[0];
+	double ymin = vy[0], ymax = vy[0];
+	for (int i = 0; i < Npts; i++){
+		xmin = (xmin < vx[i]) ? xmin : vx[i];
+ 		xmax = (xmax > vx[i]) ? xmax : vx[i];
+		ymin = (ymin < vy[i]) ? ymin : vy[i];
+		ymax = (ymax > vy[i]) ? ymax : vy[i];
+	}
+	// Define axis limits, parameter : space_fraction 
+	double dx = xmax - xmin;
+	double dy = ymax - ymin;
+	double x_inf = xmin - 0.05*dx;
+	double x_sup = xmax + 0.05*dx;
+	double y_inf = ymin - 0.05*dy;
+	double y_sup = ymax + 0.05*dy;
+	// Draw Frame for axis
+	cr->set_line_width(4);
+	cr->set_source_rgb(0.0, 0.0, 0.0);
+	int offset = 0.05*width;
+	cr->move_to(offset,offset);
+	cr->line_to(width-offset,offset);
+	cr->line_to(width-offset,height-offset);
+	cr->line_to(offset,height-offset);
+	cr->close_path();
+	cr->stroke();
+	// Scale	
+	cr->translate(offset,height-offset);
+	cr->scale(width-2*offset, height-2*offset);
+	// Update vx and vy to be relative to x_min and y_min
+	for (int i = 0; i < Npts; i++) {
+		vx[i] = vx[i] - xmin;
+		vy[i] = vy[i] - ymin;
+		x_inf = x_inf - xmin;
+		y_inf = y_inf - ymin;
+	}
+	// Draw points
+	for (int i = 0; i < Npts; i++) {
+		double x = vx[i]/dx;
+		double y = vy[i]/dy;
+		cr->set_source_rgb(1.0, 0.0, 0.0);
+		cr->arc(x,-y,0.005,0,2*M_PI); // the y is inversed
+		cr->fill();
+		if (i > 0) {
+			double x_old = vx[i-1]/dx;
+			double y_old = vy[i-1]/dy;
+			cr->set_source_rgb(0.0, 0.0, 1.0);
+			cr->set_line_width(LINE_SIZE);
+			cr->move_to(x_old,-y_old);
+			cr->line_to(x,-y);
+			cr->stroke();
+		}
+	}
+	// à améliorer, tenir compte de x_inf, x_sup, y_inf, y_sup (des espaces...)
+
+
 }
 
 void Window::dataEventAction() {
