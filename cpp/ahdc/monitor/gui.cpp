@@ -9,8 +9,11 @@
 #include "ahdcExtractor.h"
 #include <iostream>
 #include <string>
+#include <cmath>
+#include <vector>
 
 #include "TString.h"
+#include "TCanvas.h"
 
 /** Constructor */
 Window::Window() :
@@ -30,10 +33,11 @@ Window::Window() :
 	HBox_hipo4(Gtk::Orientation::HORIZONTAL,10),
 	HBox_reset(Gtk::Orientation::HORIZONTAL,10)*/
 {
+	ahdc = new AhdcDetector();
 	set_title("ALERT monitoring");
 	set_default_size(1378,654);
 	set_child(VBox_main);
-
+	
 	/********************
 	 * HEADER
 	 * *****************/
@@ -53,7 +57,10 @@ Window::Window() :
 	HBox_eventViewer.append(Grid_eventViewer);
 	Grid_eventViewer.set_column_homogeneous(true);
 	Grid_eventViewer.set_row_homogeneous(true);
-	Grid_eventViewer.attach(*Gtk::make_managed<Gtk::Picture>("./ressource/no_event.png"),1,1);
+	//Picture_event.set_filename("./ressource/no_event.png");
+	//Grid_eventViewer.attach(Picture_event,1,1);
+	Grid_eventViewer.attach(DrawingArea_event,1,1);
+	DrawingArea_event.set_draw_func(sigc::mem_fun(*this, &Window::on_draw_event) );
 	Grid_eventViewer.attach(Grid_waveforms,2,1);
 	Grid_waveforms.set_expand(true);
 	Grid_waveforms.set_column_homogeneous(true);
@@ -137,6 +144,7 @@ Window::Window() :
 /** Destructor */
 Window::~Window() {
 	// nothing
+	delete ahdc;
 }
 
 void Window::on_button_prev_clicked(){
@@ -254,11 +262,60 @@ void Window::on_book_switch_page(Gtk::Widget * _pages, guint page_num) {
 	std::cout << "Switch to " << page_name << " tab ..." << std::endl;
 }
 
+void Window::on_draw_event(const Cairo::RefPtr<Cairo::Context>& cr, int width, int height){
+	cr->save();
+	
+	// Set relative coordinates
+	cr->translate(width/2.0, height/2.0);
+	cr->scale(width / 2.0, height / 2.0);
+	// Draw the axis
+	cr->set_line_width(LINE_SIZE);
+	cr->set_source_rgb(0.0, 0.0, 0.0);
+	cr->rectangle(-1.0,-1.0,2.0,2.0);
+	cr->stroke();
+	// Draw AHDC geometry	
+	for (int s = 0; s < ahdc->GetNumberOfSectors(); s++) {
+		for (int sl = 0; sl < ahdc->GetSector(s)->GetNumberOfSuperLayers(); sl++){
+			for (int l = 0; l < ahdc->GetSector(s)->GetSuperLayer(sl)->GetNumberOfLayers(); l++){
+				for (int w = 0; w < ahdc->GetSector(s)->GetSuperLayer(sl)->GetLayer(l)->GetNumberOfWires(); w++){
+					AhdcWire wire = *ahdc->GetSector(s)->GetSuperLayer(sl)->GetLayer(l)->GetWire(w);
+					// max radius == 68 cm
+					// renormalise the coordinates
+					double xc, yc;
+					this->normalise_coords(0.92, 68.0, 68.0, wire.top.x, wire.top.y, xc, yc);
+					cr->set_line_width(LINE_SIZE);
+					cr->set_source_rgba(0.0, 0.0, 0.0,0.5);
+					cr->arc(xc,yc,WIRE_SIZE,0,2*M_PI);
+					cr->stroke();
+				}
+			}
+		}
+	}
+	// Show activated wires
+	for (AhdcWire wire : ListOfWires) {
+		double xc, yc;
+		this->normalise_coords(0.92, 68.0, 68.0, wire.top.x, wire.top.y, xc, yc);
+		//cr->set_line_width(LINE_SIZE);
+		cr->set_source_rgb(1.0, 0.0, 0.0);
+		cr->arc(xc,yc,WIRE_SIZE,0,2*M_PI);
+		cr->fill();
+	}
+
+	cr->restore();
+}
+
+void Window::normalise_coords(double scale, double x_max, double y_max, double x_old, double y_old, double & x_new, double & y_new){
+	x_new = scale*x_old/x_max;
+	y_new = scale*y_old/y_max;
+}
+
 void Window::dataEventAction() {
 	// hipo4
 	if (hipo_reader.next(hipo_banklist)) {
 		// loop over hits
-		for (int col = 0; col < hipo_banklist[1].getRows(); col++){ 
+		ListOfWires.clear();
+		for (int col = 0; col < hipo_banklist[1].getRows(); col++){
+			int sector = hipo_banklist[1].getInt("sector",col);	
 			int layer = hipo_banklist[1].getInt("layer",col);
 			int component = hipo_banklist[1].getInt("component",col);
 			std::vector<short> samples;
@@ -271,31 +328,29 @@ void Window::dataEventAction() {
 			T.adcOffset = (short) (samples[0] + samples[1] + samples[2] + samples[3] + samples[4])/5;
 			std::map<std::string,double> output = T.extract(samples);
 			T.Show(TString::Format("./ressource/wf%d.png",col+1));
+			ListOfWires.push_back(*ahdc->GetSector(sector-1)->GetSuperLayer((layer/10)-1)->GetLayer((layer%10)-1)->GetWire(component-1));
 		}
+		
 		// Clean Grid_waveforms
 		if (hipo_nEvent != 0) {
-			std::cout << "Clean Grid_waveforms" << std::endl;
 			Grid_waveforms.remove_column(2);
 			Grid_waveforms.remove_column(1);
-			Grid_waveforms.queue_draw();
 		}
 		nWF = hipo_banklist[1].getRows();
 		std::cout << "nWF : " << nWF << std::endl;
 		// Fill Grid_waveforms
 		for (int row = 1; row <= (nWF/2); row++) {
-			std::cout << "Display WF " << 2*row-1 << std::endl;
 			Grid_waveforms.attach(*Gtk::make_managed<Gtk::Picture>(TString::Format("./ressource/wf%d.png",2*row-1).Data()),1,row);
-			std::cout << "Display WF " << 2*row << std::endl;
 			Grid_waveforms.attach(*Gtk::make_managed<Gtk::Picture>(TString::Format("./ressource/wf%d.png",2*row).Data()),2,row);
 		}
 		if (nWF % 2 == 1) {
-			std::cout << "Display WF " << nWF << std::endl;
 			Grid_waveforms.attach(*Gtk::make_managed<Gtk::Picture>(TString::Format("./ressource/wf%d.png",nWF).Data()),1,nWF);
 		}
-		Grid_waveforms.queue_draw();
-		// Event info
 	}
-	Label_info.set_text(TString::Format("Event number %lu  , Number of WF : %d ...",hipo_nEvent, nWF).Data() );
+	// Event info
+	DrawingArea_event.queue_draw();
+	Grid_waveforms.queue_draw();
+	Label_info.set_text(TString::Format("Event number : %lu  , Number of WF : %d ...",hipo_nEvent, nWF).Data() );
 }
 
 /** Main function */

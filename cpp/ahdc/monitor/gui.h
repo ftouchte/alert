@@ -12,6 +12,8 @@
 #include <string>
 #include "reader.h"
 
+#include "AhdcDetector.h"
+
 class Window : public Gtk::Window {
 protected :
 	// Widgets
@@ -30,7 +32,8 @@ protected :
 	// page 0
 	Gtk::Box HBox_eventViewer;
 	Gtk::Grid Grid_eventViewer, Grid_waveforms; // 2x1 and NxP 
-
+	Gtk::Picture Picture_event;
+	Gtk::DrawingArea DrawingArea_event;
 	// page 1
 	Gtk::Box HBox_histograms;
 
@@ -50,12 +53,21 @@ protected :
 	hipo::banklist hipo_banklist;
 	long unsigned int hipo_nEvent = 0;
 	int nWF; ///< number of waveforms	
-		
+	AhdcDetector *ahdc; ///< AHDC detector
+	std::vector<AhdcWire> ListOfWires; ///< List of wires activated
+	const double MARKER_SIZE = 0.01; ///< Marker size
+	const double LINE_SIZE = 0.005; ///< Line width
+	const double WIRE_SIZE = 0.02; ///< Wire radius
+
+	// Histograms
+	
+
 public :
 	Window();
 	~Window();
 
 	void dataEventAction();
+	void normalise_coords(double scale, double x_max, double y_max, double x_old, double y_old, double & x_new, double & y_new);	
 	
 	// Signals
 	void on_button_prev_clicked();
@@ -66,7 +78,7 @@ public :
 	void on_button_reset_clicked();
 	void on_book_switch_page(Gtk::Widget * _pages, guint page_num); // le template est imposé ! page_num == Pages.get_current_page()
 	void on_file_dialog_finish(const Glib::RefPtr<Gio::AsyncResult>& result, const Glib::RefPtr<Gtk::FileDialog>& dialog); // used in on_button_hipo4_clicked()
-	
+	void on_draw_event(const Cairo::RefPtr<Cairo::Context>& cr, int width, int height);	
 };
 
 #endif

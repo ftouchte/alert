@@ -45,7 +45,7 @@ all: gui
 
 #ahdcExtractor: ahdcExtractor.o 
 #	$(CXX) -o ahdcExtractor.exe $^ $(HIPOLIBS) $(LZ4LIBS) $(ROOTLIBS)
-gui: gui.o ahdcExtractor.o
+gui: gui.o ahdcExtractor.o AhdcDetector.o Point3D.o
 	$(CXX) -o gui.exe $^ $(HIPOLIBS) $(LZ4LIBS) $(ROOTLIBS) $(GTKLIBS)
 
 #histo: histo.o futils.o
