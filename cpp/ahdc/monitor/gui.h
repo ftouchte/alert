@@ -57,6 +57,7 @@ protected :
 	int nWF; ///< number of waveforms	
 	AhdcDetector *ahdc; ///< AHDC detector
 	std::vector<AhdcWire> ListOfWires; ///< List of wires activated
+	std::vector<std::vector<short>> ListOfSamples;  ///< List of samples
 	const double MARKER_SIZE = 0.01; ///< Marker size
 	const double LINE_SIZE = 0.005; ///< Line width
 	const double WIRE_SIZE = 0.02; ///< Wire radius

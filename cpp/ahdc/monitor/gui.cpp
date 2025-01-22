@@ -11,6 +11,7 @@
 #include <string>
 #include <cmath>
 #include <vector>
+#include <functional>
 
 #include "TString.h"
 #include "TCanvas.h"
@@ -320,7 +321,7 @@ void Window::on_draw_test(const Cairo::RefPtr<Cairo::Context>& cr, int width, in
 	for (int i = 0; i<= 2000; i++) {
 		double x = i*10/2000.0;
 		vx.push_back(x);
-		vy.push_back(x*x);
+		vy.push_back(cos(x));
 	}
 
 	cairo_plot_graph(cr,width,height,vx,vy);
@@ -493,6 +494,7 @@ void Window::dataEventAction() {
 	if (hipo_reader.next(hipo_banklist)) {
 		// loop over hits
 		ListOfWires.clear();
+		ListOfSamples.clear();
 		for (int col = 0; col < hipo_banklist[1].getRows(); col++){
 			int sector = hipo_banklist[1].getInt("sector",col);	
 			int layer = hipo_banklist[1].getInt("layer",col);
@@ -506,8 +508,9 @@ void Window::dataEventAction() {
 			ahdcExtractor T(44,0.5f,5,0.3f);
 			T.adcOffset = (short) (samples[0] + samples[1] + samples[2] + samples[3] + samples[4])/5;
 			std::map<std::string,double> output = T.extract(samples);
-			T.Show(TString::Format("./ressource/wf%d.png",col+1));
+			//T.Show(TString::Format("./ressource/wf%d.png",col+1));
 			ListOfWires.push_back(*ahdc->GetSector(sector-1)->GetSuperLayer((layer/10)-1)->GetLayer((layer%10)-1)->GetWire(component-1));
+			ListOfSamples.push_back(samples);
 		}
 		
 		// Clean Grid_waveforms
@@ -519,11 +522,36 @@ void Window::dataEventAction() {
 		std::cout << "nWF : " << nWF << std::endl;
 		// Fill Grid_waveforms
 		for (int row = 1; row <= (nWF/2); row++) {
-			Grid_waveforms.attach(*Gtk::make_managed<Gtk::Picture>(TString::Format("./ressource/wf%d.png",2*row-1).Data()),1,row);
-			Grid_waveforms.attach(*Gtk::make_managed<Gtk::Picture>(TString::Format("./ressource/wf%d.png",2*row).Data()),2,row);
+			std::vector<double> vx, vy1, vy2;
+			for (int i = 0; i < (int) ListOfSamples[0].size(); i++) {
+				vx.push_back(i);
+				vy1.push_back(ListOfSamples[2*row-1-1][i]);
+				vy2.push_back(ListOfSamples[2*row-1][i]);
+			}
+			// column 1
+			auto area1 = Gtk::make_managed<Gtk::DrawingArea>();
+			area1->set_draw_func([this, vx,  vy1] (const Cairo::RefPtr<Cairo::Context>& cr, int width, int height) {
+								cairo_plot_graph(cr,width,height,vx,vy1);
+					 	      } );
+			Grid_waveforms.attach(*area1,1,row);
+			// column 2
+			auto area2 = Gtk::make_managed<Gtk::DrawingArea>();
+			area2->set_draw_func([this, vx,  vy2] (const Cairo::RefPtr<Cairo::Context>& cr, int width, int height) {
+								cairo_plot_graph(cr,width,height,vx,vy2);
+					 	      } );
+			Grid_waveforms.attach(*area2,2,row);
 		}
 		if (nWF % 2 == 1) {
-			Grid_waveforms.attach(*Gtk::make_managed<Gtk::Picture>(TString::Format("./ressource/wf%d.png",nWF).Data()),1,nWF);
+			std::vector<double> vx, vy1;
+			for (int i = 0; i < (int) ListOfSamples[0].size(); i++) {
+				vx.push_back(i);
+				vy1.push_back(ListOfSamples[nWF-1][i]); // the last waveform in that case
+			}
+			auto area1 = Gtk::make_managed<Gtk::DrawingArea>();
+			area1->set_draw_func([this, vx,  vy1] (const Cairo::RefPtr<Cairo::Context>& cr, int width, int height) {
+								cairo_plot_graph(cr,width,height,vx,vy1);
+					 	      } );
+			Grid_waveforms.attach(*area1,1,nWF);
 		}
 	}
 	// Event info
