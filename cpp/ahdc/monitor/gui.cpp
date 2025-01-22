@@ -314,40 +314,24 @@ void Window::normalise_coords(double scale, double x_max, double y_max, double x
 void Window::on_draw_test(const Cairo::RefPtr<Cairo::Context>& cr, int width, int height){
 	cr->save();
 	
-	/*cr->set_line_width(4);
-	cr->set_source_rgb(0.0, 0.0, 0.0);
-	int offset = 20;
-	cr->move_to(offset,offset);
-	cr->line_to(width-offset,offset);
-	cr->line_to(width-offset,height-offset);
-	cr->line_to(offset,height-offset);
-	cr->close_path();
-	cr->stroke();
-	// Rescale
-	cr->translate(width/2.0, height/2.0);
-	cr->scale(width / 2.0, height / 2.0);
-	
-	cr->set_line_width(LINE_SIZE);
-	cr->set_source_rgb(0.0, 0.0, 0.0);
-	cr->rectangle(-0.5,-0.5,1.0,1.0);
-	cr->stroke();*/
-	
 	//std::vector<double> vx = {1,2,3,4,5};
 	//std::vector<double> vy = {1,4,9,16,25};
 	std::vector<double> vx, vy;
-	for (int i = 0; i< 100; i++) {
-		double angle = i*2*M_PI/100;
-		vx.push_back(angle);
-		vy.push_back(sin(angle));
+	for (int i = 0; i<= 2000; i++) {
+		double x = i*10/2000.0;
+		vx.push_back(x);
+		vy.push_back(x*x);
 	}
 
 	cairo_plot_graph(cr,width,height,vx,vy);
 
 	cr->restore();
 }
+
 void Window::cairo_plot_graph(const Cairo::RefPtr<Cairo::Context>& cr, int width, int height, std::vector<double> vx, std::vector<double> vy){
+	cr->save();
 	int Npts = vx.size();
-	if (Npts != vy.size()) {return ;}
+	if (Npts != (int) vy.size()) {return ;}
 	// Determine min and max
 	double xmin = vx[0], xmax = vx[0];
 	double ymin = vy[0], ymax = vy[0];
@@ -360,50 +344,148 @@ void Window::cairo_plot_graph(const Cairo::RefPtr<Cairo::Context>& cr, int width
 	// Define axis limits, parameter : space_fraction 
 	double dx = xmax - xmin;
 	double dy = ymax - ymin;
-	double x_inf = xmin - 0.05*dx;
-	double x_sup = xmax + 0.05*dx;
-	double y_inf = ymin - 0.05*dy;
-	double y_sup = ymax + 0.05*dy;
-	// Draw Frame for axis
+	// Define axis vectors
+	/*std::vector<double> ax, ay;
+	int ex = ceil(log10(dx))-1;
+	int ey = ceil(log10(dy))-1;
+	for (int i = 0; i < Npts; i++){
+		
+	}*/
+	// Draw main frame for axis
 	cr->set_line_width(4);
 	cr->set_source_rgb(0.0, 0.0, 0.0);
-	int offset = 0.05*width;
-	cr->move_to(offset,offset);
-	cr->line_to(width-offset,offset);
-	cr->line_to(width-offset,height-offset);
-	cr->line_to(offset,height-offset);
+	int margin = 0.05*width;
+	cr->move_to(margin,margin);
+	cr->line_to(width-margin,margin);
+	cr->line_to(width-margin,height-margin);
+	cr->line_to(margin,height-margin);
 	cr->close_path();
 	cr->stroke();
-	// Scale	
-	cr->translate(offset,height-offset);
-	cr->scale(width-2*offset, height-2*offset);
-	// Update vx and vy to be relative to x_min and y_min
+	// Scale : set the origin (not necessary the zero) to be the lower left side of the frame
+	// and set width-2*margin == 1.0 with respect to x
+	// and set height-2*margin == 1.0 with respect to y
+	// Attention : the x are positve while the y are negative ! (the y axis is oriented from up to down in cairo)
+	cr->translate(margin,height-margin);
+	cr->scale(width-2*margin, height-2*margin);
+	// Update vx and vy to be relative to xmin and ymin : now all vx[i] and vy[i] are positives
 	for (int i = 0; i < Npts; i++) {
 		vx[i] = vx[i] - xmin;
 		vy[i] = vy[i] - ymin;
-		x_inf = x_inf - xmin;
-		y_inf = y_inf - ymin;
 	}
+	// at this stage vx[i] is between 0 and dx and vy[i) between 0 and dy
+	// Scale vx[i] between 0 and rlim
+	// Scale vy[i] between (1-rlim) and rlim 
+	// rlim help to have space : before ymin, after ymax, after xmax
+	double rlim = 0.95; 
+	for (int i = 0; i < Npts; i++) {
+		vx[i] = 0 + rlim*vx[i]/dx;
+		vy[i] = (1-rlim) + (2*rlim-1)*vy[i]/dy;
+	}	
 	// Draw points
 	for (int i = 0; i < Npts; i++) {
-		double x = vx[i]/dx;
-		double y = vy[i]/dy;
-		cr->set_source_rgb(1.0, 0.0, 0.0);
-		cr->arc(x,-y,0.005,0,2*M_PI); // the y is inversed
-		cr->fill();
+		// represent a marker as a filled circle
+		//cr->set_source_rgb(1.0, 0.0, 0.0);
+		//cr->arc(vx[i],-vy[i],0.005,0,2*M_PI); // the y is inversed
+		//cr->fill();
+		// draw a line between points i and i+1
 		if (i > 0) {
-			double x_old = vx[i-1]/dx;
-			double y_old = vy[i-1]/dy;
 			cr->set_source_rgb(0.0, 0.0, 1.0);
 			cr->set_line_width(LINE_SIZE);
-			cr->move_to(x_old,-y_old);
-			cr->line_to(x,-y);
+			cr->move_to(vx[i-1],-vy[i-1]);
+			cr->line_to(vx[i],-vy[i]);
 			cr->stroke();
 		}
 	}
-	// à améliorer, tenir compte de x_inf, x_sup, y_inf, y_sup (des espaces...)
+	// Draw sticks on the axis
+	// Main sticks
+	int a = 10;
+	for (int i = 0; i <= a; i++) {
+		double d = (1.0*i)/a;
+		// x axis (down)
+		cr->set_source_rgb(0.0, 0.0, 0.0);
+		cr->set_line_width(0.001);
+		cr->move_to(d,0);
+		cr->line_to(d,-0.030);
+		cr->stroke();
+		// y axis (left)
+		cr->set_source_rgb(0.0, 0.0, 0.0);
+		cr->set_line_width(0.001*width/height);
+		cr->move_to(0,-d);
+		cr->line_to(0.030*height/width,-d);
+		cr->stroke();
+		if (i > 0) {
+			// Secondary stricks
+			int bx = 5;
+			for (int ii = 1; ii < bx; ii++) {
+				double dd = ((i-1)/10.0) + (0.1*ii)/bx;
+				// x axis
+				cr->set_source_rgb(0.0, 0.0, 0.0);
+				cr->set_line_width(0.001);
+				cr->move_to(dd,0);
+				cr->line_to(dd,-0.0150);
+				cr->stroke();
+			}
+			int by = (bx*height)/width;
+			for (int ii = 1; ii < by; ii++) {
+				double dd = ((i-1)/10.0) + (0.1*ii)/by;
+				// y axis
+				cr->set_source_rgb(0.0, 0.0, 0.0);
+				cr->set_line_width(0.001*width/height);
+				cr->move_to(0,-dd);
+				cr->line_to(0.0150*height/width,-dd);
+				cr->stroke();
+				
+			}
 
-
+		}
+		// Complementary sticks (up and right side)
+		// x axis (up)
+		cr->set_source_rgb(0.0, 0.0, 0.0);
+		cr->set_line_width(0.001);
+		cr->move_to(d,-1);
+		cr->line_to(d,-(1-0.030));
+		cr->stroke();
+		// y axis (right)
+		cr->set_source_rgb(0.0, 0.0, 0.0);
+		cr->set_line_width(0.001*width/height);
+		cr->move_to(1,-d);
+		cr->line_to(1-0.030*height/width,-d);
+		cr->stroke();
+	}
+	/* TO BE IMPROVED :: NOW, DO NOT FIT WITH STICKS (change the way I represent stickd, it doesn't take into account xmin and xmax, precision, etc
+	// Add Labels
+	// return to uniform scale
+	cr->restore(); 
+	// x title
+	cr->set_source_rgb(0.0, 0.0, 0.0);
+	cr->select_font_face("@cairo:sans-serif",Cairo::ToyFontFace::Slant::NORMAL,Cairo::ToyFontFace::Weight::NORMAL);
+	cr->set_font_size(0.02*width);
+	cr->move_to(width-0.04*width,height-0.04*width);
+	cr->show_text("x");
+	// y title
+	cr->set_source_rgb(0.0, 0.0, 0.0);
+	cr->select_font_face("@cairo:sans-serif",Cairo::ToyFontFace::Slant::NORMAL,Cairo::ToyFontFace::Weight::NORMAL);
+	cr->set_font_size(0.02*width);
+	cr->move_to(0+0.04*width,0+0.04*width);
+	cr->show_text("y");
+	// Drax x and y axis values
+	for (int i = 0; i <= a; i++) {
+		// x axis values
+		cr->set_source_rgb(0.0, 0.0, 0.0);
+		cr->select_font_face("@cairo:sans-serif",Cairo::ToyFontFace::Slant::NORMAL,Cairo::ToyFontFace::Weight::NORMAL);
+		cr->set_font_size(0.01*width);
+		double x = 0.05*width + ((rlim*i)/a)*(width-2*0.05*width);
+		cr->move_to(x,height-0.01*width);
+		cr->show_text(TString::Format("%.3lf",xmin + i*dx/a).Data());
+		// y axis values
+		cr->set_source_rgb(0.0, 0.0, 0.0);
+		cr->select_font_face("@cairo:sans-serif",Cairo::ToyFontFace::Slant::NORMAL,Cairo::ToyFontFace::Weight::NORMAL);
+		cr->set_font_size(0.01*width);
+		double y = 0.05*width + ((1-rlim) + ((2*rlim-1)*(a-i))/a)*(height-2*0.05*width);
+		cr->move_to(0.005*width,y );
+		cr->show_text(TString::Format("%.3lf",ymin + i*dy/a).Data());
+	}
+	*/
 }
 
 void Window::dataEventAction() {
