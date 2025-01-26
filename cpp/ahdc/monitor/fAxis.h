@@ -39,6 +39,9 @@ public :
 	int get_eps2();
 	int get_eps3();
 	void print();
+	std::vector<std::string> get_labels1();
+	std::vector<std::string> get_labels2();
+	std::vector<std::string> get_labels3();
 };
 
 #endif

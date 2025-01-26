@@ -89,3 +89,17 @@ void fAxis::print() {
 	}
 	printf("]\n");
 }
+
+
+std::vector<std::string> fAxis::get_labels1() {
+	return Labels1;
+}
+
+
+std::vector<std::string> fAxis::get_labels2() {
+	return Labels2;
+}
+
+std::vector<std::string> fAxis::get_labels3() {
+	return Labels3;
+}

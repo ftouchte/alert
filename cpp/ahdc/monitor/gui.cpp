@@ -6,12 +6,15 @@
  * **********************************/
 
 #include "gui.h"
+#include "fAxis.h"
 #include "ahdcExtractor.h"
 #include <iostream>
 #include <string>
 #include <cmath>
 #include <vector>
 #include <functional>
+#include <cstdio>
+#include <cstdlib>
 
 #include "TString.h"
 #include "TCanvas.h"
@@ -324,7 +327,7 @@ void Window::on_draw_test(const Cairo::RefPtr<Cairo::Context>& cr, int width, in
 		vy.push_back(cos(x));
 	}
 
-	cairo_plot_graph(cr,width,height,vx,vy);
+	cairo_plot_graph2(cr,width,height,vx,vy);
 
 	cr->restore();
 }
@@ -487,6 +490,154 @@ void Window::cairo_plot_graph(const Cairo::RefPtr<Cairo::Context>& cr, int width
 		cr->show_text(TString::Format("%.3lf",ymin + i*dy/a).Data());
 	}
 	*/
+}
+void Window::cairo_plot_graph2(const Cairo::RefPtr<Cairo::Context>& cr, int width, int height, std::vector<double> vx, std::vector<double> vy){
+	int window_size = std::min(width,height);
+	// Setting parameters
+	double plot_ratio = 0.10; // 10%
+	int top_margin = plot_ratio*window_size; 
+	int bottom_margin = plot_ratio*window_size;
+	int left_margin = plot_ratio*window_size;
+	int right_margin = plot_ratio*window_size;
+	// Effective window size
+	int weff = width - left_margin - right_margin;
+	int heff = height - top_margin - bottom_margin;
+	// Change the origin to be 
+	cr->translate(left_margin, top_margin + heff);
+	// Determine the min and the max of the data	
+	int Npts = vx.size();
+	if (Npts != (int) vy.size()) {return ;}
+	double xmin = vx[0], xmax = vx[0];
+	double ymin = vy[0], ymax = vy[0];
+	for (int i = 0; i < Npts; i++){
+		xmin = (xmin < vx[i]) ? xmin : vx[i];
+ 		xmax = (xmax > vx[i]) ? xmax : vx[i];
+		ymin = (ymin < vy[i]) ? ymin : vy[i];
+		ymax = (ymax > vy[i]) ? ymax : vy[i];
+	}
+	double margin_ratio = 0.05;
+	double x_start = (xmin == 0) ? 0 : xmin - margin_ratio*(xmax - xmin);
+	double x_end = xmax + margin_ratio*(xmax - xmin);
+	double y_start = (ymin == 0) ? 0 : ymin - margin_ratio*(ymax - ymin);
+	double y_end = ymax + margin_ratio*(ymax - ymin);
+	printf("x_min   : %lf, x_max : %lf, y_min   : %lf, y_max : %lf\n", xmin, xmax, ymin, ymax);
+	printf("x_start : %lf, x_end : %lf, y_start : %lf, y_end : %lf\n", x_start, x_end, y_start, y_end);
+	// Define scale functions
+	// transform [x1,x2] to [y1,y2]
+	// return the y correspnding to a x
+	auto linear_transformation = [](double x1, double y1, double x2, double y2, double x) -> double {
+		if (x1 == x2) {return x;} // do nothing
+		double slope = (y2-y1)/(x2-x1);
+		double y=  slope*(x-x1) + y1;
+		return y;
+	};
+	// x coord to width
+	auto x2w = [x_start, x_end, weff, linear_transformation] (double x) {
+		return linear_transformation(x_start, 0, x_end, weff, x);
+	};
+	// y coord to height
+	auto y2h = [y_start, y_end, heff, linear_transformation] (double y) {
+		return linear_transformation(y_start, 0, y_end, -heff, y); // minus heff because of the axis orientation
+	};
+	
+	// Draw points
+	for (int i = 0; i < Npts; i++) {
+		// represent a marker as a filled circle
+		//cr->set_source_rgb(1.0, 0.0, 0.0);
+		//cr->arc(vx[i],-vy[i],0.005,0,2*M_PI); // the y is inversed
+		//cr->fill();
+		// draw a line between points i and i+1
+		if (i > 0) {
+			cr->set_source_rgb(0.0, 0.0, 1.0);
+			cr->set_line_width(10);
+			cr->move_to(x2w(vx[i-1]),y2h(vy[i-1]));
+			cr->line_to(x2w(vx[i]),y2h(vy[i]));
+			cr->stroke();
+		}
+	}
+
+	// Draw the frame for axis
+	cr->set_source_rgb(0.0, 0.0, 0.0);
+	cr->set_line_width(5);
+	cr->rectangle(0,0,weff,-heff);
+	cr->stroke();
+	
+	// Define axis
+	int n2x = 5; // number of secondary division in the x axis
+	//int n2y = (int) (5.0*heff/weff); // number of secondary division in the y axis		
+	int n2y = n2x;
+	fAxis ax(x_start, x_end, n2x, 0);
+	fAxis ay(y_start, y_end, n2y, 0);
+	ax.print();
+	ay.print();
+	// Draw main sticks x
+	for (std::string s : ax.get_labels1()) {
+		double value = std::atof(s.c_str());
+		if ((value >= x_start) && (value <= x_end)) {
+			cr->set_source_rgb(0.0, 0.0, 0.0);
+			cr->set_line_width(5);
+			cr->move_to(x2w(value), 0);
+			cr->line_to(x2w(value), -20);
+			cr->stroke();
+			// draw label
+			cr->set_source_rgb(0.0, 0.0, 0.0);
+			cr->select_font_face("@cairo:sans-serif",Cairo::ToyFontFace::Slant::NORMAL,Cairo::ToyFontFace::Weight::NORMAL);
+			cr->set_font_size(bottom_margin*0.4);
+			cr->move_to(x2w(value), bottom_margin*0.6);
+			cr->show_text(s.c_str());
+		}
+	}
+	// Draw main sticks y
+	for (std::string s : ay.get_labels1()) {
+		double value = std::atof(s.c_str());
+		if ((value >= y_start) && (value <= y_end)) {
+			cr->set_source_rgb(0.0, 0.0, 0.0);
+			cr->set_line_width(5);
+			cr->move_to(0, y2h(value));
+			cr->line_to(20, y2h(value));
+			cr->stroke();
+			// draw label
+			cr->set_source_rgb(0.0, 0.0, 0.0);
+			cr->select_font_face("@cairo:sans-serif",Cairo::ToyFontFace::Slant::NORMAL,Cairo::ToyFontFace::Weight::NORMAL);
+			cr->set_font_size(left_margin*0.4);
+			cr->move_to(-left_margin*0.9, y2h(value));
+			cr->show_text(s.c_str());
+		}
+	}
+	// Draw secondary sticks x
+	for (std::string s : ax.get_labels2()) {
+		double value = std::atof(s.c_str());
+		if ((value >= x_start) && (value <= x_end)) {
+			cr->set_source_rgb(0.0, 0.0, 0.0);
+			cr->set_line_width(5);
+			cr->move_to(x2w(value), 0);
+			cr->line_to(x2w(value), -15);
+			cr->stroke();
+			// draw label
+			cr->set_source_rgb(0.0, 0.0, 0.0);
+			cr->select_font_face("@cairo:sans-serif",Cairo::ToyFontFace::Slant::NORMAL,Cairo::ToyFontFace::Weight::NORMAL);
+			cr->set_font_size(bottom_margin*0.4);
+			cr->move_to(x2w(value), bottom_margin*0.6);
+			cr->show_text(s.c_str());
+		}
+	}
+	// Draw seconday sticks y
+	for (std::string s : ay.get_labels2()) {
+		double value = std::atof(s.c_str());
+		if ((value >= y_start) && (value <= y_end)) {
+			cr->set_source_rgb(0.0, 0.0, 0.0);
+			cr->set_line_width(5);
+			cr->move_to(0, y2h(value));
+			cr->line_to(15, y2h(value));
+			cr->stroke();
+			// draw label
+			cr->set_source_rgb(0.0, 0.0, 0.0);
+			cr->select_font_face("@cairo:sans-serif",Cairo::ToyFontFace::Slant::NORMAL,Cairo::ToyFontFace::Weight::NORMAL);
+			cr->set_font_size(left_margin*0.4);
+			cr->move_to(-left_margin*0.9, y2h(value));
+			cr->show_text(s.c_str());
+		}
+	}
 }
 
 void Window::dataEventAction() {
