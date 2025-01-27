@@ -324,174 +324,15 @@ void Window::on_draw_test(const Cairo::RefPtr<Cairo::Context>& cr, int width, in
 	for (int i = 0; i<= 2000; i++) {
 		double x = i*10/2000.0;
 		vx.push_back(x);
-		vy.push_back(cos(x));
+		vy.push_back(x+cos(x));
 	}
 
-	cairo_plot_graph2(cr,width,height,vx,vy);
+	cairo_plot_graph(cr,width,height,vx,vy);
 
 	cr->restore();
 }
 
 void Window::cairo_plot_graph(const Cairo::RefPtr<Cairo::Context>& cr, int width, int height, std::vector<double> vx, std::vector<double> vy){
-	cr->save();
-	int Npts = vx.size();
-	if (Npts != (int) vy.size()) {return ;}
-	// Determine min and max
-	double xmin = vx[0], xmax = vx[0];
-	double ymin = vy[0], ymax = vy[0];
-	for (int i = 0; i < Npts; i++){
-		xmin = (xmin < vx[i]) ? xmin : vx[i];
- 		xmax = (xmax > vx[i]) ? xmax : vx[i];
-		ymin = (ymin < vy[i]) ? ymin : vy[i];
-		ymax = (ymax > vy[i]) ? ymax : vy[i];
-	}
-	// Define axis limits, parameter : space_fraction 
-	double dx = xmax - xmin;
-	double dy = ymax - ymin;
-	// Define axis vectors
-	/*std::vector<double> ax, ay;
-	int ex = ceil(log10(dx))-1;
-	int ey = ceil(log10(dy))-1;
-	for (int i = 0; i < Npts; i++){
-		
-	}*/
-	// Draw main frame for axis
-	cr->set_line_width(4);
-	cr->set_source_rgb(0.0, 0.0, 0.0);
-	int margin = 0.05*width;
-	cr->move_to(margin,margin);
-	cr->line_to(width-margin,margin);
-	cr->line_to(width-margin,height-margin);
-	cr->line_to(margin,height-margin);
-	cr->close_path();
-	cr->stroke();
-	// Scale : set the origin (not necessary the zero) to be the lower left side of the frame
-	// and set width-2*margin == 1.0 with respect to x
-	// and set height-2*margin == 1.0 with respect to y
-	// Attention : the x are positve while the y are negative ! (the y axis is oriented from up to down in cairo)
-	cr->translate(margin,height-margin);
-	cr->scale(width-2*margin, height-2*margin);
-	// Update vx and vy to be relative to xmin and ymin : now all vx[i] and vy[i] are positives
-	for (int i = 0; i < Npts; i++) {
-		vx[i] = vx[i] - xmin;
-		vy[i] = vy[i] - ymin;
-	}
-	// at this stage vx[i] is between 0 and dx and vy[i) between 0 and dy
-	// Scale vx[i] between 0 and rlim
-	// Scale vy[i] between (1-rlim) and rlim 
-	// rlim help to have space : before ymin, after ymax, after xmax
-	double rlim = 0.95; 
-	for (int i = 0; i < Npts; i++) {
-		vx[i] = 0 + rlim*vx[i]/dx;
-		vy[i] = (1-rlim) + (2*rlim-1)*vy[i]/dy;
-	}	
-	// Draw points
-	for (int i = 0; i < Npts; i++) {
-		// represent a marker as a filled circle
-		//cr->set_source_rgb(1.0, 0.0, 0.0);
-		//cr->arc(vx[i],-vy[i],0.005,0,2*M_PI); // the y is inversed
-		//cr->fill();
-		// draw a line between points i and i+1
-		if (i > 0) {
-			cr->set_source_rgb(0.0, 0.0, 1.0);
-			cr->set_line_width(LINE_SIZE);
-			cr->move_to(vx[i-1],-vy[i-1]);
-			cr->line_to(vx[i],-vy[i]);
-			cr->stroke();
-		}
-	}
-	// Draw sticks on the axis
-	// Main sticks
-	int a = 10;
-	for (int i = 0; i <= a; i++) {
-		double d = (1.0*i)/a;
-		// x axis (down)
-		cr->set_source_rgb(0.0, 0.0, 0.0);
-		cr->set_line_width(0.001);
-		cr->move_to(d,0);
-		cr->line_to(d,-0.030);
-		cr->stroke();
-		// y axis (left)
-		cr->set_source_rgb(0.0, 0.0, 0.0);
-		cr->set_line_width(0.001*width/height);
-		cr->move_to(0,-d);
-		cr->line_to(0.030*height/width,-d);
-		cr->stroke();
-		if (i > 0) {
-			// Secondary stricks
-			int bx = 5;
-			for (int ii = 1; ii < bx; ii++) {
-				double dd = ((i-1)/10.0) + (0.1*ii)/bx;
-				// x axis
-				cr->set_source_rgb(0.0, 0.0, 0.0);
-				cr->set_line_width(0.001);
-				cr->move_to(dd,0);
-				cr->line_to(dd,-0.0150);
-				cr->stroke();
-			}
-			int by = (bx*height)/width;
-			for (int ii = 1; ii < by; ii++) {
-				double dd = ((i-1)/10.0) + (0.1*ii)/by;
-				// y axis
-				cr->set_source_rgb(0.0, 0.0, 0.0);
-				cr->set_line_width(0.001*width/height);
-				cr->move_to(0,-dd);
-				cr->line_to(0.0150*height/width,-dd);
-				cr->stroke();
-				
-			}
-
-		}
-		// Complementary sticks (up and right side)
-		// x axis (up)
-		cr->set_source_rgb(0.0, 0.0, 0.0);
-		cr->set_line_width(0.001);
-		cr->move_to(d,-1);
-		cr->line_to(d,-(1-0.030));
-		cr->stroke();
-		// y axis (right)
-		cr->set_source_rgb(0.0, 0.0, 0.0);
-		cr->set_line_width(0.001*width/height);
-		cr->move_to(1,-d);
-		cr->line_to(1-0.030*height/width,-d);
-		cr->stroke();
-	}
-	/* TO BE IMPROVED :: NOW, DO NOT FIT WITH STICKS (change the way I represent stickd, it doesn't take into account xmin and xmax, precision, etc
-	// Add Labels
-	// return to uniform scale
-	cr->restore(); 
-	// x title
-	cr->set_source_rgb(0.0, 0.0, 0.0);
-	cr->select_font_face("@cairo:sans-serif",Cairo::ToyFontFace::Slant::NORMAL,Cairo::ToyFontFace::Weight::NORMAL);
-	cr->set_font_size(0.02*width);
-	cr->move_to(width-0.04*width,height-0.04*width);
-	cr->show_text("x");
-	// y title
-	cr->set_source_rgb(0.0, 0.0, 0.0);
-	cr->select_font_face("@cairo:sans-serif",Cairo::ToyFontFace::Slant::NORMAL,Cairo::ToyFontFace::Weight::NORMAL);
-	cr->set_font_size(0.02*width);
-	cr->move_to(0+0.04*width,0+0.04*width);
-	cr->show_text("y");
-	// Drax x and y axis values
-	for (int i = 0; i <= a; i++) {
-		// x axis values
-		cr->set_source_rgb(0.0, 0.0, 0.0);
-		cr->select_font_face("@cairo:sans-serif",Cairo::ToyFontFace::Slant::NORMAL,Cairo::ToyFontFace::Weight::NORMAL);
-		cr->set_font_size(0.01*width);
-		double x = 0.05*width + ((rlim*i)/a)*(width-2*0.05*width);
-		cr->move_to(x,height-0.01*width);
-		cr->show_text(TString::Format("%.3lf",xmin + i*dx/a).Data());
-		// y axis values
-		cr->set_source_rgb(0.0, 0.0, 0.0);
-		cr->select_font_face("@cairo:sans-serif",Cairo::ToyFontFace::Slant::NORMAL,Cairo::ToyFontFace::Weight::NORMAL);
-		cr->set_font_size(0.01*width);
-		double y = 0.05*width + ((1-rlim) + ((2*rlim-1)*(a-i))/a)*(height-2*0.05*width);
-		cr->move_to(0.005*width,y );
-		cr->show_text(TString::Format("%.3lf",ymin + i*dy/a).Data());
-	}
-	*/
-}
-void Window::cairo_plot_graph2(const Cairo::RefPtr<Cairo::Context>& cr, int width, int height, std::vector<double> vx, std::vector<double> vy){
 	int window_size = std::min(width,height);
 	// Setting parameters
 	double plot_ratio = 0.10; // 10%
@@ -502,6 +343,8 @@ void Window::cairo_plot_graph2(const Cairo::RefPtr<Cairo::Context>& cr, int widt
 	// Effective window size
 	int weff = width - left_margin - right_margin;
 	int heff = height - top_margin - bottom_margin;
+	int seff = std::min(weff, heff);
+	printf("weff : %d , heff : %d\n",weff, heff);
 	// Change the origin to be 
 	cr->translate(left_margin, top_margin + heff);
 	// Determine the min and the max of the data	
@@ -549,7 +392,7 @@ void Window::cairo_plot_graph2(const Cairo::RefPtr<Cairo::Context>& cr, int widt
 		// draw a line between points i and i+1
 		if (i > 0) {
 			cr->set_source_rgb(0.0, 0.0, 1.0);
-			cr->set_line_width(10);
+			cr->set_line_width(0.01*seff);
 			cr->move_to(x2w(vx[i-1]),y2h(vy[i-1]));
 			cr->line_to(x2w(vx[i]),y2h(vy[i]));
 			cr->stroke();
@@ -558,14 +401,18 @@ void Window::cairo_plot_graph2(const Cairo::RefPtr<Cairo::Context>& cr, int widt
 
 	// Draw the frame for axis
 	cr->set_source_rgb(0.0, 0.0, 0.0);
-	cr->set_line_width(5);
+	cr->set_line_width(0.01*seff);
 	cr->rectangle(0,0,weff,-heff);
 	cr->stroke();
 	
 	// Define axis
 	int n2x = 5; // number of secondary division in the x axis
-	//int n2y = (int) (5.0*heff/weff); // number of secondary division in the y axis		
-	int n2y = n2x;
+	int n2y = (int) (5.0*heff/weff); // number of secondary division in the y axis		
+	//int n2y = n2x;
+	int stick_size1 = 0.025*seff;
+	int stick_size2 = 0.020*seff;
+	int xlabel_size = 0.4*bottom_margin;
+	int ylabel_size = 0.4*left_margin; 
 	fAxis ax(x_start, x_end, n2x, 0);
 	fAxis ay(y_start, y_end, n2y, 0);
 	ax.print();
@@ -575,14 +422,14 @@ void Window::cairo_plot_graph2(const Cairo::RefPtr<Cairo::Context>& cr, int widt
 		double value = std::atof(s.c_str());
 		if ((value >= x_start) && (value <= x_end)) {
 			cr->set_source_rgb(0.0, 0.0, 0.0);
-			cr->set_line_width(5);
+			cr->set_line_width(0.01*seff);
 			cr->move_to(x2w(value), 0);
-			cr->line_to(x2w(value), -20);
+			cr->line_to(x2w(value), -stick_size1);
 			cr->stroke();
 			// draw label
 			cr->set_source_rgb(0.0, 0.0, 0.0);
 			cr->select_font_face("@cairo:sans-serif",Cairo::ToyFontFace::Slant::NORMAL,Cairo::ToyFontFace::Weight::NORMAL);
-			cr->set_font_size(bottom_margin*0.4);
+			cr->set_font_size(xlabel_size);
 			cr->move_to(x2w(value), bottom_margin*0.6);
 			cr->show_text(s.c_str());
 		}
@@ -592,14 +439,14 @@ void Window::cairo_plot_graph2(const Cairo::RefPtr<Cairo::Context>& cr, int widt
 		double value = std::atof(s.c_str());
 		if ((value >= y_start) && (value <= y_end)) {
 			cr->set_source_rgb(0.0, 0.0, 0.0);
-			cr->set_line_width(5);
+			cr->set_line_width(0.01*seff);
 			cr->move_to(0, y2h(value));
-			cr->line_to(20, y2h(value));
+			cr->line_to(stick_size1, y2h(value));
 			cr->stroke();
 			// draw label
 			cr->set_source_rgb(0.0, 0.0, 0.0);
 			cr->select_font_face("@cairo:sans-serif",Cairo::ToyFontFace::Slant::NORMAL,Cairo::ToyFontFace::Weight::NORMAL);
-			cr->set_font_size(left_margin*0.4);
+			cr->set_font_size(ylabel_size);
 			cr->move_to(-left_margin*0.9, y2h(value));
 			cr->show_text(s.c_str());
 		}
@@ -609,14 +456,14 @@ void Window::cairo_plot_graph2(const Cairo::RefPtr<Cairo::Context>& cr, int widt
 		double value = std::atof(s.c_str());
 		if ((value >= x_start) && (value <= x_end)) {
 			cr->set_source_rgb(0.0, 0.0, 0.0);
-			cr->set_line_width(5);
+			cr->set_line_width(0.01*seff);
 			cr->move_to(x2w(value), 0);
-			cr->line_to(x2w(value), -15);
+			cr->line_to(x2w(value), -stick_size2);
 			cr->stroke();
 			// draw label
 			cr->set_source_rgb(0.0, 0.0, 0.0);
 			cr->select_font_face("@cairo:sans-serif",Cairo::ToyFontFace::Slant::NORMAL,Cairo::ToyFontFace::Weight::NORMAL);
-			cr->set_font_size(bottom_margin*0.4);
+			cr->set_font_size(xlabel_size);
 			cr->move_to(x2w(value), bottom_margin*0.6);
 			cr->show_text(s.c_str());
 		}
@@ -626,14 +473,14 @@ void Window::cairo_plot_graph2(const Cairo::RefPtr<Cairo::Context>& cr, int widt
 		double value = std::atof(s.c_str());
 		if ((value >= y_start) && (value <= y_end)) {
 			cr->set_source_rgb(0.0, 0.0, 0.0);
-			cr->set_line_width(5);
+			cr->set_line_width(0.01*seff);
 			cr->move_to(0, y2h(value));
-			cr->line_to(15, y2h(value));
+			cr->line_to(stick_size2, y2h(value));
 			cr->stroke();
 			// draw label
 			cr->set_source_rgb(0.0, 0.0, 0.0);
 			cr->select_font_face("@cairo:sans-serif",Cairo::ToyFontFace::Slant::NORMAL,Cairo::ToyFontFace::Weight::NORMAL);
-			cr->set_font_size(left_margin*0.4);
+			cr->set_font_size(ylabel_size);
 			cr->move_to(-left_margin*0.9, y2h(value));
 			cr->show_text(s.c_str());
 		}
