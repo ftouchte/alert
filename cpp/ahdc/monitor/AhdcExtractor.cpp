@@ -1,4 +1,4 @@
-#include "ahdcExtractor.h"
+#include "AhdcExtractor.h"
 
 
 #include "TCanvas.h"
@@ -16,7 +16,7 @@
 #include "TArrow.h"
 
 
-std::map<std::string,double> ahdcExtractor::extract(const std::vector<short> samples){
+std::map<std::string,double> AhdcExtractor::extract(const std::vector<short> samples){
 	samplesCorr = samples;
 	this->waveformCorrection();
 	this->fitAverage();
@@ -30,16 +30,16 @@ std::map<std::string,double> ahdcExtractor::extract(const std::vector<short> sam
 	output["adcMax"] = adcMax;
 	output["timeMax"] = timeMax;
 	output["integral"] = integral;
-	output["timeRiseCFA"] = timeRiseCFA;
-	output["timeFallCFA"] = timeFallCFA;
-	output["timeOverThresholdCFA"] = timeOverThresholdCFA;
-	output["timeCFD"] = timeCFD;
+	output["leadingEdgeTime"] = leadingEdgeTime;
+	output["trailingEdgeTime"] = trailingEdgeTime;
+	output["timeOverThreshold"] = timeOverThreshold;
+	output["constantFractionTime"] = constantFractionTime;
 	output["adcOffset"] = adcOffset;
 	return output;
 
 }
 
-void ahdcExtractor::waveformCorrection(){
+void AhdcExtractor::waveformCorrection(){
 	binNumber = samplesCorr.size();
 	binMax = 0;
 	adcMax = (short) (samplesCorr[0] - adcOffset);
@@ -74,7 +74,7 @@ void ahdcExtractor::waveformCorrection(){
 }
 
 
-void ahdcExtractor::fitAverage(){
+void AhdcExtractor::fitAverage(){
 	if ((binMax - 2 >= 0) && (binMax + 2 <= binNumber - 1)){
 		adcMax = 0;
 		for (int bin = binMax - 2; bin <= binMax + 2; bin++){
@@ -84,25 +84,25 @@ void ahdcExtractor::fitAverage(){
 	}
 }
 
-void ahdcExtractor::fitParabolic(){}
+void AhdcExtractor::fitParabolic(){}
 
-void ahdcExtractor::fineTimeStampCorrection(){}
+void AhdcExtractor::fineTimeStampCorrection(){}
 
-void ahdcExtractor::computeTimeAtConstantFractionAmplitude(){
+void AhdcExtractor::computeTimeAtConstantFractionAmplitude(){
 	float threshold = amplitudeFractionCFA*adcMax;
-	// timeRiseCFA
+	// leadingEdgeTime
 	int binRise = 0;
 	for (int bin = 0; bin < binMax; bin++){
 		if (samplesCorr[bin] < threshold)
 			binRise = bin;  // last pass below threshold and before adcMax
-	} // at this stage : binRise < timeRiseCFA/samplingTime <= binRise + 1 // timeRiseCFA is determined by assuming a linear fit between binRise and binRise + 1
+	} // at this stage : binRise < leadingEdgeTime/samplingTime <= binRise + 1 // leadingEdgeTime is determined by assuming a linear fit between binRise and binRise + 1
 	float slopeRise = 0;
 	if (binRise + 1 <= binNumber-1)
 		slopeRise = samplesCorr[binRise+1] - samplesCorr[binRise];
 	float fittedBinRise = (slopeRise == 0) ? binRise : binRise + (threshold - samplesCorr[binRise])/slopeRise;
-	timeRiseCFA = (fittedBinRise + binOffset)*samplingTime; // binOffset is determined in wavefromCorrection() // must be the same for all time ? // or must be defined using fittedBinRise*sparseSample
+	leadingEdgeTime = (fittedBinRise + binOffset)*samplingTime; // binOffset is determined in wavefromCorrection() // must be the same for all time ? // or must be defined using fittedBinRise*sparseSample
 
-	// timeFallCFA
+	// trailingEdgeTime
 	int binFall = binMax;
 	for (int bin = binMax; bin < binNumber; bin++){
 		if (samplesCorr[bin] > threshold){
@@ -112,18 +112,18 @@ void ahdcExtractor::computeTimeAtConstantFractionAmplitude(){
 				binFall = bin;
 				break; // first pass below the threshold
 		}
-	} // at this stage : binFall - 1 <= timeRiseCFA/samplingTime < binFall // timeFallCFA is determined by assuming a linear fit between binFall - 1 and binFall
+	} // at this stage : binFall - 1 <= leadingEdgeTime/samplingTime < binFall // trailingEdgeTime is determined by assuming a linear fit between binFall - 1 and binFall
 	float slopeFall = 0;
 	if (binFall - 1 >= 0)
 		slopeFall = samplesCorr[binFall] - samplesCorr[binFall-1];
 	float fittedBinFall = (slopeFall == 0) ? binFall : binFall-1 + (threshold - samplesCorr[binFall-1])/slopeFall;
-	timeFallCFA = (fittedBinFall + binOffset)*samplingTime;
+	trailingEdgeTime = (fittedBinFall + binOffset)*samplingTime;
 
 	// timeOverThreshold
-	timeOverThresholdCFA = timeFallCFA - timeRiseCFA;
+	timeOverThreshold = trailingEdgeTime - leadingEdgeTime;
 }
 
-void ahdcExtractor::computeTimeUsingConstantFractionDiscriminator(){
+void AhdcExtractor::computeTimeUsingConstantFractionDiscriminator(){
 	std::vector<float> signal(binNumber,0.0);
 	// signal generation
 	for (int bin = 0; bin < binNumber; bin++){
@@ -147,18 +147,18 @@ void ahdcExtractor::computeTimeUsingConstantFractionDiscriminator(){
 	for (int bin = binHumpInf; bin <= binHumpSup; bin++){
 		if (signal[bin] < 0)
 			binZero = bin; // last pass below zero
-	} // at this stage : binZero < timeCFD/samplingTime <= binZero + 1 // timeCFD is determined by assuming a linear fit between binZero and binZero + 1
+	} // at this stage : binZero < constantFractionTime/samplingTime <= binZero + 1 // constantFractionTime is determined by assuming a linear fit between binZero and binZero + 1
 	float slopeCFD = 0;
 	if (binZero + 1 <= binNumber)
 		slopeCFD = signal[binZero+1] - signal[binZero];
 	float fittedBinZero = (slopeCFD == 0) ? binZero : binZero + (0 - signal[binZero])/slopeCFD;
-	timeCFD = (fittedBinZero + binOffset)*samplingTime;
+	constantFractionTime = (fittedBinZero + binOffset)*samplingTime;
 	//
 	samplesCFD = signal;
 }
 
 
-void ahdcExtractor::Show(const char * filename){
+void AhdcExtractor::Show(const char * filename){
 	double tmin = 0;
 	double tmax = 6000;
         double threshold = adcOffset + amplitudeFractionCFA*adcMax;
@@ -174,13 +174,13 @@ void ahdcExtractor::Show(const char * filename){
         // Graph for filling
 	int binNumberOVR = 0; // binNumberOverthresholdCFA
 	for (int bin=0; bin< binNumber;bin++){
-		if ((bin*samplingTime > timeRiseCFA) && (bin*samplingTime < timeFallCFA))
+		if ((bin*samplingTime > leadingEdgeTime) && (bin*samplingTime < trailingEdgeTime))
 			binNumberOVR++;
 	}
         TGraph* gr2 = new TGraph(binNumberOVR+2);
-        gr2->SetPoint(0,timeRiseCFA,threshold);
-        gr2->SetPoint(binNumberOVR+1,timeFallCFA, threshold);
-	int binRiseCFA = (int) timeRiseCFA/samplingTime;
+        gr2->SetPoint(0,leadingEdgeTime,threshold);
+        gr2->SetPoint(binNumberOVR+1,trailingEdgeTime, threshold);
+	int binRiseCFA = (int) leadingEdgeTime/samplingTime;
         for (int i=1;i<=binNumberOVR;i++){
                 gr2->SetPoint(i,tmin+samplingTime*(binRiseCFA+i),samplesCorr.at(binRiseCFA+i)+adcOffset);
         }
@@ -202,10 +202,10 @@ void ahdcExtractor::Show(const char * filename){
         gr2->Draw("F");
 
         // View decoding
-        TLine* line1 = new TLine(timeRiseCFA,0,timeRiseCFA,threshold); line1->SetLineWidth(1); line1->SetLineColor(kRed); line1->SetLineStyle(2); line1->Draw(); // timeRiseCFA
-        TLine* line2 = new TLine(0,threshold,timeRiseCFA,threshold); line2->SetLineWidth(1); line2->SetLineColor(kRed); line2->SetLineStyle(2); line2->Draw(); // timeRiseCFA
-        TLine* line3 = new TLine(timeFallCFA,0,timeFallCFA,threshold); line3->SetLineWidth(1); line3->SetLineColor(kRed); line3->SetLineStyle(2); line3->Draw(); // timeFallCFA
-        TArrow* arrow1 = new TArrow(timeRiseCFA,threshold,timeFallCFA,threshold,0.02,"<>"); arrow1->SetLineWidth(1); arrow1->SetLineColor(kRed); arrow1->Draw(); // timeOverThresholdCFA
+        TLine* line1 = new TLine(leadingEdgeTime,0,leadingEdgeTime,threshold); line1->SetLineWidth(1); line1->SetLineColor(kRed); line1->SetLineStyle(2); line1->Draw(); // leadingEdgeTime
+        TLine* line2 = new TLine(0,threshold,leadingEdgeTime,threshold); line2->SetLineWidth(1); line2->SetLineColor(kRed); line2->SetLineStyle(2); line2->Draw(); // leadingEdgeTime
+        TLine* line3 = new TLine(trailingEdgeTime,0,trailingEdgeTime,threshold); line3->SetLineWidth(1); line3->SetLineColor(kRed); line3->SetLineStyle(2); line3->Draw(); // trailingEdgeTime
+        TArrow* arrow1 = new TArrow(leadingEdgeTime,threshold,trailingEdgeTime,threshold,0.02,"<>"); arrow1->SetLineWidth(1); arrow1->SetLineColor(kRed); arrow1->Draw(); // timeOverThreshold
         TLine* line4 = new TLine(tmin,adcOffset,tmax,adcOffset); line4->SetLineWidth(1); line4->SetLineColor(kRed); line4->SetLineStyle(2); line4->Draw(); // adcOffset
         TLine* line5 = new TLine(0,adcMax+adcOffset,timeMax,adcMax+adcOffset); line5->SetLineWidth(1); line5->SetLineColor(kRed); line5->SetLineStyle(2); line5->Draw(); // adcMax+adcOffset
         TLine* line6 = new TLine(timeMax,0,timeMax,adcMax+adcOffset); line6->SetLineWidth(1); line6->SetLineColor(kRed); line6->SetLineStyle(2); line6->Draw(); // adcMax+adcOffset
@@ -213,17 +213,17 @@ void ahdcExtractor::Show(const char * filename){
         TLatex data;
         data.SetTextSize(0.03);
         data.SetTextAlign(13);
-        data.DrawLatexNDC(0.5,0.8,TString::Format("#bf{#bf{timeRiseCFA} =  %.2lf ns}",timeRiseCFA).Data());
-        data.DrawLatexNDC(0.5,0.8-0.05,TString::Format("#bf{#bf{timeOverThresholdCFA} =  %.2lf ns}",timeOverThresholdCFA).Data());
+        data.DrawLatexNDC(0.5,0.8,TString::Format("#bf{#bf{leadingEdgeTime} =  %.2lf ns}",leadingEdgeTime).Data());
+        data.DrawLatexNDC(0.5,0.8-0.05,TString::Format("#bf{#bf{timeOverThreshold} =  %.2lf ns}",timeOverThreshold).Data());
         data.DrawLatexNDC(0.5,0.8-0.05*2,TString::Format("#bf{#bf{adcMax+adcOffset} =  %.0lf adc }",adcMax+adcOffset).Data());
         data.DrawLatexNDC(0.5,0.8-0.05*3,TString::Format("#bf{#bf{integral} =  %.0lf adc per 44 ns}",integral).Data());
         data.DrawLatexNDC(0.5,0.8-0.05*4,TString::Format("#bf{#bf{adcOffset} =  %d adc}",adcOffset).Data());
         data.DrawLatexNDC(0.5,0.8-0.05*5,"#bf{1 adc =  10^{-5} keV/ns }");
-        data.DrawLatexNDC(0.5,0.8-0.05*6,TString::Format("#bf{#bf{timeCFD} = %.2lf ns}",timeCFD));
+        data.DrawLatexNDC(0.5,0.8-0.05*6,TString::Format("#bf{#bf{constantFractionTime} = %.2lf ns}",constantFractionTime));
         data.SetTextAlign(11);
-        data.DrawLatex(timeRiseCFA,0+(adcMax+adcOffset)*0.02,"timeRiseCFA");
+        data.DrawLatex(leadingEdgeTime,0+(adcMax+adcOffset)*0.02,"leadingEdgeTime");
         data.DrawLatex(timeMax,(adcMax+adcOffset)+(adcMax+adcOffset)*0.02,"adcMax+adcOffset");
-        data.DrawLatex(timeMax,threshold,"timeOverThresholdCFA");
+        data.DrawLatex(timeMax,threshold,"timeOverThreshold");
         data.DrawLatex(0+tmax*0.02,threshold,"threshold");
         data.DrawLatex(tmax, adcOffset+(adcMax+adcOffset)*0.02,"adcOffset");
 
@@ -233,7 +233,7 @@ void ahdcExtractor::Show(const char * filename){
         delete canvas1;
 }
 
-void ahdcExtractor::ShowCFD(const char * filename){
+void AhdcExtractor::ShowCFD(const char * filename){
 	double tmin = 0;
 	double tmax = 6000;
 	TCanvas* canvas1 = new TCanvas("c1","c1 title",1366,768);
@@ -275,7 +275,7 @@ void ahdcExtractor::ShowCFD(const char * filename){
         TLatex data;
         data.SetTextSize(0.04);
         data.SetTextAlign(13);
-        data.DrawLatexNDC(0.7,0.6,TString::Format("#bf{#bf{timeCFD} =  %.2lf ns}",timeCFD).Data());
+        data.DrawLatexNDC(0.7,0.6,TString::Format("#bf{#bf{constantFractionTime} =  %.2lf ns}",constantFractionTime).Data());
 
 
         //canvas1->Print(TString::Format("./output/SignalCFD_%d_%d_%d_%d.pdf",hitn,sector,layer,component));

@@ -14,6 +14,7 @@
 #include "reader.h"
 
 #include "AhdcDetector.h"
+#include "AhdcExtractor.h"
 
 class Window : public Gtk::Window {
 protected :
@@ -57,10 +58,9 @@ protected :
 	int nWF; ///< number of waveforms	
 	AhdcDetector *ahdc; ///< AHDC detector
 	std::vector<AhdcWire> ListOfWires; ///< List of wires activated
+	std::vector<std::string> ListOfWireNames; ///< List of wire names
 	std::vector<std::vector<short>> ListOfSamples;  ///< List of samples
-	const double MARKER_SIZE = 0.01; ///< Marker size
-	const double LINE_SIZE = 0.005; ///< Line width
-	const double WIRE_SIZE = 0.02; ///< Wire radius
+	AhdcExtractor decoder;
 
 	// Histograms
 	
@@ -70,7 +70,6 @@ public :
 	~Window();
 
 	void dataEventAction();
-	void normalise_coords(double scale, double x_max, double y_max, double x_old, double y_old, double & x_new, double & y_new);	
 	
 	// Signals
 	void on_button_prev_clicked();
@@ -83,8 +82,7 @@ public :
 	void on_file_dialog_finish(const Glib::RefPtr<Gio::AsyncResult>& result, const Glib::RefPtr<Gtk::FileDialog>& dialog); // used in on_button_hipo4_clicked()
 	void on_draw_event(const Cairo::RefPtr<Cairo::Context>& cr, int width, int height);
 	void on_draw_test(const Cairo::RefPtr<Cairo::Context>& cr, int width, int height);
-	void cairo_plot_graph(const Cairo::RefPtr<Cairo::Context>& cr, int width, int height, std::vector<double> vx, std::vector<double> vy);
-	void cairo_plot_graph2(const Cairo::RefPtr<Cairo::Context>& cr, int width, int height, std::vector<double> vx, std::vector<double> vy);
+	void cairo_plot_graph(const Cairo::RefPtr<Cairo::Context>& cr, int width, int height, std::vector<double> vx, std::vector<double> vy, std::string annotation);
 };
 
 #endif
