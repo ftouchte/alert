@@ -322,16 +322,16 @@ void Window::on_draw_event(const Cairo::RefPtr<Cairo::Context>& cr, int width, i
 	cr->stroke();
 	
 	// Define axis
-	int n2x = 5; // number of secondary division in the x axis
-	//int n2y = (int) (n2x*heff/weff); // number of secondary division in the y axis		
-	int n2y = n2x;
+	int n1x = 5; // number of secondary division in the x axis
+	//int n1y = (int) (n1x*heff/weff); // number of secondary division in the y axis		
+	int n1y = n1x;
 	int stick_size1 = 0.025*seff;
 	int stick_size2 = 0.020*seff;
 	int xlabel_size = 0.4*bottom_margin;
 	int ylabel_size = 0.4*left_margin;
 	int stick_width = 0.002*seff;
-	fAxis ax(x_start, x_end, n2x, 0);
-	fAxis ay(y_start, y_end, n2y, 0);
+	fAxis ax(x_start, x_end, n1x, 0, 0);
+	fAxis ay(y_start, y_end, n1y, 0, 0);
 	ax.print();
 	ay.print();
 	// Draw main sticks x
@@ -551,16 +551,16 @@ void Window::cairo_plot_graph(const Cairo::RefPtr<Cairo::Context>& cr, int width
 	cr->stroke();
 	
 	// Define axis
-	int n2x = 0; // number of secondary division in the x axis
-	int n2y = (int) (n2x*heff/weff); // number of secondary division in the y axis		
-	//int n2y = n2x;
+	int n1x = 10; // number of secondary division in the x axis
+	//int n1y = (int) (n1x*heff/weff); // number of secondary division in the y axis		
+	int n1y = n1x;
 	int stick_size1 = 0.025*seff;
 	int stick_size2 = 0.020*seff;
 	int xlabel_size = 0.4*bottom_margin;
 	int ylabel_size = 0.4*left_margin; 
 	int stick_width = 0.01*seff;
-	fAxis ax(x_start, x_end, n2x, 0);
-	fAxis ay(y_start, y_end, n2y, 0);
+	fAxis ax(x_start, x_end, n1x, 0, 0);
+	fAxis ay(y_start, y_end, n1y, 0, 0);
 	ax.print();
 	ay.print();
 	// Draw main sticks x
