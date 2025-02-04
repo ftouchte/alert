@@ -12,53 +12,6 @@
 
 // Utility
 // int sprintf( char* buffer, const char* format, ... );
-//
-
-/**
- * @brief Constructor
- *
- * @note If `start` > `end`, it is an error, we define `start` and `end` at -1.
- */
-/*fAxis::fAxis(double _start, double _end, int _n2, int _n3) : start(_start), end(_end), n2(_n2), n3(_n3) {
-	if (start > end) {
-		start = -1;
-		end = -1;
-	}
-	length = end - start;
-	int digit = ceil(log10(length)) - 1;
-	eps1 = pow(10.0,digit);
-	eps2 = eps1/n2;
-	eps3 = eps2/n3;
-	int n_inf = floor(start/eps1);
-	int n_sup = ceil(end/eps1);
-	n1 = n_sup - n_inf;
-	// First divisions
-	for (int k = n_inf; k <= n_sup; k++) {
-		Div1.push_back(k*eps1);
-		char buffer[50];
-		sprintf(buffer, "%.*lf", digit <= 0 ? -digit : 0 , k*eps1);
-		Labels1.push_back(buffer);
-	}
-	printf("n_inf : %d, n_sup : %d\n", n_inf, n_sup);
-	// Second divisions
-	for (int k = 1; k < (int) Div1.size(); k++) {
-		for (int i = 1; i < n2; i++) {
-			Div2.push_back(Div1[k-1] + i*eps2);
-			char buffer[50];
-			sprintf(buffer, "%.*lf", digit <= 0 ? -digit+1 : 0 , Div1[k-1] + i*eps2);
-			Labels2.push_back(buffer);
-		}
-	}
-	// Third divisions
-	for (int k = 1; k < (int) Div2.size(); k++) {
-		for (int i = 1; i < n3; i++) {
-			Div2.push_back(Div2[k-1] + i*eps3);
-			char buffer[50];
-			sprintf(buffer, "%.*lf", digit <= 0 ? -digit+2 : 0 , Div2[k-1] + i*eps3);
-			Labels3.push_back(buffer);
-		}
-	}
-}*/
 
 /** Constructor */
 fAxis::fAxis(double _start, double _end, int _n1, int _n2, int _n3) : start(_start), end(_end), n1(_n1), n2(_n2), n3(_n3) {
