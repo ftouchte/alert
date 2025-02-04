@@ -322,7 +322,7 @@ void Window::on_draw_event(const Cairo::RefPtr<Cairo::Context>& cr, int width, i
 	cr->stroke();
 	
 	// Define axis
-	int n1x = 5; // number of secondary division in the x axis
+	int n1x = 10; // number of secondary division in the x axis
 	//int n1y = (int) (n1x*heff/weff); // number of secondary division in the y axis		
 	int n1y = n1x;
 	int stick_size1 = 0.025*seff;

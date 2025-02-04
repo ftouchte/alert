@@ -87,8 +87,8 @@ fAxis::fAxis(double _start, double _end, int _n1, int _n2, int _n3) : start(_sta
 				icloser = i;
 			}
 		}
-		printf("(alpha, beta, gamma) : (%d, %d, %d)\n", alpha, beta, gamma);
-		printf("precision : %d*10^%d\n", tab_125[icloser], powers[icloser]);
+		//printf("(alpha, beta, gamma) : (%d, %d, %d)\n", alpha, beta, gamma);
+		//printf("precision : %d*10^%d\n", tab_125[icloser], powers[icloser]);
 		// we redefine eps1 
 		// n_inf*eps1 < start < end < n_sup*eps1
 		eps1 = tab_125[icloser]*pow(10.0, powers[icloser]);
@@ -113,7 +113,7 @@ fAxis::fAxis(double _start, double _end, int _n1, int _n2, int _n3) : start(_sta
 					double  value = Div1[k-1] + i*eps2;
 					Div2.push_back(value);
 					char buffer[50];
-					sprintf(buffer, "%.*lf", ndecimals + 1, value);
+					sprintf(buffer, "%.*lf", (value == floor(value) ? 0 : ndecimals + 1), value);
 					Labels2.push_back(buffer);
 				}
 			}
@@ -127,7 +127,7 @@ fAxis::fAxis(double _start, double _end, int _n1, int _n2, int _n3) : start(_sta
 						double value = Div2[k-1] + i*eps3;
 						Div2.push_back(value);
 						char buffer[50];
-						sprintf(buffer, "%.*lf", ndecimals + 2, value);
+						sprintf(buffer, "%.*lf", (value == floor(value) ? 0 : ndecimals + 2), value);
 						Labels3.push_back(buffer);
 					}
 				}
@@ -149,19 +149,19 @@ int  fAxis::get_eps3() {return eps3;} ///< get the space between the third divis
 
 void fAxis::print() {
 	printf(">>> start : %lf, end : %lf, eps1 : %lf\n",start,end,eps1);
-	printf("1st divisions [ ");
+	printf("    1st divisions [ ");
 	for (std::string s : Labels1) {
 		printf("%s ", s.c_str());
 	}
 	printf("]\n");
 
-	printf("2nd divisions [ ");
+	printf("    2nd divisions [ ");
 	for (std::string s : Labels2) {
 		printf("%s ", s.c_str());
 	}
 	printf("]\n");
 
-	printf("3rd divisions [ ");
+	printf("    3rd divisions [ ");
 	for (std::string s : Labels3) {
 		printf("%s ", s.c_str());
 	}
