@@ -10,6 +10,7 @@
 #include <random>
 #include <string>
 #include <iostream>
+#include <cmath>
 
 /** Distribution uniforme */
 void test1(){
@@ -32,7 +33,10 @@ void test2() {
 	double mean = 0;
 	double stdev = 1;
 	std::string title = "distribution normale N(" + to_string(mean) + "," + to_string(stdev) + ")";
-	fhist1D * hist = new fhist1D(title.c_str(), 1000, -5, 5);
+	double start = 0;
+	double end = 73;
+	double width = end - start;
+	fhist1D * hist = new fhist1D(title.c_str(), 1000, start, end);
 	hist->SetFlagStatOverFlows(false);
 	std::default_random_engine generator;
 	std::normal_distribution<double> distribution(mean,stdev);
@@ -41,6 +45,14 @@ void test2() {
 	}
 	hist->Print();
 	hist->DrawContour("distribution_normale.pdf");
+	
+	double beta  = log10(width/2);
+	double gamma = log10(width/5);
+	double eta   = log10(width/1);
+	std::cout << "width : " << width << std::endl;
+	std::cout << "beta  : " << beta << std::endl;
+	std::cout << "gamma : " << gamma << std::endl;
+	std::cout << "eta   : " << eta << std::endl;
 }
 
 int main(int argc, char const *argv[]){

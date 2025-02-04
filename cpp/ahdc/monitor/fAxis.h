@@ -15,7 +15,7 @@ class fAxis {
 private :
 	double start; ///< start point
 	double end; ///< end point
-	double length; ///< length of the interval
+	double width; ///< length of the interval
 	double eps1; ///< epsilon, precision of the first division
 	double eps2; ///< precision of the second division
 	double eps3; ///< precision of the third division
@@ -30,7 +30,7 @@ private :
 	std::vector<std::string> Labels3; ///< Labels of the third division (formatted version of Div3)
 
 public :
-	fAxis(double _start, double _end, int _n2 = 5, int _n3 = 0);
+	fAxis(double _start, double _end, int _n1 = 5, int _n2 = 10, int _n3 = 0);
 	~fAxis();
 	int get_n1();
 	int get_n2();
