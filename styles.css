@@ -88,8 +88,8 @@ li.active {
 /***************************/
 
 .maincol {
-    margin-left: 14rem;
-    margin-right: 14rem;
+    margin-left: clamp(14rem, 10vw, 14rem);
+    margin-right: clamp(1rem, 10vw, 14rem);
     margin-top: 2rem;
     min-height: 100vh; /* Ensure the body fills the entire viewport height */
 }
