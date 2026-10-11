@@ -47,12 +47,13 @@ a.active {
 /***************************/
 
 .maincol {
-    max-width: 100rem;
+    max-width: 90rem;
     margin: 2rem auto 0;
     min-height: 100vh; /* Ensure the body fills the entire viewport height */
     display: flex;
     flex-direction: row;
     align-items: flex-start;
+    padding-inline: clamp(1rem, 5vw, 14rem);
     /* justify-content: center; */
     gap: 1rem;
 }
@@ -66,6 +67,7 @@ div.maincol-content {
     overflow: hidden;
     background-color: white;
     height: 100%;
+    padding: 0;
 }
 
 .sidebar li a {
@@ -73,7 +75,7 @@ div.maincol-content {
     color: #000;
     text-align: center;
     width: 13rem;
-    padding: 14px 0px;
+    padding: 14px;
     text-decoration: none;
 }
 
